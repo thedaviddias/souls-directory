@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node and pnpm
+        uses: ./.github/actions/setup-pnpm
+        with:
+          node-version: "20"
+          pnpm-version: "9"
+
+      - name: Restore Turbo cache
+        uses: ./.github/actions/turbo-cache
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-deps
+
+      # Optional: set TURBO_TOKEN and TURBO_TEAM for Vercel Remote Cache
+      # env:
+      #   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      #   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
+      - name: Lint, typecheck, test, build
+        run: pnpm exec turbo run lint typecheck test build
+
+      - name: Save Turbo cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml', 'turbo.json') }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-

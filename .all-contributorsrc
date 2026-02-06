@@ -1,0 +1,35 @@
+{
+  "projectName": "souls-directory",
+  "projectOwner": "thedaviddias",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 80,
+  "commit": false,
+  "commitConvention": "none",
+  "contributorsPerLine": 8,
+  "contributorsSortOrder": "alphabetical",
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg)](#contributors)",
+  "contributors": [
+    {
+      "login": "thedaviddias",
+      "name": "David Dias",
+      "avatar_url": "https://avatars.githubusercontent.com/u/237229?v=4",
+      "profile": "https://thedaviddias.com/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "github-actions[bot]",
+      "name": "github-actions[bot]",
+      "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
+      "profile": "https://github.com/apps/github-actions",
+      "contributions": [
+        "code"
+      ]
+    }
+  ]
+}

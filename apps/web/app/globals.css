@@ -1,0 +1,274 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * DESIGN SYSTEM - souls.directory
+ * ═══════════════════════════════════════════════════════════════════════════════
+ *
+ * A minimalist, typography-first design system inspired by cursor.directory.
+ *
+ * PHILOSOPHY:
+ * - Grayscale palette with minimal accent usage
+ * - Typography hierarchy through font family (sans vs mono), not weight/size
+ * - Generous whitespace, small text sizes
+ * - Subtle interactions, clean borders
+ * - Dark mode only
+ *
+ * FONTS:
+ * - Geist Sans: Body text, UI elements
+ * - Geist Mono: Logo, metadata (dates, stats), code
+ *
+ * COLORS:
+ * - Near-black backgrounds with subtle elevation
+ * - #878787 as the signature secondary gray (cursor.directory's exact color)
+ * - White (#ededed) for primary text and active states
+ *
+ * ═══════════════════════════════════════════════════════════════════════════════
+ */
+
+@import "tailwindcss";
+
+@theme {
+  /* Fonts - Geist loaded via next/font in layout.tsx */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+
+  /* Backgrounds */
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-elevated: #1a1a1a;
+
+  /* Borders */
+  --color-border: #262626;
+  --color-border-subtle: #1f1f1f;
+
+  /* Text */
+  --color-text: #ededed;
+  --color-text-secondary: #878787;
+  --color-text-muted: #525252;
+
+  /* Minimal accent - white for active states */
+  --color-accent: #ededed;
+
+  /* Semantic colors (used sparingly) */
+  --color-error: #ef4444;
+  --color-success: #22c55e;
+}
+
+/* Base styles */
+html {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Selection - white on dark */
+::selection {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+/* Focus styles - subtle white ring */
+*:focus-visible {
+  outline: 1px solid var(--color-text-secondary);
+  outline-offset: 2px;
+}
+
+/* Pointer cursor on interactive elements (buttons, submit inputs) */
+button,
+[type="button"],
+[type="submit"],
+[type="reset"],
+[role="button"] {
+  cursor: pointer;
+}
+
+/* Scrollbar - thin and subtle */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide native search input clear button (browser-rendered X) */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+/* Typewriter animation for search placeholder */
+@keyframes typewriter-char {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.typewriter-char {
+  display: inline-block;
+  opacity: 0;
+  animation: typewriter-char 0.02s ease forwards;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Prose styles for markdown content */
+.prose-minimal {
+  color: var(--color-text-secondary);
+}
+
+.prose-minimal h1,
+.prose-minimal h2,
+.prose-minimal h3,
+.prose-minimal h4 {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.prose-minimal strong {
+  color: var(--color-text);
+}
+
+.prose-minimal a {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 4px;
+}
+
+.prose-minimal a:hover {
+  text-decoration-style: solid;
+}
+
+.prose-minimal code {
+  background: var(--color-surface);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  color: var(--color-text);
+}
+
+.prose-minimal pre {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.prose-minimal pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.prose-minimal blockquote {
+  border-left: 2px solid var(--color-border);
+  padding-left: 1rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* Shimmer loading effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 0%,
+    var(--color-elevated) 50%,
+    var(--color-surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Smooth scroll behavior */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Reduced motion: disable animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

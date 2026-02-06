@@ -1,0 +1,18 @@
+# Lefthook configuration for souls-directory
+# https://github.com/evilmartians/lefthook
+
+pre-commit:
+  parallel: true
+  commands:
+    biome-check:
+      glob: "**/*.{js,ts,jsx,tsx,json}"
+      run: pnpm exec biome check --write --staged --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+      fail_text: "Biome found errors or warnings. Fix them with 'pnpm exec biome check --write .' or fix manually."
+
+pre-push:
+  parallel: true
+  commands:
+    typecheck:
+      run: pnpm typecheck
+      fail_text: "TypeScript check failed. Run 'pnpm typecheck' for details."

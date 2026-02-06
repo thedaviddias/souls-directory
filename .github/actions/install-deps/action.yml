@@ -1,0 +1,8 @@
+name: "Install dependencies"
+description: "Run pnpm install --frozen-lockfile (Node and pnpm must be set up first)"
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+      shell: bash
