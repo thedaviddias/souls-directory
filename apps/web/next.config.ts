@@ -19,8 +19,8 @@ const cspDirectives = [
   ].join(' '),
   // Styles — unsafe-inline required for UI libraries (Radix, etc.)
   "style-src 'self' 'unsafe-inline' https://vercel.live https://vercel.com",
-  // Allow images from self, data URIs, GitHub avatars, Convex storage, Vercel toolbar/flags
-  "img-src 'self' data: blob: https://avatars.githubusercontent.com https://*.convex.cloud https://vercel.live https://vercel.com https://blob.vercel-storage.com https://*.blob.vercel-storage.com",
+  // Allow images from self, data URIs, GitHub avatars, Convex storage, tweet media, Vercel toolbar/flags
+  "img-src 'self' data: blob: https://avatars.githubusercontent.com https://*.convex.cloud https://pbs.twimg.com https://abs.twimg.com https://vercel.live https://vercel.com https://blob.vercel-storage.com https://*.blob.vercel-storage.com",
   // Fonts — self + Vercel toolbar
   "font-src 'self' https://vercel.live https://assets.vercel.com",
   // Allow connections to Convex, GitHub API, Plausible, Sentry, Vercel toolbar/flags
@@ -34,12 +34,19 @@ const cspDirectives = [
     'https://plausible.io',
     // Sentry error tracking
     'https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.sentry.io',
+    // react-tweet — fetch tweet data client-side (SWR)
+    'https://react-tweet.vercel.app',
     // Vercel (insights, toolbar, flags API, blob storage)
     'https://*.vercel-insights.com https://vercel.live https://vercel.com https://blob.vercel-storage.com https://*.blob.vercel-storage.com',
     // Vercel toolbar WebSocket
     'wss://ws-us3.pusher.com',
-    // Vercel toolbar local dev server (branch sync, events; port can vary per run)
-    'http://localhost:25030 http://localhost:25031 http://localhost:25032 http://localhost:25033 http://localhost:25034 http://localhost:25035 http://localhost:43214 ws://localhost:25030 ws://localhost:25031 ws://localhost:25032 ws://localhost:25033 ws://localhost:25034 ws://localhost:25035 ws://localhost:43214',
+    // Vercel toolbar local dev server (branch sync, events; port varies per run)
+    // In dev, allow any localhost port; in prod, restrict to known ports
+    ...(process.env.NODE_ENV === 'development'
+      ? ['http://localhost:* ws://localhost:*']
+      : [
+          'http://localhost:25030 http://localhost:25031 http://localhost:25032 http://localhost:25033 http://localhost:25034 http://localhost:25035 http://localhost:43214 ws://localhost:25030 ws://localhost:25031 ws://localhost:25032 ws://localhost:25033 ws://localhost:25034 ws://localhost:25035 ws://localhost:43214',
+        ]),
   ].join(' '),
   // Frames — Vercel toolbar (and Flags Explorer)
   "frame-src 'self' https://vercel.live https://vercel.com",
@@ -58,6 +65,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'avatars.githubusercontent.com', pathname: '/**' },
+      // react-tweet: Twitter/X profile photos and media
+      { protocol: 'https', hostname: 'pbs.twimg.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'abs.twimg.com', pathname: '/**' },
     ],
   },
   async headers() {

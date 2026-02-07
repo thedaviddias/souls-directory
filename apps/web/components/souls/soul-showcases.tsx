@@ -14,11 +14,12 @@ import { logger } from '@/lib/logger'
 import { ROUTES, soulShowcasesPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { useMutation, useQuery } from 'convex/react'
-import { Trash2 } from 'lucide-react'
+import { ExternalLink, Trash2 } from 'lucide-react'
 import type { Route } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
+import type { TwitterComponents } from 'react-tweet'
 import { Tweet, TweetSkeleton } from 'react-tweet'
 import { toast } from 'sonner'
 
@@ -49,11 +50,33 @@ interface SoulShowcasesProps {
   mode?: 'preview' | 'full'
 }
 
-function TweetCard({ tweetId }: { tweetId: string }) {
+function TweetNotFoundFallback({ tweetUrl }: { tweetUrl: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-surface p-6 text-center">
+      <p className="text-sm text-text-muted mb-3">
+        This tweet could not be loaded. It may have been deleted or is from a private account.
+      </p>
+      <a
+        href={tweetUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text transition-colors"
+      >
+        View on X <ExternalLink className="w-3.5 h-3.5" />
+      </a>
+    </div>
+  )
+}
+
+function TweetCard({ tweetId, tweetUrl }: { tweetId: string; tweetUrl: string }) {
+  const tweetComponents: TwitterComponents = {
+    TweetNotFound: () => <TweetNotFoundFallback tweetUrl={tweetUrl} />,
+  }
+
   return (
     <div data-theme="dark" className="min-w-0 [&_.react-tweet-theme]:overflow-hidden">
       <Suspense fallback={<TweetSkeleton />}>
-        <Tweet id={tweetId} />
+        <Tweet id={tweetId} components={tweetComponents} />
       </Suspense>
     </div>
   )
@@ -163,7 +186,6 @@ export function SoulShowcases({
       <SectionHeader
         variant="label"
         title={totalCount === 0 ? 'Showcases' : `Showcases (${totalCount})`}
-        spacing="large"
         viewAllHref={
           usePreview && totalCount > items.length && ownerHandle
             ? soulShowcasesPath(ownerHandle, soulSlug)
@@ -174,64 +196,62 @@ export function SoulShowcases({
         }
       />
 
-      <p className="text-sm text-text-secondary mb-6">
-        Tried this soul? Share a tweet with a screenshot of your conversation.
-      </p>
-
-      {isAuthenticated ? (
-        <form onSubmit={handleSubmit} className="mb-8 mx-auto max-w-lg">
-          <div className="flex gap-2">
-            <label htmlFor="showcase-tweet-url" className="sr-only">
-              Tweet URL
-            </label>
-            <input
-              id="showcase-tweet-url"
-              type="url"
-              value={tweetUrl}
-              onChange={(e) => setTweetUrl(e.target.value)}
-              placeholder="Paste a tweet URL"
-              aria-label="Tweet URL"
-              className="flex-1 min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-text-muted"
-            />
-            <Button
-              type="submit"
-              size="sm"
-              disabled={!tweetUrl.trim() || isSubmitting}
-              aria-busy={isSubmitting}
-            >
-              Add
-            </Button>
-          </div>
-          <p className="mt-2 text-center text-xs text-text-muted">
-            Paste a link from x.com or twitter.com
-          </p>
-        </form>
-      ) : (
-        <p className="mb-6 text-sm text-text-muted text-center">
-          <Link href={ROUTES.login as Route} className="text-text-secondary hover:underline">
-            Sign in
-          </Link>{' '}
-          to submit a tweet showcase.
+      <div className="mt-4 mb-8 rounded-lg border border-border bg-surface/50 px-6 py-5">
+        <p className="text-sm text-text-secondary mb-4">
+          Tried this soul? Tweet a screenshot of your conversation and paste the link below.
         </p>
-      )}
-
-      <div
-        className={cn(
-          'grid gap-6',
-          mode === 'full'
-            ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-            : items.length > 0
-              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center'
-              : 'grid-cols-1'
-        )}
-      >
-        {items.length === 0 ? (
-          <p className="text-sm text-text-muted text-center">No showcases yet.</p>
+        {isAuthenticated ? (
+          <form onSubmit={handleSubmit}>
+            <div className="flex gap-2">
+              <label htmlFor="showcase-tweet-url" className="sr-only">
+                Tweet URL
+              </label>
+              <input
+                id="showcase-tweet-url"
+                type="url"
+                value={tweetUrl}
+                onChange={(e) => setTweetUrl(e.target.value)}
+                placeholder="https://x.com/username/status/..."
+                aria-label="Tweet URL"
+                className="flex-1 min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-text-muted"
+              />
+              <Button
+                type="submit"
+                size="sm"
+                disabled={!tweetUrl.trim() || isSubmitting}
+                aria-busy={isSubmitting}
+              >
+                Add showcase
+              </Button>
+            </div>
+          </form>
         ) : (
-          items.map((item) => (
+          <p className="text-sm text-text-muted">
+            <Link href={ROUTES.login as Route} className="text-text-secondary hover:underline">
+              Sign in
+            </Link>{' '}
+            to share a showcase.
+          </p>
+        )}
+      </div>
+
+      {items.length === 0 ? (
+        <p className="text-sm text-text-muted">
+          No showcases yet. Try this soul and share a screenshot of your conversation.
+        </p>
+      ) : (
+        <div
+          className={cn(
+            'grid gap-6 justify-items-center',
+            mode === 'full'
+              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+              : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+          )}
+        >
+          {items.map((item) => (
             <div key={item.showcase._id} className="relative min-w-0 w-full max-w-[550px]">
               <div className="relative">
-                <TweetCard tweetId={item.showcase.tweetId} />
+                <TweetCard tweetId={item.showcase.tweetId} tweetUrl={item.showcase.tweetUrl} />
                 {canRemove(item) && (
                   <Button
                     type="button"
@@ -246,9 +266,9 @@ export function SoulShowcases({
                 )}
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
       {hasMore && (
         <div className="mt-6 flex justify-center">

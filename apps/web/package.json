@@ -12,7 +12,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "audit:headings": "node scripts/audit-headings.mjs"
+    "audit:headings": "node scripts/audit-headings.mjs",
+    "deploy": "convex deploy --typecheck=disable --yes"
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
