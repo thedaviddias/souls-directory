@@ -1,11 +1,5 @@
 version: 2
 
-registries:
-  npm-npmjs:
-    type: npm-registry
-    url: https://registry.npmjs.org
-    replaces-base: true
-
 updates:
   # npm dependencies (pnpm workspace root)
   - package-ecosystem: npm
@@ -21,8 +15,6 @@ updates:
         dependency-type: development
         update-types: [minor, patch]
     open-pull-requests-limit: 5
-    registries:
-      - npm-npmjs
     labels:
       - dependencies
 
