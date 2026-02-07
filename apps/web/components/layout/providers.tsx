@@ -10,9 +10,10 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import type { ReactNode } from 'react'
 import { Toaster } from 'sonner'
 
-// Initialize Convex client (only if URL is configured)
-const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL
-const convex = convexUrl ? new ConvexReactClient(convexUrl) : null
+// Convex client: use real URL when set; otherwise placeholder so ConvexProvider is always present
+// (avoids "useQuery must be used under ConvexProvider" during static prerender when env is missing, e.g. CI)
+const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || 'https://build-placeholder.convex.cloud'
+const convex = new ConvexReactClient(convexUrl)
 
 interface ProvidersProps {
   children: ReactNode
@@ -58,15 +59,10 @@ export function Providers({ children }: ProvidersProps) {
     </NuqsAdapter>
   )
 
-  // Wrap with Convex if configured
-  if (convex) {
-    return (
-      <ConvexAuthProvider client={convex}>
-        <UserBootstrap />
-        {content}
-      </ConvexAuthProvider>
-    )
-  }
-
-  return content
+  return (
+    <ConvexAuthProvider client={convex}>
+      <UserBootstrap />
+      {content}
+    </ConvexAuthProvider>
+  )
 }
