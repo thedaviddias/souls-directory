@@ -5,8 +5,10 @@
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { BreadcrumbSchema } from '@/components/seo/json-ld'
+import { getAllGuides } from '@/lib/guides'
 import { ROUTES } from '@/lib/routes'
 import { createMetadata } from '@/lib/seo'
+import { format } from 'date-fns'
 import Link from 'next/link'
 
 export const metadata = createMetadata({
@@ -17,25 +19,8 @@ export const metadata = createMetadata({
   keywords: ['OpenClaw guides', 'SOUL.md guide', 'OpenClaw SOUL.md', 'soul template'],
 })
 
-const GUIDES = [
-  {
-    slug: 'openclaw-soul-md-guide',
-    title: 'The Complete Guide to SOUL.md for OpenClaw',
-    description: 'What SOUL.md is, how it shapes your agent, and how to install or choose one.',
-  },
-  {
-    slug: 'best-souls-for-developers',
-    title: '10 Best SOUL.md Templates for Developers',
-    description: 'Curated developer souls: code review, debugging, DevOps, and technical writing.',
-  },
-  {
-    slug: 'openclaw-personality-tips',
-    title: 'How to Write a Great SOUL.md',
-    description: 'Voice, structure, boundaries, and model compatibility when writing a soul.',
-  },
-]
-
 export default function GuidesPage() {
+  const guides = getAllGuides()
   return (
     <>
       <BreadcrumbSchema items={[{ name: 'Guides', url: '/guides' }]} />
@@ -48,14 +33,22 @@ export default function GuidesPage() {
             tips.
           </p>
           <ul className="space-y-4">
-            {GUIDES.map((guide) => (
+            {guides.map((guide) => (
               <li key={guide.slug}>
                 <Link
                   href={ROUTES.guideDetail(guide.slug)}
                   className="block p-4 rounded-lg border border-border bg-surface hover:border-text-muted transition-colors"
                 >
-                  <h2 className="text-sm font-medium text-text mb-1">{guide.title}</h2>
-                  <p className="text-xs text-text-secondary">{guide.description}</p>
+                  <h2 className="text-sm font-medium text-text mb-1">{guide.frontmatter.title}</h2>
+                  <p className="text-xs text-text-secondary mb-2">
+                    {guide.frontmatter.description}
+                  </p>
+                  <div className="flex items-center gap-x-3 text-xs text-text-muted">
+                    <time dateTime={guide.frontmatter.publishedAt}>
+                      {format(new Date(guide.frontmatter.publishedAt), 'PPP')}
+                    </time>
+                    {guide.readingTime > 0 && <span>{guide.readingTime} min read</span>}
+                  </div>
                 </Link>
               </li>
             ))}

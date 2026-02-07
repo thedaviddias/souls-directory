@@ -8,6 +8,7 @@
  */
 
 import { getAllSoulsForSitemap, getAllUsersForSitemap } from '@/lib/convex-server'
+import { getAllGuides } from '@/lib/guides'
 import { profilePath } from '@/lib/routes'
 import { SITE_CONFIG } from '@/lib/seo'
 import type { MetadataRoute } from 'next'
@@ -81,25 +82,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/guides/openclaw-soul-md-guide`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/guides/best-souls-for-developers`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/guides/openclaw-personality-tips`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
   ]
+
+  // Guide article pages (from MDX content)
+  const guidePages: MetadataRoute.Sitemap = getAllGuides().map((guide) => ({
+    url: `${baseUrl}/guides/${guide.slug}`,
+    lastModified: new Date(guide.frontmatter.updatedAt ?? guide.frontmatter.publishedAt),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }))
 
   // Dynamic soul pages - highest priority for content
   const soulPages: MetadataRoute.Sitemap = (souls || []).map((soul: SitemapSoul) => ({
@@ -119,5 +110,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     }))
 
-  return [...staticPages, ...soulPages, ...userPages]
+  return [...staticPages, ...guidePages, ...soulPages, ...userPages]
 }
