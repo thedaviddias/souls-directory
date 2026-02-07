@@ -45,7 +45,7 @@ jobs:
         run: pnpm exec turbo run lint typecheck test build
 
       - name: Notify Vercel
-        if: always()
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: vercel/repository-dispatch/actions/status@v1
         with:
           name: "Vercel - souls-directory: lint"
