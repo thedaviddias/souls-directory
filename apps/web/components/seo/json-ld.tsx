@@ -352,3 +352,53 @@ export function CollectionPageSchema({
 
   return <JsonLd data={schema} />
 }
+
+// =============================================================================
+// Article Schema (for guide pages)
+// =============================================================================
+
+interface ArticleSchemaProps {
+  title: string
+  description: string
+  url: string
+  publishedAt: string
+  updatedAt?: string
+  authorName?: string
+  readingTime?: number
+}
+
+export function ArticleSchema({
+  title,
+  description,
+  url,
+  publishedAt,
+  updatedAt,
+  authorName,
+  readingTime,
+}: ArticleSchemaProps) {
+  const fullUrl = url.startsWith('http') ? url : `${SITE_CONFIG.url}${url}`
+  const schema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    url: fullUrl,
+    datePublished: publishedAt,
+    dateModified: updatedAt ?? publishedAt,
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_CONFIG.name,
+      url: SITE_CONFIG.url,
+    },
+  }
+  if (authorName) {
+    schema.author = {
+      '@type': 'Person',
+      name: authorName,
+    }
+  }
+  if (readingTime !== undefined) {
+    schema.timeRequired = `PT${readingTime}M`
+  }
+  return <JsonLd data={schema} />
+}

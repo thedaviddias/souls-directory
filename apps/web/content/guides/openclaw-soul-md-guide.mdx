@@ -1,0 +1,39 @@
+---
+title: "The Complete Guide to SOUL.md for OpenClaw"
+description: "Learn what SOUL.md is, how it shapes your OpenClaw agent's personality, and how to choose or write one. Step-by-step guide for beginners."
+publishedAt: "2025-06-15"
+updatedAt: "2025-06-15"
+keywords:
+  - SOUL.md
+  - OpenClaw
+  - OpenClaw SOUL.md
+  - agent personality
+  - AI personality template
+  - OpenClaw guide
+author: "David Dias"
+---
+
+SOUL.md is the file that defines your OpenClaw agent's personality, tone, and behavior. This guide covers what it is, how to use it, and where to find or write one.
+
+## What is SOUL.md?
+
+SOUL.md is a markdown file that sits in your OpenClaw workspace and tells the agent how to present itself: its voice, priorities, and style. Unlike system prompts that only one model sees, SOUL.md is the persistent "soul" of your agent—what makes it feel like yours.
+
+OpenClaw reads this file when starting or responding, so changing SOUL.md changes how your agent talks, what it emphasizes, and how it helps you.
+
+## Why use a SOUL.md?
+
+Default agents tend to sound generic. A SOUL.md gives you a consistent personality: more direct, more technical, more casual, or more formal. It can define roles (e.g. "senior dev reviewer") and boundaries (e.g. "never run destructive commands without asking").
+
+Using a curated SOUL.md from a directory like [souls.directory](/souls) is the fastest way to get a production-ready personality without writing one from scratch.
+
+## How to install a SOUL.md
+
+1. Install OpenClaw and set up your workspace (see the official OpenClaw docs).
+2. Browse [souls.directory](/souls) and pick a soul that fits your use case.
+3. Copy the one-command install (e.g. `curl https://souls.directory/api/souls/your-soul-slug.md > ~/.openclaw/workspace/SOUL.md`) and run it in your terminal.
+4. Restart or reconfigure OpenClaw so it picks up the new SOUL.md.
+
+## Next steps
+
+Try the [Getting Started](/getting-started) page for a full setup walkthrough, or [Find Your Soul](/quiz) to get personalized recommendations.

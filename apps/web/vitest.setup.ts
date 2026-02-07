@@ -2,6 +2,8 @@ import '@testing-library/jest-dom'
 import * as React from 'react'
 import { vi } from 'vitest'
 
+// @sentry/nextjs is stubbed via alias in vitest.config.ts
+
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
   useRouter: () => ({

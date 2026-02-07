@@ -215,4 +215,77 @@ describe('useWizardNavigation', () => {
       expect(screen.getByTestId('current-step')).toHaveTextContent('metadata')
     })
   })
+
+  describe('fork mode flows', () => {
+    it('fork mode: starts on review with initialStep', () => {
+      render(<TestWrapper readiness={defaultReadiness} initialStep="review" />)
+      expect(screen.getByTestId('current-step')).toHaveTextContent('review')
+    })
+
+    it('fork mode: canProceed reflects review readiness', () => {
+      const forkReadiness = {
+        source: true,
+        review: true,
+        metadata: true,
+        publish: true,
+      }
+      render(<TestWrapper readiness={forkReadiness} initialStep="review" />)
+      expect(screen.getByTestId('can-proceed')).toHaveTextContent('true')
+    })
+
+    it('fork mode: can proceed from review to metadata', () => {
+      render(<TestWrapper readiness={defaultReadiness} initialStep="review" />)
+      expect(screen.getByTestId('current-step')).toHaveTextContent('review')
+
+      act(() => {
+        screen.getByText('Next').click()
+      })
+      expect(screen.getByTestId('current-step')).toHaveTextContent('metadata')
+    })
+
+    it('fork mode: can navigate back from metadata to review', () => {
+      render(<TestWrapper readiness={defaultReadiness} initialStep="review" />)
+
+      act(() => {
+        screen.getByText('Next').click()
+      })
+      expect(screen.getByTestId('current-step')).toHaveTextContent('metadata')
+
+      act(() => {
+        screen.getByText('Back').click()
+      })
+      expect(screen.getByTestId('current-step')).toHaveTextContent('review')
+    })
+
+    it('fork mode: blocked on review when review readiness is false', () => {
+      const forkReadiness = {
+        source: true,
+        review: false,
+        metadata: true,
+        publish: true,
+      }
+      render(<TestWrapper readiness={forkReadiness} initialStep="review" />)
+      expect(screen.getByTestId('can-proceed')).toHaveTextContent('false')
+
+      act(() => {
+        screen.getByText('Next').click()
+      })
+      expect(screen.getByTestId('current-step')).toHaveTextContent('review')
+    })
+
+    it('fork mode: full flow review → metadata → publish', () => {
+      render(<TestWrapper readiness={defaultReadiness} initialStep="review" />)
+      expect(screen.getByTestId('current-step')).toHaveTextContent('review')
+
+      act(() => {
+        screen.getByText('Next').click()
+      })
+      expect(screen.getByTestId('current-step')).toHaveTextContent('metadata')
+
+      act(() => {
+        screen.getByText('Next').click()
+      })
+      expect(screen.getByTestId('current-step')).toHaveTextContent('publish')
+    })
+  })
 })

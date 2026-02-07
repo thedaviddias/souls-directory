@@ -6,7 +6,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    pool: 'forks',
+    testTimeout: 30_000,
     setupFiles: ['./vitest.setup.ts'],
     include: ['**/*.test.{ts,tsx}'],
     coverage: {
@@ -21,10 +21,10 @@ export default defineConfig({
         '**/__tests__/**',
       ],
       thresholds: {
-        statements: 40,
-        branches: 35,
-        functions: 40,
-        lines: 40,
+        statements: 75,
+        branches: 65,
+        functions: 70,
+        lines: 75,
       },
     },
   },
@@ -37,6 +37,10 @@ export default defineConfig({
       '@convex-dev/auth/react': new URL('./__mocks__/convex-auth-react.ts', import.meta.url)
         .pathname,
       'convex/react': new URL('./__mocks__/convex-react.ts', import.meta.url).pathname,
+      // Stub Sentry to prevent initialization in tests
+      '@sentry/nextjs': new URL('./__mocks__/sentry-nextjs.ts', import.meta.url).pathname,
+      // Stub next-plausible
+      'next-plausible': new URL('./__mocks__/next-plausible.ts', import.meta.url).pathname,
     },
   },
 })
