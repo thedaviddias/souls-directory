@@ -102,7 +102,7 @@ export function UploadContent() {
   // Local state (source, versioning, UI)
   // ==========================================================================
 
-  const [sourceType, setSourceType] = useState<SourceType>('file')
+  const [sourceType, setSourceType] = useState<SourceType>('paste')
   const [versionBump, setVersionBump] = useState<VersionBump>('patch')
   const [changelog, setChangelog] = useState('')
   const [isUpdate, setIsUpdate] = useState(false)

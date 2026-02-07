@@ -286,7 +286,7 @@ export function getFeaturedSouls(): Soul[] {
 export function getRecentSouls(): Soul[] {
   return [...mockSouls]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    .slice(0, 4)
+    .slice(0, 8)
 }
 
 export function searchSouls(query: string): Soul[] {

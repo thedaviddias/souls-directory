@@ -255,6 +255,49 @@ function extractSection(body: string, heading: string): string | undefined {
   return cleaned || undefined
 }
 
+const DESCRIPTION_MAX_LENGTH = 500
+
+/**
+ * Strip markdown from section text and truncate at sentence or word boundary.
+ * Used to produce a plain-text description from ## Vibe (or fallback) content.
+ */
+function sectionToDescription(rawSection: string, maxLength: number): string {
+  if (!rawSection || !rawSection.trim()) return ''
+
+  const lines = rawSection.split('\n')
+  const processedLines: string[] = []
+
+  for (const line of lines) {
+    let s = line.trim()
+    if (!s) continue
+    // Strip ### / ## subheadings (keep the phrase)
+    s = s.replace(/^#+\s*/, '')
+    // Strip list bullets: - or * at start (with optional space after)
+    s = s.replace(/^[-*]\s+/, '')
+    // Strip bold: **text** → text (non-greedy)
+    s = s.replace(/\*\*([^*]*)\*\*/g, '$1')
+    // Strip italic: *text* → text (after ** removal, so no ** left)
+    s = s.replace(/\*([^*]+)\*/g, '$1')
+    if (s.trim()) processedLines.push(s.trim())
+  }
+
+  const plain = processedLines.join(' ').replace(/\s+/g, ' ').trim()
+  if (!plain) return ''
+
+  if (plain.length <= maxLength) return plain
+
+  const head = plain.slice(0, maxLength)
+  const lastSentenceEnd = Math.max(
+    head.lastIndexOf('. '),
+    head.lastIndexOf('! '),
+    head.lastIndexOf('? ')
+  )
+  if (lastSentenceEnd >= 0) return plain.slice(0, lastSentenceEnd + 1).trim()
+  const lastSpace = head.lastIndexOf(' ')
+  if (lastSpace > 0) return plain.slice(0, lastSpace).trim()
+  return plain.slice(0, maxLength).trim()
+}
+
 /**
  * Extract rich metadata from a SOUL.md file.
  *
@@ -331,7 +374,7 @@ export function extractSoulMetadata(content: string, filePath?: string): Extract
   if (!meta.description) {
     const vibeContent = extractSection(body, 'Vibe')
     if (vibeContent) {
-      meta.description = vibeContent.slice(0, 500)
+      meta.description = sectionToDescription(vibeContent, DESCRIPTION_MAX_LENGTH)
     }
   }
 
@@ -339,7 +382,7 @@ export function extractSoulMetadata(content: string, filePath?: string): Extract
   if (!meta.description) {
     const commStyle = extractSection(body, 'Communication Style')
     if (commStyle) {
-      meta.description = commStyle.slice(0, 500)
+      meta.description = sectionToDescription(commStyle, DESCRIPTION_MAX_LENGTH)
     }
   }
 
@@ -361,7 +404,7 @@ export function extractSoulMetadata(content: string, filePath?: string): Extract
         continue
       }
       if (trimmed.startsWith('## ')) break
-      meta.description = trimmed.slice(0, 500)
+      meta.description = sectionToDescription(trimmed, DESCRIPTION_MAX_LENGTH)
       break
     }
   }

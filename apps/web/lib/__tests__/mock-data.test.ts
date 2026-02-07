@@ -73,9 +73,9 @@ describe('mock-data', () => {
   })
 
   describe('getMockRecentSouls', () => {
-    it('returns at most 4 souls', () => {
+    it('returns at most 8 souls', () => {
       const recent = getMockRecentSouls()
-      expect(recent.length).toBeLessThanOrEqual(4)
+      expect(recent.length).toBeLessThanOrEqual(8)
     })
   })
 

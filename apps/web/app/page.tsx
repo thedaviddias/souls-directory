@@ -38,7 +38,7 @@ export default async function Home() {
     getCategories(),
     getFeaturedSouls(8),
     getSoulsList({ sort: 'published', limit: 12 }),
-    getSoulsList({ sort: 'recent', limit: 6 }),
+    getSoulsList({ sort: 'recent', limit: 8 }),
   ])
 
   // Transform categories

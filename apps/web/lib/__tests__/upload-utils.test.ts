@@ -4,6 +4,7 @@ import {
   MAX_SINGLE_FILE_BYTES,
   MAX_TOTAL_BYTES,
   SLUG_PATTERN,
+  extractSoulMetadata,
   formatBytes,
   formatPublishError,
   generateSlug,
@@ -199,6 +200,81 @@ tags: [a, b, c]
     it('leaves as-is when multiple top-level folders', () => {
       const entries = [{ path: 'folder1/a.md' }, { path: 'folder2/b.md' }]
       expect(unwrapSingleTopLevelFolder(entries)).toEqual(entries)
+    })
+  })
+
+  describe('extractSoulMetadata description extraction', () => {
+    it('strips markdown from ## Vibe section (bold, bullets, subheadings)', () => {
+      const content = `# SOUL.md - Groot
+
+_Tagline._
+
+## Vibe
+
+**Minimalist but meaningful.** You use few words.
+
+**Voice characteristics:**
+- Primarily speaks: "I am Groot"
+- Varies tone/emphasis to convey meaning
+- Repetition for emphasis.`
+      const meta = extractSoulMetadata(content)
+      expect(meta.description).not.toContain('**')
+      expect(meta.description).not.toContain('- ')
+      expect(meta.description).toContain('Minimalist but meaningful')
+      expect(meta.description).toContain('Primarily speaks')
+      expect(meta.description).toContain('Repetition for emphasis')
+    })
+
+    it('truncates at sentence boundary, not mid-word', () => {
+      const longSentence = `${'A'.repeat(400)}. ${'B'.repeat(200)}`
+      const content = `# SOUL.md - Test
+
+_Tagline._
+
+## Vibe
+
+${longSentence}`
+      const meta = extractSoulMetadata(content)
+      expect(meta.description).toHaveLength(401) // 400 + '.'
+      expect(meta.description).toMatch(/\.$/)
+      expect(meta.description).not.toContain('B')
+    })
+
+    it('truncates at word boundary when no sentence end in first 500 chars', () => {
+      const noPeriod = 'word '.repeat(120) // 600 chars, no . ! ?
+      const content = `# SOUL.md - Test
+
+_Tagline._
+
+## Vibe
+
+${noPeriod}`
+      const meta = extractSoulMetadata(content)
+      expect(meta.description?.length).toBeLessThanOrEqual(500)
+      expect(meta.description).not.toMatch(/\s\w$/) // does not end with single letter (cut word)
+    })
+
+    it('returns plain text for Groot-style Vibe with mixed markdown', () => {
+      const content = `# SOUL.md - Groot
+
+_We are Groot._
+
+## Vibe
+
+**Minimalist but meaningful.** You use few words, but each one carries weight. You speak in "I am Groot" — the same phrase that means different things based on context, tone, and intention. Others must learn to understand you; you don't simplify yourself for their convenience.
+
+**Voice characteristics:**
+- Primarily speaks: "I am Groot"
+- Varies tone/emphasis to convey meaning
+- Occasionally uses "We are Groot" for collective unity
+- Long pauses before speaking (consideration)
+- Repetition for emphasis.`
+      const meta = extractSoulMetadata(content)
+      expect(meta.description).not.toContain('**')
+      expect(meta.description).not.toMatch(/^\s*-\s+/m)
+      expect(meta.description).toContain('Minimalist but meaningful.')
+      expect(meta.description).toContain('Repetition for emphasis.')
+      expect(meta.description?.length).toBeLessThanOrEqual(500)
     })
   })
 })
