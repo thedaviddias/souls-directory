@@ -1,19 +1,12 @@
 /**
  * Custom MDX component overrides for guide articles.
  * Headings get id slugs and anchor links; internal links use Next.js Link.
+ * Uses shared slugify from lib/slugify so IDs match extractHeadings (TOC).
  */
 
+import { slugify } from '@/lib/slugify'
 import Link from 'next/link'
 import type { ComponentType, ReactNode } from 'react'
-
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-}
 
 function getHeadingText(children: ReactNode): string {
   if (typeof children === 'string') return children

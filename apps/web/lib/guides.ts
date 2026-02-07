@@ -7,6 +7,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
+import { slugify } from './slugify'
 
 // =============================================================================
 // Types
@@ -49,13 +50,20 @@ function getGuidesDir(): string {
 // Heading extraction (h2, h3 from markdown)
 // =============================================================================
 
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
+/**
+ * Normalize raw markdown heading text so it matches the visible text produced
+ * by React (getHeadingText in mdx-components). Ensures TOC anchor IDs match h2/h3 id attributes.
+ * Strips link syntax [text](url) -> text, and bold/code so slugs stay in sync.
+ */
+function normalizeHeadingText(raw: string): string {
+  return raw
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // [link text](url) -> link text
+    .replace(/\*\*([^*]*)\*\*/g, '$1') // **bold** -> bold
+    .replace(/__([^_]*)__/g, '$1') // __bold__ -> bold
+    .replace(/`([^`]*)`/g, '$1') // `code` -> code
+    .replace(/\*([^*]+)\*/g, '$1') // *italic* -> italic
+    .replace(/_([^_]+)_/g, '$1') // _italic_ -> italic
+    .trim()
 }
 
 function extractHeadings(content: string): GuideHeading[] {
@@ -65,10 +73,12 @@ function extractHeadings(content: string): GuideHeading[] {
     const h2 = line.match(/^##\s+(.+)$/)
     const h3 = line.match(/^###\s+(.+)$/)
     if (h2) {
-      const text = h2[1].trim()
+      const raw = h2[1].trim()
+      const text = normalizeHeadingText(raw)
       headings.push({ id: slugify(text), text, level: 2 })
     } else if (h3) {
-      const text = h3[1].trim()
+      const raw = h3[1].trim()
+      const text = normalizeHeadingText(raw)
       headings.push({ id: slugify(text), text, level: 3 })
     }
   }
