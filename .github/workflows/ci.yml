@@ -28,7 +28,6 @@ jobs:
         uses: ./.github/actions/setup-pnpm
         with:
           node-version: "20"
-          pnpm-version: "9"
 
       - name: Restore Turbo cache
         uses: ./.github/actions/turbo-cache

@@ -89,10 +89,14 @@ describe('ProfileContent', () => {
     expect(screen.getByText(/This user account has been deleted/)).toBeInTheDocument()
   })
 
-  it('renders profile header with name and handle', () => {
+  it('renders profile header with name, handle link, and bio', () => {
     render(<ProfileContent user={visibleUser} souls={[]} />)
     expect(screen.getByRole('heading', { name: 'Jane', level: 1 })).toBeInTheDocument()
-    expect(screen.getByText(/@jane/)).toBeInTheDocument()
+    // The handle shows as a link to GitHub profile
+    const ghHandleLink = screen
+      .getAllByRole('link')
+      .find((l) => l.getAttribute('href')?.includes('github.com/jane'))
+    expect(ghHandleLink).toBeDefined()
     expect(screen.getByText('Developer')).toBeInTheDocument()
   })
 

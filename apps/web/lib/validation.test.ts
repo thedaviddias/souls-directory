@@ -87,6 +87,57 @@ describe('SoulListQuerySchema', () => {
     const res = SoulListQuerySchema.safeParse({ q: 'test;DROP TABLE' })
     expect(res.success).toBe(false)
   })
+
+  // --- Security-relevant edge cases ---
+
+  it('rejects search query with HTML tags (XSS)', () => {
+    const res = SoulListQuerySchema.safeParse({ q: '<script>alert(1)</script>' })
+    expect(res.success).toBe(false)
+  })
+
+  it('rejects search query with SQL injection characters', () => {
+    for (const payload of ["' OR 1=1", '"; DROP TABLE;--', 'UNION SELECT * FROM users']) {
+      const res = SoulListQuerySchema.safeParse({ q: payload })
+      expect(res.success).toBe(false)
+    }
+  })
+
+  it('rejects search query longer than 64 characters', () => {
+    const res = SoulListQuerySchema.safeParse({ q: 'a'.repeat(65) })
+    expect(res.success).toBe(false)
+  })
+
+  it('accepts search query with dots and hyphens', () => {
+    const res = SoulListQuerySchema.safeParse({ q: 'my-soul.name' })
+    expect(res.success).toBe(true)
+  })
+
+  it('trims whitespace from search query', () => {
+    const res = SoulListQuerySchema.safeParse({ q: '  hello world  ' })
+    expect(res.success).toBe(true)
+    if (res.success) {
+      expect(res.data.q).toBe('hello world')
+    }
+  })
+
+  it('rejects category with path traversal attempt', () => {
+    const res = SoulListQuerySchema.safeParse({ category: '../../../etc/passwd' })
+    expect(res.success).toBe(false)
+  })
+
+  it('rejects offset beyond 10000', () => {
+    const res = SoulListQuerySchema.safeParse({ offset: '10001' })
+    expect(res.success).toBe(false)
+  })
+
+  it('coerces string numbers to actual numbers', () => {
+    const res = SoulListQuerySchema.safeParse({ limit: '25', offset: '50' })
+    expect(res.success).toBe(true)
+    if (res.success) {
+      expect(typeof res.data.limit).toBe('number')
+      expect(typeof res.data.offset).toBe('number')
+    }
+  })
 })
 
 describe('parseSoulListQuery', () => {

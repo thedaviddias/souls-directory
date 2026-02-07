@@ -5,17 +5,11 @@ inputs:
     description: "Node.js version"
     required: false
     default: "20"
-  pnpm-version:
-    description: "pnpm version"
-    required: false
-    default: "9"
 runs:
   using: "composite"
   steps:
     - name: Install pnpm
       uses: pnpm/action-setup@v4
-      with:
-        version: ${{ inputs.pnpm-version }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v4

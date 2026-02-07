@@ -32,11 +32,14 @@ describe('CopyButton', () => {
 
   it('shows copied state after click', async () => {
     render(<CopyButton text="test" />)
-    fireEvent.click(screen.getByRole('button'))
 
-    await waitFor(() => {
-      expect(screen.getByText('Copied!')).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button'))
+      // Flush the microtask queue for the clipboard.writeText promise
+      await Promise.resolve()
     })
+
+    expect(screen.getByText('Copied!')).toBeInTheDocument()
   })
 
   it('calls onCopy callback when provided', async () => {

@@ -9,9 +9,14 @@ const mockCategories: CategoriesParam = [
   { _id: 'cat-2' as Id<'categories'>, slug: 'technical', name: 'Technical', icon: 'code' },
 ]
 
+// Stable empty array reference — passing `[]` directly inside renderHook
+// would create a new reference on each render, which previously caused
+// an infinite re-render loop via the useEffect dependency array.
+const emptyFiles: { file: File; path: string }[] = []
+
 describe('useSoulMetadata', () => {
   it('initializes with empty form state', () => {
-    const { result } = renderHook(() => useSoulMetadata('', [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata('', emptyFiles, mockCategories))
     expect(result.current.displayName).toBe('')
     expect(result.current.slug).toBe('')
     expect(result.current.tagline).toBe('')
@@ -30,7 +35,7 @@ _You are a helpful assistant._
 ## Vibe
 
 Friendly and concise.`
-    const { result } = renderHook(() => useSoulMetadata(content, [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata(content, emptyFiles, mockCategories))
     expect(result.current.displayName).toBe('My Agent')
     expect(result.current.slug).toBe('my-agent')
     expect(result.current.autoDetected.name).toBe(true)
@@ -45,7 +50,7 @@ _You are a helpful assistant._
 ## Vibe
 
 Nothing.`
-    const { result } = renderHook(() => useSoulMetadata(content, [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata(content, emptyFiles, mockCategories))
     expect(result.current.tagline).toBe('You are a helpful assistant.')
     expect(result.current.autoDetected.tagline).toBe(true)
   })
@@ -58,7 +63,7 @@ _Tagline._
 ## Vibe
 
 This is the vibe description.`
-    const { result } = renderHook(() => useSoulMetadata(content, [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata(content, emptyFiles, mockCategories))
     expect(result.current.description).toContain('vibe description')
     expect(result.current.autoDetected.description).toBe(true)
   })
@@ -70,7 +75,7 @@ category: creative
 ---
 
 # SOUL.md - Comedian`
-    const { result } = renderHook(() => useSoulMetadata(content, [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata(content, emptyFiles, mockCategories))
     expect(result.current.categoryId).toBe('cat-1')
     expect(result.current.autoDetected.category).toBe(true)
   })
@@ -82,13 +87,13 @@ tags: [funny, dev]
 ---
 
 # SOUL.md - Test`
-    const { result } = renderHook(() => useSoulMetadata(content, [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata(content, emptyFiles, mockCategories))
     expect(result.current.selectedTags).toEqual(['funny', 'dev'])
     expect(result.current.autoDetected.tags).toBe(true)
   })
 
   it('addTag adds trimmed lowercase tag and clears input', () => {
-    const { result } = renderHook(() => useSoulMetadata('', [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata('', emptyFiles, mockCategories))
     act(() => {
       result.current.setTagInput('  NewTag  ')
       result.current.addTag('  NewTag  ')
@@ -98,7 +103,7 @@ tags: [funny, dev]
   })
 
   it('addTag does not add duplicate or exceed 5 tags', () => {
-    const { result } = renderHook(() => useSoulMetadata('', [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata('', emptyFiles, mockCategories))
     act(() => {
       result.current.addTag('a')
       result.current.addTag('a')
@@ -116,7 +121,7 @@ tags: [funny, dev]
 tags: [x, y]
 ---
 # SOUL.md - T`
-    const { result } = renderHook(() => useSoulMetadata(content, [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata(content, emptyFiles, mockCategories))
     act(() => {
       result.current.removeTag('x')
     })
@@ -124,7 +129,7 @@ tags: [x, y]
   })
 
   it('metadataValidation requires slug and display name', () => {
-    const { result } = renderHook(() => useSoulMetadata('', [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata('', emptyFiles, mockCategories))
     expect(result.current.metadataValidation.ready).toBe(false)
     act(() => {
       result.current.setDisplayName('Name')
@@ -134,7 +139,7 @@ tags: [x, y]
   })
 
   it('metadataValidation rejects invalid slug format', () => {
-    const { result } = renderHook(() => useSoulMetadata('', [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata('', emptyFiles, mockCategories))
     act(() => {
       result.current.setDisplayName('Name')
       result.current.setSlug('Invalid Slug!')
@@ -144,7 +149,7 @@ tags: [x, y]
   })
 
   it('populateFromInitialData sets all form fields', () => {
-    const { result } = renderHook(() => useSoulMetadata('', [], mockCategories))
+    const { result } = renderHook(() => useSoulMetadata('', emptyFiles, mockCategories))
     const data = {
       displayName: 'Initial',
       slug: 'initial',

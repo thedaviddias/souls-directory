@@ -93,6 +93,12 @@ export function useSoulMetadata(
   const [autoDetected, setAutoDetected] = useState<AutoDetectedFields>({})
   const autoFilledContentRef = useRef<string>('')
 
+  // Keep a stable ref for normalizedFiles so the effect doesn't re-run
+  // on every render when the parent passes a new array reference.
+  // The effect only needs to read the files when content/categories change.
+  const normalizedFilesRef = useRef(normalizedFiles)
+  normalizedFilesRef.current = normalizedFiles
+
   // Auto-extract metadata when content or categories change
   useEffect(() => {
     if (!content) return
@@ -104,9 +110,9 @@ export function useSoulMetadata(
     autoFilledContentRef.current = content
 
     // Get file path for hints (filename → slug, folder → category)
+    const files = normalizedFilesRef.current
     const mdFile =
-      normalizedFiles.find((f) => isSoulFile(f.path)) ||
-      normalizedFiles.find((f) => isMarkdownFile(f.path))
+      files.find((f) => isSoulFile(f.path)) || files.find((f) => isMarkdownFile(f.path))
 
     try {
       const extracted = extractSoulMetadata(content, mdFile?.path)
@@ -149,19 +155,23 @@ export function useSoulMetadata(
     } catch (err) {
       logger.warn('Soul metadata extraction failed', { path: mdFile?.path })
     }
-  }, [content, categories, normalizedFiles])
+    // normalizedFiles is read via ref — not included in deps to avoid infinite re-render
+    // loops when the parent passes a fresh array reference on each render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [content, categories])
 
   // Tag management
-  const addTag = useCallback(
-    (tagName: string) => {
-      const trimmed = tagName.trim().toLowerCase()
-      if (trimmed && !selectedTags.includes(trimmed) && selectedTags.length < 5) {
-        setSelectedTags((prev) => [...prev, trimmed])
-      }
-      setTagInput('')
-    },
-    [selectedTags]
-  )
+  const addTag = useCallback((tagName: string) => {
+    const trimmed = tagName.trim().toLowerCase()
+    if (!trimmed) return
+    // Guard conditions inside the updater to avoid stale closure reads
+    // of selectedTags during React's batched state updates.
+    setSelectedTags((prev) => {
+      if (prev.includes(trimmed) || prev.length >= 5) return prev
+      return [...prev, trimmed]
+    })
+    setTagInput('')
+  }, [])
 
   const removeTag = useCallback((tagName: string) => {
     setSelectedTags((prev) => prev.filter((t) => t !== tagName))
