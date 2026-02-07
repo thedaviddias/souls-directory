@@ -237,7 +237,6 @@ export default async function SoulPage({ params }: PageProps) {
         stars={transformedData.soul.stats.stars}
         createdAt={soul.createdAt}
         updatedAt={soul.updatedAt}
-        relatedSlugs={relatedSouls.map((s) => `${s.ownerHandle ?? ''}/${s.slug}`)}
         testedWithModels={soul.testedWithModels}
       />
       <BreadcrumbSchema

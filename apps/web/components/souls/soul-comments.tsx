@@ -45,11 +45,12 @@ function CommentAvatar({
   size?: number
 }) {
   const initials = getInitials(author)
+  const displayName = author?.displayName || author?.name || author?.handle || 'User'
   if (author?.image) {
     return (
       <Image
         src={author.image}
-        alt=""
+        alt={`${displayName}'s profile photo`}
         width={size}
         height={size}
         className="rounded-full shrink-0 bg-surface"
@@ -272,7 +273,7 @@ export function SoulComments({
       />
 
       {isAuthenticated ? (
-        <form onSubmit={handleSubmitRoot} className="mb-6">
+        <form onSubmit={handleSubmitRoot} className="mb-6 max-w-2xl">
           <textarea
             id="comment-body"
             value={newBody}

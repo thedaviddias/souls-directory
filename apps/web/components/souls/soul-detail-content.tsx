@@ -16,6 +16,7 @@ import { ShareMenuItems } from '@/components/shared/share-menu-items'
 import { SoulCard } from '@/components/souls/soul-card'
 import { SoulCardGrid } from '@/components/souls/soul-card-grid'
 import { SoulComments } from '@/components/souls/soul-comments'
+import { SoulShowcases } from '@/components/souls/soul-showcases'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -558,6 +559,15 @@ export function SoulDetailContent({ data }: SoulDetailContentProps) {
             </ol>
           </section>
         )}
+
+        {/* Showcases */}
+        <SoulShowcases
+          soulId={soulId}
+          soulSlug={soul.slug}
+          ownerHandle={soul.ownerHandle}
+          soulOwnerId={owner?.id as Id<'users'> | undefined}
+          mode="preview"
+        />
 
         {/* Comments */}
         <SoulComments

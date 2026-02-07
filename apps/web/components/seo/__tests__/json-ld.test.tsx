@@ -150,12 +150,33 @@ describe('SoulSchema', () => {
     expect(schema.genre).toBe('Coding')
   })
 
-  it('adds isRelatedTo when relatedSlugs provided', () => {
-    const { container } = render(<SoulSchema {...baseProps} relatedSlugs={['other-soul']} />)
+  it('uses Action objects for interactionType (not URL strings)', () => {
+    const { container } = render(<SoulSchema {...baseProps} />)
     const schema = getJsonLdFromContainer(container)
-    expect(schema.isRelatedTo).toEqual([
-      { '@type': 'CreativeWork', url: `${SITE_CONFIG.url}/souls/other-soul` },
-    ])
+    const stats = schema.interactionStatistic as Array<Record<string, unknown>>
+    expect(stats[0].interactionType).toEqual({ '@type': 'DownloadAction' })
+    expect(stats[1].interactionType).toEqual({ '@type': 'LikeAction' })
+  })
+
+  it('includes potentialAction with download EntryPoint', () => {
+    const { container } = render(<SoulSchema {...baseProps} handle="jane" />)
+    const schema = getJsonLdFromContainer(container)
+    expect(schema.potentialAction).toEqual({
+      '@type': 'DownloadAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${SITE_CONFIG.url}/api/souls/jane/stark.md`,
+      },
+    })
+  })
+
+  it('does not include invalid SoftwareApplication properties', () => {
+    const { container } = render(<SoulSchema {...baseProps} />)
+    const schema = getJsonLdFromContainer(container)
+    expect(schema).not.toHaveProperty('applicationCategory')
+    expect(schema).not.toHaveProperty('downloadUrl')
+    expect(schema).not.toHaveProperty('installInstructions')
+    expect(schema).not.toHaveProperty('isRelatedTo')
   })
 })
 

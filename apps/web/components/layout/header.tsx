@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuthStatus } from '@/hooks/use-auth-status'
-import { LayoutDashboard, Loader2, LogOut, Settings } from 'lucide-react'
+import { LayoutDashboard, Loader2, LogOut, Plus, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -94,6 +94,9 @@ export function Header() {
   const rafId = useRef<number | null>(null)
 
   useEffect(() => {
+    // Sync ref to actual scroll position so first scroll event doesn't use delta from 0
+    lastScrollY.current = window.scrollY
+
     const handleScroll = () => {
       const scrollY = window.scrollY
       const delta = scrollY - lastScrollY.current
@@ -196,22 +199,44 @@ export function Header() {
                 <Loader2 className="w-4 h-4 animate-spin text-text-secondary" />
               </div>
             ) : isAuthenticated && me ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className="rounded-full focus:outline-none focus:ring-1 focus:ring-text-secondary"
-                    aria-label="User menu"
-                  >
-                    <UserAvatar user={me} />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-surface border-border">
-                  {me.handle ? (
-                    <Link href={profilePath(me.handle)} className="block focus:outline-none group">
-                      <DropdownMenuLabel className="font-normal cursor-pointer hover:bg-border/50 rounded-sm transition-colors">
+              <>
+                <Button asChild variant="primary" size="sm">
+                  <Link href={ROUTES.upload}>
+                    <Plus className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Submit</span>
+                  </Link>
+                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="rounded-full focus:outline-none focus:ring-1 focus:ring-text-secondary"
+                      aria-label="User menu"
+                    >
+                      <UserAvatar user={me} />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 bg-surface border-border">
+                    {me.handle ? (
+                      <Link
+                        href={profilePath(me.handle)}
+                        className="block focus:outline-none group"
+                      >
+                        <DropdownMenuLabel className="font-normal cursor-pointer hover:bg-border/50 rounded-sm transition-colors">
+                          <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none text-text group-hover:underline">
+                              {me.displayName || me.handle}
+                            </p>
+                            {me.email && (
+                              <p className="text-xs leading-none text-text-secondary">{me.email}</p>
+                            )}
+                          </div>
+                        </DropdownMenuLabel>
+                      </Link>
+                    ) : (
+                      <DropdownMenuLabel className="font-normal">
                         <div className="flex flex-col space-y-1">
-                          <p className="text-sm font-medium leading-none text-text group-hover:underline">
+                          <p className="text-sm font-medium leading-none text-text">
                             {me.displayName || me.handle}
                           </p>
                           {me.email && (
@@ -219,48 +244,37 @@ export function Header() {
                           )}
                         </div>
                       </DropdownMenuLabel>
-                    </Link>
-                  ) : (
-                    <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none text-text">
-                          {me.displayName || me.handle}
-                        </p>
-                        {me.email && (
-                          <p className="text-xs leading-none text-text-secondary">{me.email}</p>
-                        )}
-                      </div>
-                    </DropdownMenuLabel>
-                  )}
-                  <DropdownMenuSeparator className="bg-border" />
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href={ROUTES.dashboard}
-                      className="cursor-pointer text-text-secondary hover:text-text"
+                    )}
+                    <DropdownMenuSeparator className="bg-border" />
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={ROUTES.dashboard}
+                        className="cursor-pointer text-text-secondary hover:text-text"
+                      >
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={ROUTES.settings}
+                        className="cursor-pointer text-text-secondary hover:text-text"
+                      >
+                        <Settings className="mr-2 h-4 w-4" />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="bg-border" />
+                    <DropdownMenuItem
+                      onClick={handleSignOut}
+                      className="cursor-pointer text-error focus:text-error"
                     >
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href={ROUTES.settings}
-                      className="cursor-pointer text-text-secondary hover:text-text"
-                    >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-border" />
-                  <DropdownMenuItem
-                    onClick={handleSignOut}
-                    className="cursor-pointer text-error focus:text-error"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
             ) : (
               <Button asChild variant="primary" size="sm">
                 <Link href={ROUTES.login}>Sign Up</Link>

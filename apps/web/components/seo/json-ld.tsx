@@ -39,8 +39,6 @@ interface SoulSchemaProps {
   stars: number
   createdAt: number
   updatedAt: number
-  /** Related souls for isRelatedTo: "handle/slug" or legacy slug string */
-  relatedSlugs?: string[]
   /** Models this soul was tested with (for agent parseability) */
   testedWithModels?: Array<{ model: string; provider?: string }>
 }
@@ -164,7 +162,6 @@ export function SoulSchema(props: SoulSchemaProps) {
   const soulPathSegment = props.handle ? `${props.handle}/${props.slug}` : props.slug
   const url = `${baseUrl}/souls/${soulPathSegment}`
   const downloadUrl = `${baseUrl}/api/souls/${soulPathSegment}.md`
-  const installCommand = `curl ${downloadUrl} > ~/.openclaw/workspace/SOUL.md`
 
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -176,18 +173,17 @@ export function SoulSchema(props: SoulSchemaProps) {
     codeRepository: url,
     programmingLanguage: 'Markdown',
     runtimePlatform: 'OpenClaw',
-    applicationCategory: 'SOUL.md Personality Template',
     dateCreated: new Date(props.createdAt).toISOString(),
     dateModified: new Date(props.updatedAt).toISOString(),
     interactionStatistic: [
       {
         '@type': 'InteractionCounter',
-        interactionType: 'https://schema.org/DownloadAction',
+        interactionType: { '@type': 'DownloadAction' },
         userInteractionCount: props.downloads,
       },
       {
         '@type': 'InteractionCounter',
-        interactionType: 'https://schema.org/LikeAction',
+        interactionType: { '@type': 'LikeAction' },
         userInteractionCount: props.stars,
       },
     ],
@@ -198,12 +194,20 @@ export function SoulSchema(props: SoulSchemaProps) {
       name: SITE_CONFIG.name,
       url: SITE_CONFIG.url,
     },
-    // Agent-parseable: direct download and install instructions
-    downloadUrl,
-    installInstructions: installCommand,
+    // Download action for agents and rich results
+    potentialAction: {
+      '@type': 'DownloadAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: downloadUrl,
+      },
+    },
     ...(props.testedWithModels?.length
       ? {
-          compatibleWith: props.testedWithModels.map((t) => t.model),
+          targetProduct: props.testedWithModels.map((t) => ({
+            '@type': 'SoftwareApplication',
+            name: t.model,
+          })),
         }
       : {}),
   }
@@ -220,14 +224,6 @@ export function SoulSchema(props: SoulSchemaProps) {
   // Add category
   if (props.categoryName) {
     schema.genre = props.categoryName
-  }
-
-  // Add related souls for internal linking (Schema.org isRelatedTo)
-  if (props.relatedSlugs?.length) {
-    schema.isRelatedTo = props.relatedSlugs.map((s) => ({
-      '@type': 'CreativeWork' as const,
-      url: `${SITE_CONFIG.url}/souls/${s}`,
-    }))
   }
 
   return <JsonLd data={schema} />

@@ -127,7 +127,7 @@ export default async function GuidePage({ params }: PageProps) {
                       <span className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full border border-border">
                         <Image
                           src={authorImage}
-                          alt=""
+                          alt={`${authorName}'s profile photo`}
                           width={24}
                           height={24}
                           className="object-cover"
@@ -142,7 +142,7 @@ export default async function GuidePage({ params }: PageProps) {
                       <span className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full border border-border">
                         <Image
                           src={authorImage}
-                          alt=""
+                          alt={`${authorName}'s profile photo`}
                           width={24}
                           height={24}
                           className="object-cover"

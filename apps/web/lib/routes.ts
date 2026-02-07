@@ -55,6 +55,11 @@ export function soulCommentsPath(handle: string, slug: string): Route {
   return `/souls/${handle}/${slug}/comments` as Route
 }
 
+/** Soul showcases page (all tweet showcases) */
+export function soulShowcasesPath(handle: string, slug: string): Route {
+  return `/souls/${handle}/${slug}/showcases` as Route
+}
+
 /**
  * Resolve handle for a soul (owner wins when present). Use this everywhere you need a soul URL.
  */

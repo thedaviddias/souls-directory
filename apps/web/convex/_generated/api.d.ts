@@ -21,6 +21,7 @@ import type * as migrations from "../migrations.js";
 import type * as reports from "../reports.js";
 import type * as search from "../search.js";
 import type * as seed from "../seed.js";
+import type * as showcases from "../showcases.js";
 import type * as soulActions from "../soulActions.js";
 import type * as souls from "../souls.js";
 import type * as tags from "../tags.js";
@@ -47,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   reports: typeof reports;
   search: typeof search;
   seed: typeof seed;
+  showcases: typeof showcases;
   soulActions: typeof soulActions;
   souls: typeof souls;
   tags: typeof tags;

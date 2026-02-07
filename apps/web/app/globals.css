@@ -276,3 +276,10 @@ input[type="search"]::-webkit-search-results-decoration {
     scroll-behavior: auto !important;
   }
 }
+
+/* react-tweet dark theme - match site grayscale palette */
+[data-theme="dark"] .react-tweet-theme {
+  --tweet-bg-color: var(--color-surface);
+  --tweet-border: 1px solid var(--color-border);
+  --tweet-font-color: var(--color-text);
+}

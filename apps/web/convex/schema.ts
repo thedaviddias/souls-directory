@@ -102,6 +102,7 @@ const souls = defineTable({
     versions: v.number(),
     comments: v.number(),
     views: v.number(),
+    showcases: v.optional(v.number()),
   }),
   // Featured/Trending
   featured: v.optional(v.boolean()),
@@ -240,6 +241,22 @@ const comments = defineTable({
   .index('by_user', ['userId'])
   .index('by_parent', ['parentCommentId'])
 
+// Showcases - tweet URLs submitted by users (screenshots of AI conversations with souls)
+const showcases = defineTable({
+  soulId: v.id('souls'),
+  userId: v.id('users'),
+  tweetId: v.string(),
+  tweetUrl: v.string(),
+  note: v.optional(v.string()),
+  softDeletedAt: v.optional(v.number()),
+  deletedBy: v.optional(v.id('users')),
+  createdAt: v.number(),
+})
+  .index('by_soul', ['soulId'])
+  .index('by_soul_created', ['soulId', 'createdAt'])
+  .index('by_user', ['userId'])
+  .index('by_soul_user', ['soulId', 'userId'])
+
 // Collections (folders) - NEW feature
 const collections = defineTable({
   slug: v.string(),
@@ -340,6 +357,7 @@ export default defineSchema({
   stars,
   upvotes,
   comments,
+  showcases,
   collections,
   collectionItems,
   downloads,
