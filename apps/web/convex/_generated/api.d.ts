@@ -16,6 +16,7 @@ import type * as crons from "../crons.js";
 import type * as debug from "../debug.js";
 import type * as http from "../http.js";
 import type * as lib_access from "../lib/access.js";
+import type * as lib_sanitizeSoulContent from "../lib/sanitizeSoulContent.js";
 import type * as migrations from "../migrations.js";
 import type * as reports from "../reports.js";
 import type * as search from "../search.js";
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   debug: typeof debug;
   http: typeof http;
   "lib/access": typeof lib_access;
+  "lib/sanitizeSoulContent": typeof lib_sanitizeSoulContent;
   migrations: typeof migrations;
   reports: typeof reports;
   search: typeof search;

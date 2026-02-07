@@ -9,6 +9,7 @@ import { ConvexError, v } from 'convex/values'
 import type { Doc, Id } from './_generated/dataModel'
 import { mutation, query } from './_generated/server'
 import { getAuthenticatedUser, getCurrentUser } from './lib/access'
+import { sanitizeSoulContent } from './lib/sanitizeSoulContent'
 
 // Upvote/un-upvote a soul
 export const toggleUpvote = mutation({
@@ -191,7 +192,7 @@ export const publish = mutation({
     changelog: v.optional(v.string()),
     source: v.optional(
       v.object({
-        kind: v.union(v.literal('upload'), v.literal('github')),
+        kind: v.union(v.literal('upload'), v.literal('github'), v.literal('paste')),
         url: v.optional(v.string()),
         repo: v.optional(v.string()),
         ref: v.optional(v.string()),
@@ -209,6 +210,13 @@ export const publish = mutation({
     if (!slug || !/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
       throw new ConvexError('Slug must be lowercase alphanumeric with dashes')
     }
+
+    const content = sanitizeSoulContent(args.content)
+    const encoder = new TextEncoder()
+    const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(content))
+    const fingerprint = Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('')
 
     const ownerHandle =
       (user.handle ?? user.githubHandle ?? (user as { name?: string }).name ?? 'user')
@@ -277,8 +285,8 @@ export const publish = mutation({
         soulId: existingSoul._id,
         version: newVersion,
         versionNumber: currentVersionNumber + 1,
-        content: args.content,
-        fingerprint: args.sha256,
+        content,
+        fingerprint,
         changelog: args.changelog?.trim() || 'Updated content',
         changelogSource: args.changelog ? 'user' : 'auto',
         source: args.source,
@@ -324,8 +332,8 @@ export const publish = mutation({
       soulId,
       version,
       versionNumber: 1,
-      content: args.content,
-      fingerprint: args.sha256,
+      content,
+      fingerprint,
       changelog: args.changelog?.trim() || 'Initial version',
       changelogSource: args.changelog ? 'user' : 'auto',
       source: args.source,

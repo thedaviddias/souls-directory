@@ -73,7 +73,7 @@ export interface UseFileUploadReturn {
  * 3. Effect reads the first .md file → `content` state updates
  * 4. `sourceValidation` memo checks if ready to proceed
  */
-export function useFileUpload(sourceType: 'file' | 'github'): UseFileUploadReturn {
+export function useFileUpload(sourceType: 'file' | 'github' | 'paste'): UseFileUploadReturn {
   // -------------------------------------------------------------------------
   // Core state
   // -------------------------------------------------------------------------
@@ -241,10 +241,15 @@ export function useFileUpload(sourceType: 'file' | 'github'): UseFileUploadRetur
   const sourceValidation = useMemo<SourceValidation>(() => {
     const issues: string[] = []
 
-    // Only validate when in 'file' mode
-    if (sourceType !== 'file') {
+    if (sourceType === 'paste') {
       return { issues: [], ready: content.length > 0 }
     }
+
+    if (sourceType === 'github') {
+      return { issues: [], ready: content.length > 0 }
+    }
+
+    // 'file' mode
 
     // Check: at least one file
     if (files.length === 0) {

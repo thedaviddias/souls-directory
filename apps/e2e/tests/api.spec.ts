@@ -33,7 +33,7 @@ test.describe('API Endpoints', () => {
 
   test('GET /api/souls/[slug] returns single soul', async ({ request }) => {
     const response = await request.get('/api/souls/stark')
-    // May return 404 if Supabase not configured, which is fine
+    // May return 404 if soul not found
     expect([200, 404]).toContain(response.status())
 
     if (response.ok()) {
@@ -50,7 +50,7 @@ test.describe('API Endpoints', () => {
 
   test('GET /api/souls/[slug]/raw returns markdown', async ({ request }) => {
     const response = await request.get('/api/souls/stark/raw')
-    // May return 404 if Supabase not configured
+    // May return 404 if soul not found
     expect([200, 404]).toContain(response.status())
 
     if (response.ok()) {

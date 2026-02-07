@@ -4,6 +4,7 @@ import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { Button } from '@/components/ui/button'
 import { CategorySelect } from '@/components/upload/category-select'
+import { MarkdownEditor } from '@/components/upload/markdown-editor'
 import { ReviewStep } from '@/components/upload/review-step'
 import { TagInput } from '@/components/upload/tag-input'
 import type { Id } from '@/convex/_generated/dataModel'
@@ -26,6 +27,7 @@ import {
   Check,
   CheckCircle,
   ChevronDown,
+  Clipboard,
   ExternalLink,
   FileText,
   Github,
@@ -41,7 +43,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 // Constants
 // =============================================================================
 
-type SourceType = 'file' | 'github'
+type SourceType = 'file' | 'github' | 'paste'
 type VersionBump = 'major' | 'minor' | 'patch'
 
 const inputClasses =
@@ -131,9 +133,11 @@ export function UploadContent() {
           ? true
           : isForkMode && fileUpload.content.length > 0
             ? true
-            : sourceType === 'file'
-              ? fileUpload.sourceValidation.ready
-              : !!githubImport.githubSource && fileUpload.content.length > 0,
+            : sourceType === 'paste'
+              ? fileUpload.content.trim().length > 0
+              : sourceType === 'file'
+                ? fileUpload.sourceValidation.ready
+                : !!githubImport.githubSource && fileUpload.content.length > 0,
       review: fileUpload.content.length > 0,
       metadata: soulMetadata.metadataValidation.ready && !metadataOnlyBlocked,
       publish: true,
@@ -145,7 +149,7 @@ export function UploadContent() {
     sourceType,
     fileUpload.files.length,
     fileUpload.sourceValidation.ready,
-    fileUpload.content.length,
+    fileUpload.content,
     githubImport.githubSource,
     soulMetadata.metadataValidation.ready,
   ])
@@ -316,6 +320,8 @@ export function UploadContent() {
           path: gs.path || '',
           importedAt: Date.now(),
         }
+      } else if (sourceType === 'paste') {
+        publishArgs.source = { kind: 'paste' }
       } else {
         publishArgs.source = { kind: 'upload' }
       }
@@ -567,7 +573,19 @@ export function UploadContent() {
                     <span className="text-text-secondary">{forkSoulData.soul.name}</span>
                   </p>
                 )}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setSourceType('paste')}
+                    className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
+                      sourceType === 'paste'
+                        ? 'border-text bg-text/5'
+                        : 'border-border hover:border-text-muted'
+                    }`}
+                  >
+                    <Clipboard className="w-5 h-5 text-text-secondary" />
+                    <span className="text-sm text-text">Paste or type</span>
+                  </button>
                   <button
                     type="button"
                     onClick={() => setSourceType('file')}
@@ -594,6 +612,39 @@ export function UploadContent() {
                   </button>
                 </div>
               </section>
+
+              {/* Paste / type */}
+              {sourceType === 'paste' && (
+                <section className="bg-surface border border-border rounded-lg p-5">
+                  <h2 className="text-sm font-medium text-text mb-4">Paste or type</h2>
+                  <p className="text-xs text-text-muted mb-4">
+                    Paste or type your SOUL.md content below. Only plain text and markdown are
+                    stored.
+                  </p>
+                  <div className="rounded-lg border border-border overflow-hidden">
+                    <MarkdownEditor
+                      value={fileUpload.content}
+                      onChange={fileUpload.setContent}
+                      placeholder="Paste or type markdown..."
+                      aria-label="Soul content"
+                      minHeight="min-h-128"
+                      maxHeight="max-h-192"
+                    />
+                  </div>
+                  {fileUpload.content.length > 0 && (
+                    <div className="mt-3 flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => fileUpload.setContent('')}
+                        className="text-xs text-text-secondary hover:text-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text focus-visible:ring-offset-2 focus-visible:ring-offset-bg rounded"
+                        aria-label="Clear pasted content"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  )}
+                </section>
+              )}
 
               {/* File Upload */}
               {sourceType === 'file' && (
@@ -780,7 +831,9 @@ export function UploadContent() {
               sourceType={sourceType}
               githubSource={githubImport.githubSource}
               fileLabel={
-                fileUpload.markdownFiles[fileUpload.currentFileIndex]?.path || 'Uploaded file'
+                sourceType === 'paste'
+                  ? 'Paste / Type'
+                  : fileUpload.markdownFiles[fileUpload.currentFileIndex]?.path || 'Uploaded file'
               }
             />
           )}
@@ -1182,7 +1235,11 @@ export function UploadContent() {
                 <div className="flex justify-between text-sm">
                   <dt className="text-text-muted">Source</dt>
                   <dd className="text-text-secondary">
-                    {sourceType === 'github' ? 'GitHub Import' : 'File Upload'}
+                    {sourceType === 'github'
+                      ? 'GitHub Import'
+                      : sourceType === 'paste'
+                        ? 'Paste / Type'
+                        : 'File Upload'}
                   </dd>
                 </div>
                 <div className="flex justify-between text-sm">

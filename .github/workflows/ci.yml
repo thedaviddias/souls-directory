@@ -13,6 +13,7 @@ concurrency:
 permissions:
   contents: read
   pull-requests: read
+  statuses: write  # required for vercel/repository-dispatch status action to post commit status
 
 jobs:
   ci:
@@ -47,7 +48,7 @@ jobs:
         if: always()
         uses: vercel/repository-dispatch/actions/status@v1
         with:
-          name: Vercel - souls-directory: lint
+          name: "Vercel - souls-directory: lint"
 
       - name: Save Turbo cache
         uses: actions/cache@v4
