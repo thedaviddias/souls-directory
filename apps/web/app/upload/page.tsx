@@ -10,6 +10,7 @@
 
 import { UploadContent } from '@/components/upload/upload-content'
 import { createAuthPageMetadata } from '@/lib/seo'
+import { Loader2 } from 'lucide-react'
 import { Suspense } from 'react'
 
 export const metadata = createAuthPageMetadata(
@@ -19,7 +20,14 @@ export const metadata = createAuthPageMetadata(
 
 export default function UploadPage() {
   return (
-    <Suspense>
+    <Suspense
+      fallback={
+        <div className="flex flex-1 items-center justify-center flex-col gap-3">
+          <h1 className="text-xl font-medium text-text">Upload Soul</h1>
+          <Loader2 className="w-5 h-5 animate-spin text-text-secondary" />
+        </div>
+      }
+    >
       <UploadContent />
     </Suspense>
   )

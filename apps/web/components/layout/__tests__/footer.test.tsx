@@ -51,4 +51,17 @@ describe('Footer', () => {
     expect(screen.getByRole('link', { name: 'David Dias' })).toBeInTheDocument()
     expect(screen.getByText(/Open source/)).toBeInTheDocument()
   })
+
+  it('renders other projects links with correct href and target _blank', () => {
+    render(<Footer />)
+    const nav = screen.getByRole('navigation', { name: 'Other open-source projects' })
+    expect(nav).toBeInTheDocument()
+    const frontendchecklist = screen.getByRole('link', { name: 'frontendchecklist.io' })
+    expect(frontendchecklist).toHaveAttribute('href', 'https://frontendchecklist.io')
+    expect(frontendchecklist).toHaveAttribute('target', '_blank')
+    expect(frontendchecklist).toHaveAttribute('rel', 'noopener noreferrer')
+    const goshuin = screen.getByRole('link', { name: 'goshuin.com' })
+    expect(goshuin).toHaveAttribute('href', 'https://goshuin.com')
+    expect(goshuin).toHaveAttribute('target', '_blank')
+  })
 })

@@ -13,9 +13,10 @@ export default function robots(): MetadataRoute.Robots {
 
   return {
     rules: [
+      // Single User-agent: * block so all crawlers parse allow/disallow correctly (RFC 9309: longest match wins)
       {
         userAgent: '*',
-        allow: '/',
+        allow: ['/', '/api/souls/', '/api/og/'],
         disallow: [
           '/api/',
           '/dashboard/',
@@ -25,16 +26,6 @@ export default function robots(): MetadataRoute.Robots {
           '/_next/',
           '/private/',
         ],
-      },
-      // Allow public soul API (raw SOUL.md fetch) for agents and crawlers
-      {
-        userAgent: '*',
-        allow: ['/api/souls/'],
-      },
-      // Allow specific API routes for OpenGraph
-      {
-        userAgent: '*',
-        allow: ['/api/og/'],
       },
       // Block AI training crawlers (opt-out of model training)
       // These bots collect data for training AI models

@@ -7,6 +7,7 @@
 
 import { LoginContent } from '@/components/auth/login-content'
 import { createAuthPageMetadata } from '@/lib/seo'
+import { Suspense } from 'react'
 
 export const metadata = createAuthPageMetadata(
   'Sign In',
@@ -14,5 +15,15 @@ export const metadata = createAuthPageMetadata(
 )
 
 export default function LoginPage() {
-  return <LoginContent />
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-1 items-center justify-center">
+          <h1 className="text-lg font-medium text-text">Sign in</h1>
+        </div>
+      }
+    >
+      <LoginContent />
+    </Suspense>
+  )
 }

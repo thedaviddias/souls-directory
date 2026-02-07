@@ -49,6 +49,16 @@ const communityLinks: FooterLink[] = [
   { href: EXTERNAL_LINKS.linkedin, label: 'LinkedIn', external: true },
 ]
 
+/** Other open-source projects by the same author (name + URL). */
+const otherProjectsLinks: { name: string; href: string }[] = [
+  { name: 'frontendchecklist.io', href: 'https://frontendchecklist.io' },
+  { name: 'uxpatterns.dev', href: 'https://uxpatterns.dev' },
+  { name: 'llmstxthub.com', href: 'https://llmstxthub.com' },
+  { name: 'daviddias.digital', href: 'https://daviddias.digital' },
+  { name: 'goshuin.com', href: 'https://goshuin.com' },
+  { name: 'goshuinatlas.com', href: 'https://goshuinatlas.com' },
+]
+
 export function Footer() {
   const collectionsEnabled = useCollectionsEnabled()
   const footerSections: { title: string; links: FooterLink[] }[] = [
@@ -121,6 +131,29 @@ export function Footer() {
             </div>
           ))}
         </div>
+
+        {/* Other open-source projects */}
+        <nav className="border-t border-border py-6" aria-label="Other open-source projects">
+          <ul className="flex flex-wrap items-center justify-end gap-x-1 gap-y-1 text-xs text-text-secondary">
+            {otherProjectsLinks.map((project, index) => (
+              <li key={project.href} className="inline-flex items-center gap-x-1">
+                {index > 0 && (
+                  <span className="text-text-muted" aria-hidden="true">
+                    ·
+                  </span>
+                )}
+                <a
+                  href={project.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-text transition-colors"
+                >
+                  {project.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         {/* Bottom bar */}
         <div className="pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
