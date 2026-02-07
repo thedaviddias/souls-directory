@@ -163,10 +163,10 @@ const soulVersions = defineTable({
       metadata: v.optional(v.any()),
     })
   ),
-  // Source - for tracking where the content came from (upload vs GitHub import)
+  // Source - for tracking where the content came from (upload, GitHub import, or paste)
   source: v.optional(
     v.object({
-      kind: v.union(v.literal('upload'), v.literal('github')),
+      kind: v.union(v.literal('upload'), v.literal('github'), v.literal('paste')),
       // GitHub-specific fields
       url: v.optional(v.string()),
       repo: v.optional(v.string()),

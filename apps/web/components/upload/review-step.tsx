@@ -1,5 +1,6 @@
 'use client'
 
+import { MarkdownEditor } from '@/components/upload/markdown-editor'
 import { ExternalLink, FileText, GitFork, Pencil } from 'lucide-react'
 import { useCallback, useState } from 'react'
 
@@ -25,8 +26,8 @@ interface ReviewStepProps {
   isForkMode: boolean
   /** Name of the soul being forked (for attribution) */
   forkSourceName?: string
-  /** Source type (file upload vs GitHub import) */
-  sourceType: 'file' | 'github'
+  /** Source type (file upload, GitHub import, or paste) */
+  sourceType: 'file' | 'github' | 'paste'
   /** GitHub source metadata (when imported from GitHub) */
   githubSource?: GitHubSource | null
   /** Current file label (filename or path) */
@@ -55,7 +56,9 @@ export function ReviewStep({
   const displayLabel =
     sourceType === 'github' && githubSource
       ? `${githubSource.owner}/${githubSource.repo}`
-      : fileLabel || 'Uploaded file'
+      : sourceType === 'paste'
+        ? fileLabel || 'Paste / Type'
+        : fileLabel || 'Uploaded file'
 
   const subtitle = isEditing
     ? `${content.length.toLocaleString()} characters \u00b7 Editing`
@@ -109,16 +112,16 @@ export function ReviewStep({
         </div>
       </div>
 
-      {/* Content: editable textarea or read-only preview */}
+      {/* Content: editable editor (paste-as-plain-text) or read-only preview */}
       {isEditing ? (
         <div className="rounded-lg border border-border overflow-hidden">
-          <textarea
+          <MarkdownEditor
             value={content}
-            onChange={(e) => onContentChange(e.target.value)}
-            className="w-full min-h-128 max-h-192 p-4 text-sm font-mono bg-surface text-text-secondary resize-y focus:outline-none focus:ring-1 focus:ring-text-secondary"
-            spellCheck={false}
-            data-testid="review-editor"
+            onChange={onContentChange}
             aria-label="Soul content editor"
+            minHeight="min-h-128"
+            maxHeight="max-h-192"
+            data-testid="review-editor"
           />
         </div>
       ) : (

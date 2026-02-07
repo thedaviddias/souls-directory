@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useFileUpload } from '../use-file-upload'
 
-function TestWrapper({ sourceType }: { sourceType: 'file' | 'github' }) {
+function TestWrapper({ sourceType }: { sourceType: 'file' | 'github' | 'paste' }) {
   const {
     content,
     handleFileSelect,
@@ -95,6 +95,22 @@ describe('useFileUpload', () => {
     })
     expect(screen.getByTestId('content')).toHaveTextContent('github-content')
     expect(screen.getByTestId('ready')).toHaveTextContent('true')
+  })
+
+  it('paste mode: sourceValidation.ready is true when content is non-empty', () => {
+    render(<TestWrapper sourceType="paste" />)
+    expect(screen.getByTestId('ready')).toHaveTextContent('false')
+    act(() => {
+      screen.getByText('Set content').click()
+    })
+    expect(screen.getByTestId('content')).toHaveTextContent('github-content')
+    expect(screen.getByTestId('ready')).toHaveTextContent('true')
+  })
+
+  it('paste mode: sourceValidation.ready is false when content is empty', () => {
+    render(<TestWrapper sourceType="paste" />)
+    expect(screen.getByTestId('ready')).toHaveTextContent('false')
+    expect(screen.getByTestId('content')).toHaveTextContent('')
   })
 
   it('handleFileSelect adds files and reads markdown content', async () => {

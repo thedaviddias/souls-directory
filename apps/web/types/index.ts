@@ -48,15 +48,14 @@ export interface SoulTag {
 }
 
 /**
- * Type for Supabase join results when fetching souls with tags
- * Represents the structure: soul_tags(tag:tags(*))
+ * Type for join results when fetching souls with tags (e.g. soul_tags -> tag).
  */
 export interface SoulTagJoinResult {
   tag: Tag | null
 }
 
 /**
- * Raw soul data from Supabase with joined tag results
+ * Soul data with joined tag results (nested tag objects).
  */
 export interface SoulWithJoinedTags extends Omit<Soul, 'tags'> {
   tags?: SoulTagJoinResult[] | null

@@ -11,7 +11,6 @@
 'use client'
 
 import { useCollectionsEnabled } from '@/components/flags-provider'
-import { useEffect, useRef, useState } from 'react'
 import { SearchAutocomplete } from '@/components/search/search-autocomplete'
 import { GithubStars } from '@/components/shared/github-stars'
 import { Button } from '@/components/ui/button'
@@ -27,6 +26,7 @@ import { useAuthStatus } from '@/hooks/use-auth-status'
 import { LayoutDashboard, Loader2, LogOut, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 
 import { ROUTES, profilePath } from '@/lib/routes'
 import { cn } from '@/lib/utils'

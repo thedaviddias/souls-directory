@@ -2,11 +2,47 @@
  * Custom MDX component overrides for guide articles.
  * Headings get id slugs and anchor links; internal links use Next.js Link.
  * Uses shared slugify from lib/slugify so IDs match extractHeadings (TOC).
+ * Internal hrefs are mapped to route helpers from lib/routes (no string cast).
  */
 
+import { ROUTES, collectionPath, guidePath, profilePath, soulPath } from '@/lib/routes'
 import { slugify } from '@/lib/slugify'
 import Link from 'next/link'
 import type { ComponentType, ReactNode } from 'react'
+
+/** Map internal pathname to Route using route helpers. Returns null if not a known route. */
+function internalHrefToRoute(href: string): ReturnType<typeof guidePath> | null {
+  const pathname = href.split('?')[0] || '/'
+  const staticRoutes: Record<string, ReturnType<typeof guidePath>> = {
+    [ROUTES.home]: ROUTES.home,
+    [ROUTES.about]: ROUTES.about,
+    [ROUTES.faq]: ROUTES.faq,
+    [ROUTES.guides]: ROUTES.guides,
+    [ROUTES.browse]: ROUTES.browse,
+    [ROUTES.dashboard]: ROUTES.dashboard,
+    [ROUTES.login]: ROUTES.login,
+    [ROUTES.upload]: ROUTES.upload,
+    [ROUTES.settings]: ROUTES.settings,
+    [ROUTES.terms]: ROUTES.terms,
+    [ROUTES.privacy]: ROUTES.privacy,
+    [ROUTES.gettingStarted]: ROUTES.gettingStarted,
+    [ROUTES.quiz]: ROUTES.quiz,
+    [ROUTES.souls]: ROUTES.souls,
+    [ROUTES.collections]: ROUTES.collections,
+    [ROUTES.members]: ROUTES.members,
+    [ROUTES.feed]: ROUTES.feed,
+  }
+  if (staticRoutes[pathname]) return staticRoutes[pathname]
+  const guidesMatch = pathname.match(/^\/guides\/([^/]+)$/)
+  if (guidesMatch) return guidePath(guidesMatch[1])
+  const soulsMatch = pathname.match(/^\/souls\/([^/]+)\/([^/]+)$/)
+  if (soulsMatch) return soulPath(soulsMatch[1], soulsMatch[2])
+  const membersMatch = pathname.match(/^\/members\/([^/]+)$/)
+  if (membersMatch) return profilePath(membersMatch[1])
+  const collectionsMatch = pathname.match(/^\/collections\/([^/]+)$/)
+  if (collectionsMatch) return collectionPath(collectionsMatch[1])
+  return null
+}
 
 function getHeadingText(children: ReactNode): string {
   if (typeof children === 'string') return children
@@ -57,11 +93,11 @@ export const mdxGuideComponents: MDXGuideComponents = {
     )
   },
   a: ({ href, children, ...props }: { href?: string; children?: ReactNode }) => {
-    const isInternal = href?.startsWith('/')
-    if (isInternal && href) {
+    const route = href ? internalHrefToRoute(href) : null
+    if (route) {
       return (
         <Link
-          href={href}
+          href={route}
           className="text-text underline underline-offset-4 decoration-dashed hover:decoration-solid"
           {...props}
         >

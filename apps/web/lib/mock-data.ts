@@ -1,6 +1,6 @@
 /**
- * Mock data for static development when Supabase is unavailable
- * Remove or disable in production
+ * Mock data for static development when backend is unavailable.
+ * Production uses Convex.
  */
 
 import type { Category, Soul, Tag } from '@/types'

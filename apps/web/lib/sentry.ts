@@ -13,6 +13,8 @@ import type { BrowserOptions, NodeOptions } from '@sentry/nextjs'
 // Environment detection
 const isDevelopment = process.env.NODE_ENV === 'development'
 const isProduction = process.env.NODE_ENV === 'production'
+// Set SENTRY_ENABLED_FOR_TEST=1 in .env.local to send events from dev (e.g. to verify the test route); remove after testing
+const sentryEnabledForTest = process.env.SENTRY_ENABLED_FOR_TEST === '1'
 
 /**
  * Common errors that are safe to ignore (browser quirks, network issues, user cancellations)
@@ -81,11 +83,16 @@ export const DENY_URLS: (string | RegExp)[] = [
 export const sharedSentryOptions = {
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-  // Disable Sentry in development to avoid noise
-  enabled: isProduction && !!process.env.NEXT_PUBLIC_SENTRY_DSN,
+  // Production + DSN, or dev with SENTRY_ENABLED_FOR_TEST=1 (for one-off local testing)
+  enabled: !!process.env.NEXT_PUBLIC_SENTRY_DSN && (isProduction || sentryEnabledForTest),
 
-  // Environment tag for filtering in dashboard
-  environment: process.env.NODE_ENV || 'development',
+  // Environment tag: use Vercel's names so events show under vercel-production / vercel-preview in Sentry
+  environment:
+    process.env.VERCEL_ENV === 'production'
+      ? 'vercel-production'
+      : process.env.VERCEL_ENV === 'preview'
+        ? 'vercel-preview'
+        : process.env.NODE_ENV || 'development',
 
   // Release tracking (auto-populated by Vercel if available)
   release: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
@@ -94,8 +101,8 @@ export const sharedSentryOptions = {
   // FREE TIER OPTIMIZATION
   // ============================================
 
-  // Sample 25% of errors to preserve quota (5K/month limit)
-  sampleRate: 0.25,
+  // When testing from dev, send 100% so the test route always reaches Sentry; otherwise 25%
+  sampleRate: sentryEnabledForTest ? 1 : 0.25,
 
   // Sample only 1% of transactions for performance monitoring (10K/month limit)
   tracesSampleRate: 0.01,
@@ -123,8 +130,8 @@ export const sharedSentryOptions = {
   beforeSend(event, hint) {
     const error = hint?.originalException
 
-    // Don't send errors in development
-    if (isDevelopment) {
+    // Don't send errors in development (unless SENTRY_ENABLED_FOR_TEST=1 for one-off verification)
+    if (isDevelopment && !sentryEnabledForTest) {
       return null
     }
 
