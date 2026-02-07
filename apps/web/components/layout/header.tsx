@@ -11,6 +11,7 @@
 'use client'
 
 import { useCollectionsEnabled } from '@/components/flags-provider'
+import { useEffect, useRef, useState } from 'react'
 import { SearchAutocomplete } from '@/components/search/search-autocomplete'
 import { GithubStars } from '@/components/shared/github-stars'
 import { Button } from '@/components/ui/button'
@@ -42,6 +43,9 @@ const allNavItems: NavItem[] = [
   { href: ROUTES.guides, label: 'Guides' },
   { href: ROUTES.members, label: 'Members' },
 ]
+
+const SCROLL_TOP_THRESHOLD = 64
+const SCROLL_DELTA_THRESHOLD = 10
 
 // User avatar component with fallback
 function UserAvatar({
@@ -85,6 +89,41 @@ export function Header() {
 
   const isHomepage = pathname === '/'
 
+  const [headerVisible, setHeaderVisible] = useState(true)
+  const lastScrollY = useRef(0)
+  const rafId = useRef<number | null>(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY
+      const delta = scrollY - lastScrollY.current
+
+      if (scrollY < SCROLL_TOP_THRESHOLD) {
+        setHeaderVisible(true)
+      } else if (delta > SCROLL_DELTA_THRESHOLD) {
+        setHeaderVisible(false)
+      } else if (delta < -SCROLL_DELTA_THRESHOLD) {
+        setHeaderVisible(true)
+      }
+
+      lastScrollY.current = scrollY
+    }
+
+    const onScroll = () => {
+      if (rafId.current !== null) return
+      rafId.current = requestAnimationFrame(() => {
+        handleScroll()
+        rafId.current = null
+      })
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (rafId.current !== null) cancelAnimationFrame(rafId.current)
+    }
+  }, [])
+
   const handleSignOut = async () => {
     await signOut()
     router.push(ROUTES.home)
@@ -100,7 +139,13 @@ export function Header() {
         Skip to main content
       </a>
 
-      <header className="sticky top-0 z-50 backdrop-blur-lg bg-bg/80 border-b border-border/50">
+      <header
+        className={cn(
+          'sticky top-0 z-50 backdrop-blur-lg bg-bg/80 border-b border-border/50',
+          'transition-[transform] duration-200 ease-out',
+          !headerVisible && '-translate-y-full'
+        )}
+      >
         <div className="w-full px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           {/* Logo - Monospace text only */}
           <Link
