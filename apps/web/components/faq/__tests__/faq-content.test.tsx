@@ -30,6 +30,18 @@ vi.mock('@/components/layout/page-container', () => ({
 import { faqCategories, faqItems } from '@/lib/faq-data'
 import { FAQContent } from '../faq-content'
 
+/** Find the accordion button for a given question text and assert it exists. */
+function getQuestionButton(text: string): HTMLButtonElement {
+  const el = screen.getByText(text).closest('button')
+  expect(el).not.toBeNull()
+  return el as HTMLButtonElement
+}
+
+/** Check whether the chevron inside a button is rotated (answer expanded). */
+function isExpanded(button: HTMLButtonElement): boolean {
+  return button.querySelector('[class*="rotate-180"]') !== null
+}
+
 describe('FAQContent', () => {
   // ---------------------------------------------------------------------------
   // Rendering
@@ -71,42 +83,39 @@ describe('FAQContent', () => {
 
   it('clicking a question toggles its answer open', () => {
     render(<FAQContent />)
-    const firstQuestion = faqItems[0].question
-    const questionButton = screen.getByText(firstQuestion).closest('button')!
-    fireEvent.click(questionButton)
+    const button = getQuestionButton(faqItems[0].question)
+    fireEvent.click(button)
 
-    // After clicking, the parent grid should have grid-rows-[1fr] (expanded)
-    // We verify by checking the chevron has rotate-180 class
-    const chevronContainer = questionButton.querySelector('[class*="rotate-180"]')
-    expect(chevronContainer).not.toBeNull()
+    // After clicking, the chevron should be rotated (expanded)
+    expect(isExpanded(button)).toBe(true)
   })
 
   it('clicking the same question again closes it', () => {
     render(<FAQContent />)
-    const questionButton = screen.getByText(faqItems[0].question).closest('button')!
+    const button = getQuestionButton(faqItems[0].question)
 
     // Open
-    fireEvent.click(questionButton)
-    expect(questionButton.querySelector('[class*="rotate-180"]')).not.toBeNull()
+    fireEvent.click(button)
+    expect(isExpanded(button)).toBe(true)
 
     // Close
-    fireEvent.click(questionButton)
-    expect(questionButton.querySelector('[class*="rotate-180"]')).toBeNull()
+    fireEvent.click(button)
+    expect(isExpanded(button)).toBe(false)
   })
 
   it('opening a different question closes the previously open one', () => {
     render(<FAQContent />)
-    const firstButton = screen.getByText(faqItems[0].question).closest('button')!
-    const secondButton = screen.getByText(faqItems[1].question).closest('button')!
+    const firstButton = getQuestionButton(faqItems[0].question)
+    const secondButton = getQuestionButton(faqItems[1].question)
 
     // Open first
     fireEvent.click(firstButton)
-    expect(firstButton.querySelector('[class*="rotate-180"]')).not.toBeNull()
+    expect(isExpanded(firstButton)).toBe(true)
 
     // Open second — first should close
     fireEvent.click(secondButton)
-    expect(secondButton.querySelector('[class*="rotate-180"]')).not.toBeNull()
-    expect(firstButton.querySelector('[class*="rotate-180"]')).toBeNull()
+    expect(isExpanded(secondButton)).toBe(true)
+    expect(isExpanded(firstButton)).toBe(false)
   })
 
   // ---------------------------------------------------------------------------

@@ -1,14 +1,17 @@
+import type { Id } from '@/convex/_generated/dataModel'
 import { fireEvent, render, screen } from '@testing-library/react'
 import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { TagInput } from '../tag-input'
 
+const mockId = (id: string) => id as unknown as Id<'tags'>
+
 const mockSuggestions = [
-  { _id: 't1' as any, name: 'productivity' },
-  { _id: 't2' as any, name: 'coding' },
-  { _id: 't3' as any, name: 'creative' },
-  { _id: 't4' as any, name: 'communication' },
-  { _id: 't5' as any, name: 'research' },
+  { _id: mockId('t1'), name: 'productivity' },
+  { _id: mockId('t2'), name: 'coding' },
+  { _id: mockId('t3'), name: 'creative' },
+  { _id: mockId('t4'), name: 'communication' },
+  { _id: mockId('t5'), name: 'research' },
 ]
 
 const defaultProps = {

@@ -1,0 +1,41 @@
+version: 2
+
+registries:
+  npm-npmjs:
+    type: npm-registry
+    url: https://registry.npmjs.org
+    replaces-base: true
+
+updates:
+  # npm dependencies (pnpm workspace root)
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      prod-deps:
+        dependency-type: production
+        update-types: [minor, patch]
+      dev-deps:
+        dependency-type: development
+        update-types: [minor, patch]
+    open-pull-requests-limit: 5
+    registries:
+      - npm-npmjs
+    labels:
+      - dependencies
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns: ["*"]
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - ci
