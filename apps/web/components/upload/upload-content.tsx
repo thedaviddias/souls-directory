@@ -4,6 +4,7 @@ import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { Button } from '@/components/ui/button'
 import { CategorySelect } from '@/components/upload/category-select'
+import { ReviewStep } from '@/components/upload/review-step'
 import { TagInput } from '@/components/upload/tag-input'
 import type { Id } from '@/convex/_generated/dataModel'
 import { useAnalytics } from '@/hooks/use-analytics'
@@ -128,15 +129,18 @@ export function UploadContent() {
       source:
         isEditMode && fileUpload.content.length > 0
           ? true
-          : sourceType === 'file'
-            ? fileUpload.sourceValidation.ready
-            : !!githubImport.githubSource && fileUpload.content.length > 0,
+          : isForkMode && fileUpload.content.length > 0
+            ? true
+            : sourceType === 'file'
+              ? fileUpload.sourceValidation.ready
+              : !!githubImport.githubSource && fileUpload.content.length > 0,
       review: fileUpload.content.length > 0,
       metadata: soulMetadata.metadataValidation.ready && !metadataOnlyBlocked,
       publish: true,
     }
   }, [
     isEditMode,
+    isForkMode,
     metadataOnly,
     sourceType,
     fileUpload.files.length,
@@ -146,7 +150,10 @@ export function UploadContent() {
     soulMetadata.metadataValidation.ready,
   ])
 
-  const wizard = useWizardNavigation(wizardReadiness, isEditMode ? 'metadata' : undefined)
+  const wizard = useWizardNavigation(
+    wizardReadiness,
+    isEditMode ? 'metadata' : isForkMode ? 'review' : undefined
+  )
 
   // ==========================================================================
   // Auth redirect
@@ -765,55 +772,17 @@ export function UploadContent() {
           {/* STEP 2: Review */}
           {/* ============================================================ */}
           {currentStep === 'review' && (
-            <section className="space-y-4">
-              {/* File info bar */}
-              <div className="flex items-center justify-between bg-surface border border-border rounded-lg px-4 py-3">
-                <div className="flex items-center gap-3">
-                  <FileText className="w-4 h-4 text-text-muted" />
-                  <div>
-                    <p className="text-sm text-text font-medium">
-                      {sourceType === 'github' && githubImport.githubSource
-                        ? `${githubImport.githubSource.owner}/${githubImport.githubSource.repo}`
-                        : fileUpload.markdownFiles[fileUpload.currentFileIndex]?.path ||
-                          'Uploaded file'}
-                    </p>
-                    <p className="text-xs text-text-muted">
-                      {content.length.toLocaleString()} characters &middot; Read-only preview
-                    </p>
-                  </div>
-                </div>
-                {sourceType === 'github' && githubImport.githubSource && (
-                  <a
-                    href={githubImport.githubSource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-text-secondary hover:text-text flex items-center gap-1 transition-colors"
-                  >
-                    View on GitHub
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
-              </div>
-
-              {/* Content preview */}
-              <div className="max-h-128 overflow-y-auto rounded-lg border border-border">
-                <div className="overflow-x-auto bg-surface">
-                  <pre className="p-4 text-sm font-mono">
-                    <code>
-                      {content.split('\n').map((line, i) => (
-                        // biome-ignore lint/suspicious/noArrayIndexKey: lines are static display content
-                        <div key={i} className="flex">
-                          <span className="select-none w-10 pr-4 text-right text-text-muted/40 text-xs leading-relaxed">
-                            {i + 1}
-                          </span>
-                          <span className="text-text-secondary leading-relaxed">{line || ' '}</span>
-                        </div>
-                      ))}
-                    </code>
-                  </pre>
-                </div>
-              </div>
-            </section>
+            <ReviewStep
+              content={content}
+              onContentChange={fileUpload.setContent}
+              isForkMode={isForkMode}
+              forkSourceName={forkSoulData?.soul?.name}
+              sourceType={sourceType}
+              githubSource={githubImport.githubSource}
+              fileLabel={
+                fileUpload.markdownFiles[fileUpload.currentFileIndex]?.path || 'Uploaded file'
+              }
+            />
           )}
 
           {/* ============================================================ */}
@@ -1235,7 +1204,8 @@ export function UploadContent() {
                   Back to Details
                 </Button>
               ) : currentStep !== 'source' &&
-                !(isEditMode && (currentStep === 'metadata' || currentStep === 'review')) ? (
+                !(isEditMode && (currentStep === 'metadata' || currentStep === 'review')) &&
+                !(isForkMode && currentStep === 'review') ? (
                 <Button type="button" variant="ghost" onClick={wizard.goBack}>
                   <ArrowLeft className="w-4 h-4" />
                   Back
