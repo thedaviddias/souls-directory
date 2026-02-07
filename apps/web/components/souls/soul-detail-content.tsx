@@ -579,7 +579,7 @@ export function SoulDetailContent({ data }: SoulDetailContentProps) {
 
         {/* Related souls */}
         {relatedSouls.length > 0 && (
-          <section>
+          <section className="mb-12">
             <SectionHeader variant="label" title="Related Souls" spacing="large" />
             <SoulCardGrid>
               {relatedSouls.map((s) => (
@@ -591,7 +591,7 @@ export function SoulDetailContent({ data }: SoulDetailContentProps) {
 
         {/* More from this author */}
         {authorSouls.length > 0 && owner && (
-          <section>
+          <section className="mb-12">
             <SectionHeader
               variant="label"
               title={`More from ${getUserDisplayName(owner)}`}
