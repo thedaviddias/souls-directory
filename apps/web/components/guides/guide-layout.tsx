@@ -12,9 +12,9 @@ interface GuideLayoutProps {
  */
 export function GuideLayout({ children, headings }: GuideLayoutProps) {
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <div className="flex flex-col lg:flex-row lg:gap-10 lg:items-start">
-        <article className="min-w-0 flex-1 max-w-prose prose-minimal">{children}</article>
+        <article className="min-w-0 flex-1 max-w-[70ch] prose-minimal">{children}</article>
         <TableOfContents headings={headings} className="lg:mt-0" />
       </div>
     </div>

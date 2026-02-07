@@ -17,10 +17,11 @@ vi.mock('next/link', () => ({
 describe('Footer', () => {
   it('renders brand and section titles', () => {
     render(<Footer />)
-    expect(screen.getByText('souls.directory')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'souls.directory' })).toHaveAttribute('href', '/')
     expect(screen.getByRole('heading', { name: 'Site footer', level: 2 })).toBeInTheDocument()
     expect(screen.getByText('Directory')).toBeInTheDocument()
-    expect(screen.getByText('Resources')).toBeInTheDocument()
+    expect(screen.getByText('Learn')).toBeInTheDocument()
+    expect(screen.getByText('Site')).toBeInTheDocument()
     expect(screen.getByText('Community')).toBeInTheDocument()
   })
 
@@ -30,6 +31,7 @@ describe('Footer', () => {
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
     expect(screen.getByRole('link', { name: 'FAQ' })).toHaveAttribute('href', '/faq')
     expect(screen.getByRole('link', { name: 'Submit Soul' })).toHaveAttribute('href', '/upload')
+    expect(screen.getByRole('link', { name: 'llms.txt' })).toHaveAttribute('href', '/llms.txt')
   })
 
   it('renders external links with target _blank and noopener noreferrer', () => {

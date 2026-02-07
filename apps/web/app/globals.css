@@ -204,6 +204,10 @@ input[type="search"]::-webkit-search-results-decoration {
   text-decoration-style: solid;
 }
 
+.prose-minimal a.anchor-link {
+  text-decoration: none;
+}
+
 .prose-minimal code {
   background: var(--color-surface);
   padding: 0.2em 0.4em;

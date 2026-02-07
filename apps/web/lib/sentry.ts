@@ -13,8 +13,6 @@ import type { BrowserOptions, NodeOptions } from '@sentry/nextjs'
 // Environment detection
 const isDevelopment = process.env.NODE_ENV === 'development'
 const isProduction = process.env.NODE_ENV === 'production'
-// Set SENTRY_ENABLED_FOR_TEST=1 in .env.local to send events from dev (e.g. to verify the test route); remove after testing
-const sentryEnabledForTest = process.env.SENTRY_ENABLED_FOR_TEST === '1'
 
 /**
  * Common errors that are safe to ignore (browser quirks, network issues, user cancellations)
@@ -83,8 +81,8 @@ export const DENY_URLS: (string | RegExp)[] = [
 export const sharedSentryOptions = {
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-  // Production + DSN, or dev with SENTRY_ENABLED_FOR_TEST=1 (for one-off local testing)
-  enabled: !!process.env.NEXT_PUBLIC_SENTRY_DSN && (isProduction || sentryEnabledForTest),
+  // Production only: enabled when DSN is set
+  enabled: !!process.env.NEXT_PUBLIC_SENTRY_DSN && isProduction,
 
   // Environment tag: use Vercel's names so events show under vercel-production / vercel-preview in Sentry
   environment:
@@ -101,8 +99,8 @@ export const sharedSentryOptions = {
   // FREE TIER OPTIMIZATION
   // ============================================
 
-  // When testing from dev, send 100% so the test route always reaches Sentry; otherwise 25%
-  sampleRate: sentryEnabledForTest ? 1 : 0.25,
+  // Send all errors in production (no sampling)
+  sampleRate: 1,
 
   // Sample only 1% of transactions for performance monitoring (10K/month limit)
   tracesSampleRate: 0.01,
@@ -115,6 +113,9 @@ export const sharedSentryOptions = {
 
   // Disable structured logs (uses quota)
   enableLogs: false,
+
+  // Optional: set SENTRY_DEBUG=1 to log to console why events are or aren't sent (troubleshooting)
+  debug: process.env.SENTRY_DEBUG === '1',
 
   // ============================================
   // ERROR FILTERING
@@ -130,8 +131,7 @@ export const sharedSentryOptions = {
   beforeSend(event, hint) {
     const error = hint?.originalException
 
-    // Don't send errors in development (unless SENTRY_ENABLED_FOR_TEST=1 for one-off verification)
-    if (isDevelopment && !sentryEnabledForTest) {
+    if (isDevelopment) {
       return null
     }
 

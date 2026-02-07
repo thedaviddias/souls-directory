@@ -126,8 +126,8 @@ const sentryConfig = {
     excludeReplayShadowDom: true,
   },
 
-  // Widens the scope of Sentry SDK's tunneling feature (helps bypass ad-blockers)
-  // tunnelRoute: '/monitoring-tunnel', // Uncomment to enable tunneling
+  // Tunnel: proxy Sentry events through our origin to bypass ad-blockers
+  tunnelRoute: '/monitoring-tunnel',
 
   // Automatically instrument React components for performance monitoring
   // This can add overhead, so it's disabled by default

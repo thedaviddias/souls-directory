@@ -12,6 +12,7 @@ import { PageContainer } from '@/components/layout/page-container'
 import { SectionHeader } from '@/components/marketing/section-header'
 import { CategoryBadge } from '@/components/shared/category-badge'
 import { ModelBadges } from '@/components/shared/model-badge'
+import { ShareMenuItems } from '@/components/shared/share-menu-items'
 import { SoulCard } from '@/components/souls/soul-card'
 import { SoulCardGrid } from '@/components/souls/soul-card-grid'
 import { SoulComments } from '@/components/souls/soul-comments'
@@ -47,10 +48,8 @@ import {
   Clipboard,
   Download,
   GitFork,
-  Link2,
   MoreHorizontal,
   Pencil,
-  Share2,
   Star,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -154,7 +153,6 @@ export function SoulDetailContent({ data }: SoulDetailContentProps) {
   // Local state for copy buttons
   const [copied, setCopied] = useState(false)
   const [copiedCurl, setCopiedCurl] = useState(false)
-  const [copiedLink, setCopiedLink] = useState(false)
 
   // Handle copy to clipboard
   const handleCopy = async () => {
@@ -193,38 +191,6 @@ export function SoulDetailContent({ data }: SoulDetailContentProps) {
     } catch (error) {
       logger.error('Soul download failed', error, { soulSlug: soul.slug })
       toast.error('Download failed')
-    }
-  }
-
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl)
-      setCopiedLink(true)
-      toast.success('Link copied')
-      setTimeout(() => setCopiedLink(false), 2000)
-    } catch (error) {
-      logger.error('Failed to copy link', error, { soulSlug: soul.slug })
-      toast.error('Failed to copy link')
-    }
-  }
-
-  const handleShare = async () => {
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({
-          title: soul.name,
-          text: soul.tagline,
-          url: shareUrl,
-        })
-        toast.success('Shared')
-      } catch (err) {
-        if ((err as Error).name !== 'AbortError') {
-          logger.error('Share failed', err, { soulSlug: soul.slug })
-          toast.error('Share failed')
-        }
-      }
-    } else {
-      await handleCopyLink()
     }
   }
 
@@ -418,36 +384,7 @@ export function SoulDetailContent({ data }: SoulDetailContentProps) {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleCopyLink} className="gap-2 cursor-pointer">
-                    {copiedLink ? (
-                      <Check className="w-4 h-4 text-emerald-500" aria-hidden />
-                    ) : (
-                      <Link2 className="w-4 h-4" aria-hidden />
-                    )}
-                    <span>{copiedLink ? 'Link copied' : 'Copy link'}</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleShare} className="gap-2 cursor-pointer">
-                    <Share2 className="w-4 h-4" aria-hidden />
-                    <span>Share via…</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a
-                      href={`https://x.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(`${soul.name} – ${soul.tagline}`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                      </svg>
-                      <span>Post on X</span>
-                    </a>
-                  </DropdownMenuItem>
+                  <ShareMenuItems title={soul.name} text={soul.tagline} shareUrl={shareUrl} />
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

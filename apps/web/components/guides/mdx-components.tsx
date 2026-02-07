@@ -63,7 +63,7 @@ export const mdxGuideComponents: MDXGuideComponents = {
     const id = slugify(text)
     return (
       <h2 id={id} className="text-lg font-medium text-text mb-3 mt-10 scroll-mt-24" {...props}>
-        <a href={`#${id}`} className="anchor-link group flex items-center gap-2">
+        <a href={`#${id}`} className="anchor-link no-underline group flex items-center gap-2">
           <span>{children}</span>
           <span
             className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity text-sm"
@@ -80,7 +80,7 @@ export const mdxGuideComponents: MDXGuideComponents = {
     const id = slugify(text)
     return (
       <h3 id={id} className="text-base font-medium text-text mb-2 mt-6 scroll-mt-24" {...props}>
-        <a href={`#${id}`} className="anchor-link group flex items-center gap-2">
+        <a href={`#${id}`} className="anchor-link no-underline group flex items-center gap-2">
           <span>{children}</span>
           <span
             className="text-text-muted opacity-0 group-hover:opacity-100 transition-opacity text-sm"

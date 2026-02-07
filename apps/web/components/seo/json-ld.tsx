@@ -85,6 +85,12 @@ export function WebSiteSchema() {
       name: 'OpenClaw',
       url: 'https://openclaw.ai',
       applicationCategory: 'AI Agent Platform',
+      operatingSystem: 'Web',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
     },
     potentialAction: {
       '@type': 'SearchAction',
@@ -364,6 +370,7 @@ interface ArticleSchemaProps {
   publishedAt: string
   updatedAt?: string
   authorName?: string
+  authorUrl?: string
   readingTime?: number
 }
 
@@ -374,6 +381,7 @@ export function ArticleSchema({
   publishedAt,
   updatedAt,
   authorName,
+  authorUrl,
   readingTime,
 }: ArticleSchemaProps) {
   const fullUrl = url.startsWith('http') ? url : `${SITE_CONFIG.url}${url}`
@@ -392,10 +400,14 @@ export function ArticleSchema({
     },
   }
   if (authorName) {
-    schema.author = {
+    const author: Record<string, unknown> = {
       '@type': 'Person',
       name: authorName,
     }
+    if (authorUrl) {
+      author.url = authorUrl.startsWith('http') ? authorUrl : `${SITE_CONFIG.url}${authorUrl}`
+    }
+    schema.author = author
   }
   if (readingTime !== undefined) {
     schema.timeRequired = `PT${readingTime}M`

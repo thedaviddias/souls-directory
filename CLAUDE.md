@@ -16,9 +16,7 @@
 
 ## Critical Rules
 
-### Database is Convex — NEVER use Supabase
-
-All data lives in Convex. The `supabase/` folder at root is legacy/unused.
+### Database is Convex
 
 - Queries: `useQuery(api.tableName.queryName)`
 - Mutations: `useMutation(api.tableName.mutationName)`
@@ -137,7 +135,6 @@ This runs **Biome** (lint + format with `--write`) then **TypeScript** (Turbo ty
 
 ## Common Pitfalls
 
-1. **Don't confuse Supabase with Convex** — there's a legacy `supabase/` folder but all data is in Convex
 2. **Don't add dependencies to useEffect** that cause cascading re-renders — especially in the upload hooks
 3. **Always test file upload after touching upload code** — FileReader callbacks are async and sensitive to component re-renders
 4. **Use `getAuthenticatedUser(ctx)` not `ctx.auth.getUserIdentity()`** for user lookups in Convex mutations

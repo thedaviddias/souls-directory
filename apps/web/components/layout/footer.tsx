@@ -29,10 +29,14 @@ const directoryLinks: FooterLink[] = [
   { href: soulsByCategoryPath('playful'), label: 'Playful' },
 ]
 
-const resourcesLinks: FooterLink[] = [
+const learnLinks: FooterLink[] = [
   { href: ROUTES.gettingStarted, label: 'Getting Started' },
   { href: ROUTES.quiz, label: 'Find Your Soul' },
   { href: ROUTES.guides, label: 'Guides' },
+  { href: '/llms.txt' as Route, label: 'llms.txt' },
+]
+
+const siteLinks: FooterLink[] = [
   { href: ROUTES.about, label: 'About' },
   { href: ROUTES.faq, label: 'FAQ' },
   { href: ROUTES.upload, label: 'Submit Soul' },
@@ -54,35 +58,37 @@ export function Footer() {
         (link) => link.href !== ROUTES.collections || collectionsEnabled
       ),
     },
-    { title: 'Resources', links: resourcesLinks },
+    { title: 'Learn', links: learnLinks },
+    { title: 'Site', links: siteLinks },
     { title: 'Community', links: communityLinks },
   ]
   return (
     <footer className="border-t border-border bg-surface">
       <PageContainer>
         <h2 className="sr-only">Site footer</h2>
-        {/* Main footer content */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link href={ROUTES.home} className="inline-block mb-4 font-mono text-sm text-text">
-              souls.directory
-            </Link>
-            <p className="text-sm text-text-secondary mb-4">
-              Curated SOUL.md personality templates for{' '}
-              <a
-                href="https://openclaw.ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text hover:underline"
-              >
-                OpenClaw
-              </a>{' '}
-              agents. Find the soul that speaks to you.
-            </p>
-          </div>
+        {/* Brand + short tagline above the columns */}
+        <div className="pt-10 pb-8">
+          <Link href={ROUTES.home} className="inline-block mb-3 font-mono text-sm text-text">
+            souls.directory
+          </Link>
+          <p className="text-sm text-text-secondary max-w-md">
+            Curated SOUL.md personality templates for{' '}
+            <a
+              href="https://openclaw.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text hover:underline"
+            >
+              OpenClaw
+            </a>{' '}
+            agents.
+            <br />
+            Find the soul that speaks to you.
+          </p>
+        </div>
 
-          {/* Links sections */}
+        {/* Four link columns */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-8">
           {footerSections.map((section) => (
             <div key={section.title}>
               <h3 className="text-xs font-medium text-text mb-4 uppercase tracking-wider">

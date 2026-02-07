@@ -37,6 +37,23 @@ describe('WebSiteSchema', () => {
       'query-input': 'required name=search_term_string',
     })
   })
+
+  it('includes SoftwareApplication about with applicationCategory, operatingSystem, and offers', () => {
+    const { container } = render(<WebSiteSchema />)
+    const schema = getJsonLdFromContainer(container)
+    const about = schema.about as Record<string, unknown>
+    expect(about).toBeDefined()
+    expect(about['@type']).toBe('SoftwareApplication')
+    expect(about.name).toBe('OpenClaw')
+    expect(about.url).toBe('https://openclaw.ai')
+    expect(about.applicationCategory).toBe('AI Agent Platform')
+    expect(about.operatingSystem).toBe('Web')
+    expect(about.offers).toEqual({
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    })
+  })
 })
 
 describe('OrganizationSchema', () => {

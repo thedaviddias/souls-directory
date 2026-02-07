@@ -489,6 +489,7 @@ export const listForSitemap = query({
       .map((soul) => ({
         ownerHandle: soul.ownerHandle as string,
         slug: soul.slug,
+        name: soul.name,
         updatedAt: soul.updatedAt,
         createdAt: soul.createdAt,
       }))

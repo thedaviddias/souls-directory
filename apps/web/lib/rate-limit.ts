@@ -16,6 +16,7 @@ import { Redis } from '@upstash/redis'
 const WINDOW_DURATION = '60 s' // 1 minute window
 const MAX_REQUESTS = 10 // 10 requests per minute (soul fetch)
 const MAX_SEARCH_REQUESTS = 5 // 5 requests per minute (search API - heavier)
+const MAX_LLMSTXT_REQUESTS = 30 // 30 requests per minute (llms.txt - generous for crawlers)
 
 export interface RateLimitResult {
   allowed: boolean
@@ -34,6 +35,7 @@ const isRedisConfigured = !!(REDIS_URL && REDIS_TOKEN)
 let upstashRatelimit: Ratelimit | null = null
 
 let upstashSearchRatelimit: Ratelimit | null = null
+let upstashLlmsTxtRatelimit: Ratelimit | null = null
 
 if (isRedisConfigured) {
   const redis = new Redis({
@@ -52,12 +54,19 @@ if (isRedisConfigured) {
     analytics: true,
     prefix: 'souls-directory:ratelimit:search',
   })
+  upstashLlmsTxtRatelimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(MAX_LLMSTXT_REQUESTS, WINDOW_DURATION),
+    analytics: true,
+    prefix: 'souls-directory:ratelimit:llmstxt',
+  })
 }
 
 // In-memory fallback for development or when Upstash is not configured
 const WINDOW_MS = 60 * 1000
 const inMemoryRequests = new Map<string, { count: number; resetAt: number }>()
 const inMemorySearchRequests = new Map<string, { count: number; resetAt: number }>()
+const inMemoryLlmsTxtRequests = new Map<string, { count: number; resetAt: number }>()
 
 /**
  * Check if a request from the given IP is allowed under the rate limit.
@@ -126,6 +135,22 @@ export async function checkRateLimitSearch(ip: string): Promise<RateLimitResult>
   return checkInMemoryRateLimitWithConfig(ip, inMemorySearchRequests, MAX_SEARCH_REQUESTS)
 }
 
+/**
+ * Check rate limit for the llms.txt route (30 req/min per IP).
+ * Generous for legitimate bots/crawlers, limits hammering.
+ */
+export async function checkRateLimitLlmsTxt(ip: string): Promise<RateLimitResult> {
+  if (upstashLlmsTxtRatelimit) {
+    const result = await upstashLlmsTxtRatelimit.limit(ip)
+    return {
+      allowed: result.success,
+      remaining: result.remaining,
+      resetAt: result.reset,
+    }
+  }
+  return checkInMemoryRateLimitWithConfig(ip, inMemoryLlmsTxtRequests, MAX_LLMSTXT_REQUESTS)
+}
+
 function checkInMemoryRateLimitWithConfig(
   ip: string,
   store: Map<string, { count: number; resetAt: number }>,
@@ -161,6 +186,11 @@ if (typeof setInterval !== 'undefined' && !isRedisConfigured) {
     for (const [ip, record] of inMemorySearchRequests.entries()) {
       if (now > record.resetAt) {
         inMemorySearchRequests.delete(ip)
+      }
+    }
+    for (const [ip, record] of inMemoryLlmsTxtRequests.entries()) {
+      if (now > record.resetAt) {
+        inMemoryLlmsTxtRequests.delete(ip)
       }
     }
   }, WINDOW_MS)
