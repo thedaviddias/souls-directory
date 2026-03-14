@@ -18,7 +18,6 @@ import type * as http from "../http.js";
 import type * as lib_access from "../lib/access.js";
 import type * as lib_sanitizeSoulContent from "../lib/sanitizeSoulContent.js";
 import type * as migrations from "../migrations.js";
-import type * as mocaImport from "../mocaImport.js";
 import type * as reports from "../reports.js";
 import type * as search from "../search.js";
 import type * as seed from "../seed.js";
@@ -46,7 +45,6 @@ declare const fullApi: ApiFromModules<{
   "lib/access": typeof lib_access;
   "lib/sanitizeSoulContent": typeof lib_sanitizeSoulContent;
   migrations: typeof migrations;
-  mocaImport: typeof mocaImport;
   reports: typeof reports;
   search: typeof search;
   seed: typeof seed;
