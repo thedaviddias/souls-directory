@@ -116,7 +116,7 @@ export default async function ProfilePage({ params }: PageProps) {
           { name: 'Members', url: ROUTES.members },
           {
             name: userData.displayName || `@${userData.handle}`,
-            url: profilePath(userData.handle),
+            url: profilePath(userData.handle ?? handle),
           },
         ]}
       />

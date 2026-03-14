@@ -18,10 +18,13 @@
         "SENTRY_ORG",
         "SENTRY_PROJECT",
         "SENTRY_AUTH_TOKEN",
+        "SENTRY_ENABLED_FOR_TEST",
+        "SENTRY_TEST_SECRET",
         "SENTRY_VERCEL_LOG_DRAIN_URL",
         "SENTRY_OTLP_TRACES_URL",
         "SENTRY_PUBLIC_KEY",
-        "FLAGS_SECRET"
+        "FLAGS_SECRET",
+        "OPENPANEL_SECRET_ID"
       ]
     },
     "dev": {

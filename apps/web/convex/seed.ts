@@ -7,7 +7,7 @@ import { internalMutation, mutation } from './_generated/server'
  * This matches the centralized config in lib/categories.ts
  */
 /**
- * Consolidated categories (reduced from 15 to 8 to avoid overlap).
+ * Consolidated categories (reduced from 15 to 9 to avoid overlap).
  *
  * Merges:
  * - Technical absorbed Coding
@@ -15,6 +15,7 @@ import { internalMutation, mutation } from './_generated/server'
  * - Creative absorbed Communication
  * - Educational absorbed Learning
  * - Playful absorbed Fun
+ * - Added Art DeCC0 for CC0/public-domain art workflows
  */
 const SEED_CATEGORIES = [
   {
@@ -66,12 +67,20 @@ const SEED_CATEGORIES = [
     order: 6,
   },
   {
+    slug: 'art-decc0',
+    name: 'Art DeCC0',
+    description: 'Public-domain (CC0) art prompts, references, and visual style helpers',
+    icon: 'art-decc0',
+    color: '#fb923c',
+    order: 7,
+  },
+  {
     slug: 'research',
     name: 'Research',
     description: 'Analysis, fact-checking, and investigation',
     icon: 'research',
     color: '#f59e0b',
-    order: 7,
+    order: 8,
   },
   {
     slug: 'experimental',
@@ -79,7 +88,7 @@ const SEED_CATEGORIES = [
     description: 'Novel, unconventional, and boundary-pushing',
     icon: 'experimental',
     color: '#06b6d4',
-    order: 8,
+    order: 9,
   },
 ]
 

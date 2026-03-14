@@ -159,6 +159,14 @@ export const CATEGORIES: CategoryDefinition[] = [
     color: '#06b6d4',
     order: 15,
   },
+  {
+    slug: 'art-decc0',
+    name: 'Art DeCC0',
+    description: 'Public-domain (CC0) art prompts, references, and visual style helpers',
+    icon: Palette,
+    color: '#fb923c',
+    order: 16,
+  },
 ]
 
 /**

@@ -83,6 +83,7 @@ interface SoulData {
   owner: {
     id: string
     handle?: string
+    name?: string
     displayName?: string
     deletedAt?: number
   } | null

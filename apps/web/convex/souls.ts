@@ -71,6 +71,7 @@ async function buildSoulDetailResponse(ctx: QueryCtx, soul: Doc<'souls'>) {
     owner: owner
       ? {
           _id: (owner as Doc<'users'>)._id,
+          name: (owner as Doc<'users'> & { name?: string }).name,
           handle:
             (owner as Doc<'users'>).handle ??
             (owner as Doc<'users'>).githubHandle ??

@@ -58,6 +58,7 @@ Categories are fixed in the database. When uploading, you choose one of:
 | Technical     | Engineering, DevOps, security, and developer tools   |
 | Professional  | Business, workplace, planning, and workflow          |
 | Creative      | Writers, artists, copywriters, and translators       |
+| Art DeCC0     | Public-domain (CC0) art prompts, references, and visual style helpers |
 | Educational   | Teachers, tutors, study guides, and mentors           |
 | Playful       | Games, entertainment, and quirky characters          |
 | Wellness      | Mindful, supportive, and empathetic companions        |

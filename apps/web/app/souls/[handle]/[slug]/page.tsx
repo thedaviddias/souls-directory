@@ -137,7 +137,8 @@ export default async function SoulPage({ params }: PageProps) {
     owner: owner
       ? {
           id: owner._id,
-          handle: owner.handle ?? null,
+          handle: owner.handle ?? undefined,
+          name: owner.name ?? undefined,
           displayName: owner.displayName ?? undefined,
           deletedAt: owner.deletedAt,
         }

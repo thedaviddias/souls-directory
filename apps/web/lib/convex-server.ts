@@ -33,6 +33,48 @@ const CACHE_TIMES = {
   collections: 60, // 1 minute - public collections list
 } as const
 
+type PublicUserProfile = {
+  _id: string
+  handle?: string
+  name?: string
+  displayName?: string
+  bio?: string
+  image?: string
+  websiteUrl?: string
+  xHandle?: string
+  mastodonHandle?: string
+  blueskyHandle?: string
+  githubHandle?: string
+  role?: string
+  createdAt?: number
+  deletedAt?: number
+}
+
+function normalizeUserProfile<T extends { _id: string } & Record<string, unknown>>(
+  user: T | null
+): PublicUserProfile | null {
+  if (!user) {
+    return null
+  }
+
+  return {
+    _id: user._id,
+    handle: typeof user.handle === 'string' ? user.handle : undefined,
+    name: typeof user.name === 'string' ? user.name : undefined,
+    displayName: typeof user.displayName === 'string' ? user.displayName : undefined,
+    bio: typeof user.bio === 'string' ? user.bio : undefined,
+    image: typeof user.image === 'string' ? user.image : undefined,
+    websiteUrl: typeof user.websiteUrl === 'string' ? user.websiteUrl : undefined,
+    xHandle: typeof user.xHandle === 'string' ? user.xHandle : undefined,
+    mastodonHandle: typeof user.mastodonHandle === 'string' ? user.mastodonHandle : undefined,
+    blueskyHandle: typeof user.blueskyHandle === 'string' ? user.blueskyHandle : undefined,
+    githubHandle: typeof user.githubHandle === 'string' ? user.githubHandle : undefined,
+    role: typeof user.role === 'string' ? user.role : undefined,
+    createdAt: typeof user.createdAt === 'number' ? user.createdAt : undefined,
+    deletedAt: typeof user.deletedAt === 'number' ? user.deletedAt : undefined,
+  }
+}
+
 // =============================================================================
 // Safe query wrapper
 // =============================================================================
@@ -203,7 +245,8 @@ export async function getUserByHandle(handle: string) {
     { revalidate: CACHE_TIMES.members, tags: ['users', `user-${handle}`] }
   )
 
-  return cachedFetch()
+  const user = await cachedFetch()
+  return normalizeUserProfile(user as ({ _id: string } & Record<string, unknown>) | null)
 }
 
 /**

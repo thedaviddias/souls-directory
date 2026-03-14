@@ -18,6 +18,7 @@ export const revalidate = 300
 
 // Type for feed soul items
 type FeedSoul = NonNullable<Awaited<ReturnType<typeof getSoulsForFeed>>>[number]
+type FeedSouls = NonNullable<Awaited<ReturnType<typeof getSoulsForFeed>>>
 
 function escapeXml(text: string): string {
   return text
@@ -36,7 +37,7 @@ function formatISO8601Date(timestamp: number): string {
   return new Date(timestamp).toISOString()
 }
 
-function generateRSS(souls: Awaited<ReturnType<typeof getSoulsForFeed>>): string {
+function generateRSS(souls: FeedSouls): string {
   const { name, url, description } = SITE_CONFIG
   const now = new Date().toUTCString()
 
@@ -87,7 +88,7 @@ ${items}
 </rss>`
 }
 
-function generateAtom(souls: Awaited<ReturnType<typeof getSoulsForFeed>>): string {
+function generateAtom(souls: FeedSouls): string {
   const { name, url, description } = SITE_CONFIG
   const now = formatISO8601Date(Date.now())
 
@@ -143,7 +144,7 @@ export async function GET(request: Request) {
   const format = searchParams.get('format')
 
   try {
-    const souls = await getSoulsForFeed(20)
+    const souls = (await getSoulsForFeed(20)) ?? []
 
     const isAtom = format === 'atom'
     const content = isAtom ? generateAtom(souls) : generateRSS(souls)
