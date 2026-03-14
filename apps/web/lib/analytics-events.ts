@@ -1,9 +1,6 @@
 /**
  * Centralized analytics event definitions.
  * Add new events here — this is the single source of truth.
- *
- * Plausible custom properties docs:
- * https://plausible.io/docs/custom-props/introduction
  */
 export type AnalyticsEvents = {
   // Conversions
@@ -20,7 +17,7 @@ export type AnalyticsEvents = {
   collection_create: never
   github_import: { url: string }
 
-  // Navigation (outbound_click is auto-tracked by next-plausible; listed for documentation)
+  // Navigation (outbound clicks are auto-tracked by OpenPanel; listed for documentation)
   outbound_click: { url: string }
 }
 

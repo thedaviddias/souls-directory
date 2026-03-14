@@ -6,6 +6,7 @@ import { Providers } from '@/components/layout/providers'
 import { OrganizationSchema } from '@/components/seo/json-ld'
 import { VercelToolbarWrapper } from '@/components/vercel-toolbar'
 import { rootMetadata } from '@/lib/seo'
+import { AnalyticsHead } from '@thedaviddias/analytics/head'
 import { GeistMono } from 'geist/font/mono'
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
@@ -31,6 +32,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <AnalyticsHead openPanelClientId={process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID} />
         <OrganizationSchema />
       </head>
       <body className="font-sans antialiased bg-bg text-text">

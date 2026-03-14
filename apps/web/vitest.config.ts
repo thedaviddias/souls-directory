@@ -39,8 +39,6 @@ export default defineConfig({
       'convex/react': new URL('./__mocks__/convex-react.ts', import.meta.url).pathname,
       // Stub Sentry to prevent initialization in tests
       '@sentry/nextjs': new URL('./__mocks__/sentry-nextjs.ts', import.meta.url).pathname,
-      // Stub next-plausible
-      'next-plausible': new URL('./__mocks__/next-plausible.ts', import.meta.url).pathname,
     },
   },
 })

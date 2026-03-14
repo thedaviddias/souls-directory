@@ -12,8 +12,6 @@ const cspDirectives = [
   // Next.js requires unsafe-inline and unsafe-eval for hydration scripts
   [
     "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-    // Plausible analytics
-    'https://plausible.io',
     // Vercel analytics / speed insights / toolbar / flags
     'https://*.vercel-scripts.com https://vercel.live https://vercel.com',
   ].join(' '),
@@ -23,15 +21,13 @@ const cspDirectives = [
   "img-src 'self' data: blob: https://avatars.githubusercontent.com https://*.convex.cloud https://pbs.twimg.com https://abs.twimg.com https://vercel.live https://vercel.com https://blob.vercel-storage.com https://*.blob.vercel-storage.com",
   // Fonts — self + Vercel toolbar
   "font-src 'self' https://vercel.live https://assets.vercel.com",
-  // Allow connections to Convex, GitHub API, Plausible, Sentry, Vercel toolbar/flags
+  // Allow connections to Convex, GitHub API, Sentry, Vercel toolbar/flags
   [
     "connect-src 'self'",
     // Convex (HTTP + WebSocket)
     'https://*.convex.cloud wss://*.convex.cloud',
     // GitHub API (soul imports)
     'https://api.github.com https://raw.githubusercontent.com',
-    // Plausible analytics
-    'https://plausible.io',
     // Sentry error tracking
     'https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.sentry.io',
     // react-tweet — fetch tweet data client-side (SWR)

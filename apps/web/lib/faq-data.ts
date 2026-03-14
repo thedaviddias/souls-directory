@@ -84,7 +84,7 @@ export const faqItems: FAQItem[] = [
     category: 'Privacy',
     question: 'What data do you collect?',
     answer:
-      "Without an account: Page views via Plausible Analytics (no tracking, no cookies, no personal data)\n\nWith an account: GitHub username, email, avatar (from GitHub OAuth), souls you create, souls you star\n\nWe don't sell or share data.",
+      "Without an account: privacy-friendly analytics for page views and product usage.\n\nWith an account: GitHub username, email, avatar (from GitHub OAuth), souls you create, souls you star.\n\nWe don't sell or share data.",
   },
   {
     category: 'Privacy',

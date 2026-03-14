@@ -112,28 +112,22 @@ declare module '@convex-dev/auth/react' {
   export function AuthLoading(props: { children: ReactNode }): JSX.Element | null
 }
 
-// Next Plausible analytics
-declare module 'next-plausible' {
-  import type { ReactNode } from 'react'
-
-  export interface PlausibleProviderProps {
-    domain: string
-    children: ReactNode
-    trackOutboundLinks?: boolean
-    trackFileDownloads?: boolean
-    taggedEvents?: boolean
-    hash?: boolean
-    exclude?: string
-    selfHosted?: boolean
-    enabled?: boolean
-    integrity?: string
-    scriptProps?: Record<string, string>
+declare global {
+  interface Window {
+    op?: {
+      (command: string, ...args: unknown[]): void
+      track: (eventName: string, properties?: Record<string, unknown>) => void
+      identify: (profile: {
+        profileId: string
+        firstName?: string
+        lastName?: string
+        email?: string
+        properties?: Record<string, unknown>
+      }) => void
+      clear: () => void
+      setGlobalProperties: (properties: Record<string, unknown>) => void
+    }
   }
-
-  export default function PlausibleProvider(props: PlausibleProviderProps): JSX.Element
-
-  export function usePlausible(): (
-    eventName: string,
-    options?: { props?: Record<string, string | number | boolean> }
-  ) => void
 }
+
+export {}

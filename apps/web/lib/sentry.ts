@@ -66,10 +66,6 @@ export const DENY_URLS: (string | RegExp)[] = [
   /googletagmanager\.com/,
   /google-analytics\.com/,
 
-  // Other analytics
-  /plausible\.io/,
-  /analytics\./,
-
   // Browser internals
   /^webkit-masked-url:\/\//,
 ]
@@ -173,7 +169,7 @@ export const sharedSentryOptions = {
     if (breadcrumb.category === 'fetch') {
       const url = breadcrumb.data?.url || ''
       if (
-        url.includes('plausible.io') ||
+        url.includes('/api/op') ||
         url.includes('google-analytics.com') ||
         url.includes('googletagmanager.com')
       ) {
