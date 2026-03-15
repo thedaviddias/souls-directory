@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import type { ButtonProps } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -14,46 +15,72 @@ import { useAnalytics } from '@/hooks/use-analytics'
 import { Check, Copy, ExternalLink, Sparkles } from 'lucide-react'
 import { useCallback, useState } from 'react'
 
-const SKILL_COMMAND = 'npx skills https://github.com/thedaviddias/souls-directory'
+const SKILL_COMMAND = 'npx skills add https://github.com/thedaviddias/souls-directory'
 const REPO_URL = 'https://github.com/thedaviddias/souls-directory'
 
-export function SkillCommandCard() {
+interface SkillCommandCardProps {
+  triggerLabel?: string
+  dialogTitle?: string
+  dialogDescription?: string
+  analyticsLocation?: 'hero' | 'builder'
+  triggerVariant?: ButtonProps['variant']
+  triggerSize?: ButtonProps['size']
+  triggerClassName?: string
+  showTriggerIcon?: boolean
+}
+
+export function SkillCommandCard({
+  triggerLabel = 'Install skill',
+  dialogTitle = 'Install SOUL.md Creator',
+  dialogDescription = 'Install SOUL.md Creator to write a soul from scratch, then tailor it to your workflow.',
+  analyticsLocation = 'hero',
+  triggerVariant = 'secondary',
+  triggerSize = 'default',
+  triggerClassName,
+  showTriggerIcon = true,
+}: SkillCommandCardProps) {
   const analytics = useAnalytics()
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(SKILL_COMMAND)
-    analytics.track('homepage_skill_command_copy', { location: 'hero' })
+    analytics.track('homepage_skill_command_copy', { location: analyticsLocation })
     setCopied(true)
 
     window.setTimeout(() => {
       setCopied(false)
     }, 2000)
-  }, [analytics])
+  }, [analytics, analyticsLocation])
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
           type="button"
-          variant="secondary"
-          onClick={() => analytics.track('homepage_skill_cta_click', { location: 'hero' })}
+          variant={triggerVariant}
+          size={triggerSize}
+          onClick={() =>
+            analytics.track('homepage_skill_cta_click', { location: analyticsLocation })
+          }
+          className={triggerClassName}
         >
-          <Sparkles className="h-4 w-4" />
-          Create your own
+          {showTriggerIcon ? <Sparkles className="h-4 w-4" /> : null}
+          {triggerLabel}
         </Button>
       </DialogTrigger>
 
       <DialogContent
         className="border-border bg-surface p-6 sm:max-w-2xl sm:rounded-xl"
-        onOpenAutoFocus={() => analytics.track('homepage_skill_modal_open', { location: 'hero' })}
+        onOpenAutoFocus={() =>
+          analytics.track('homepage_skill_modal_open', { location: analyticsLocation })
+        }
       >
         <DialogHeader>
           <DialogTitle className="text-left text-text text-base font-medium">
-            Create your own
+            {dialogTitle}
           </DialogTitle>
           <DialogDescription className="text-left text-sm text-text-secondary">
-            Install SOUL.md Creator to write a soul from scratch, then tailor it to your workflow.
+            {dialogDescription}
           </DialogDescription>
         </DialogHeader>
 

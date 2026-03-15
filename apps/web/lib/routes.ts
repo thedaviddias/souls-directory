@@ -19,6 +19,7 @@ export const ROUTES = {
   about: '/about' as Route,
   gettingStarted: '/getting-started' as Route,
   quiz: '/quiz' as Route,
+  create: '/create' as Route,
   guides: '/guides' as Route,
   faq: '/faq' as Route,
   login: '/login' as Route,

@@ -23,6 +23,7 @@ import type * as search from "../search.js";
 import type * as seed from "../seed.js";
 import type * as showcases from "../showcases.js";
 import type * as soulActions from "../soulActions.js";
+import type * as soulBuilderUsage from "../soulBuilderUsage.js";
 import type * as souls from "../souls.js";
 import type * as tags from "../tags.js";
 import type * as trending from "../trending.js";
@@ -50,6 +51,7 @@ declare const fullApi: ApiFromModules<{
   seed: typeof seed;
   showcases: typeof showcases;
   soulActions: typeof soulActions;
+  soulBuilderUsage: typeof soulBuilderUsage;
   souls: typeof souls;
   tags: typeof tags;
   trending: typeof trending;

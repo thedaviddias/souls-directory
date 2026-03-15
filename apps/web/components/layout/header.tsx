@@ -39,6 +39,7 @@ interface NavItem {
 
 const allNavItems: NavItem[] = [
   { href: ROUTES.souls, label: 'Souls' },
+  { href: ROUTES.create, label: 'Generator' },
   { href: ROUTES.collections, label: 'Collections' },
   { href: ROUTES.guides, label: 'Guides' },
   { href: ROUTES.members, label: 'Members' },

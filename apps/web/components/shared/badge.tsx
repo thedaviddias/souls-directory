@@ -11,6 +11,7 @@ interface BadgeProps {
   icon?: ReactNode
   color?: string
   className?: string
+  title?: string
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
@@ -35,6 +36,7 @@ export function Badge({
   icon,
   color,
   className = '',
+  title,
 }: BadgeProps) {
   const baseStyles = 'inline-flex items-center gap-1.5 rounded-full font-medium transition-colors'
 
@@ -50,6 +52,7 @@ export function Badge({
     <span
       className={`${baseStyles} ${!color ? variantStyles[variant] : ''} ${sizeStyles[size]} ${className}`}
       style={colorStyles}
+      title={title}
     >
       {icon && <span className="shrink-0">{icon}</span>}
       {children}

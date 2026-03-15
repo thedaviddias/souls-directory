@@ -13,6 +13,7 @@ import { useAuthStatus } from '@/hooks/use-auth-status'
 import { useFileUpload } from '@/hooks/use-file-upload'
 import { useGitHubImport } from '@/hooks/use-github-import'
 import { useSoulMetadata } from '@/hooks/use-soul-metadata'
+import { consumeUploadDraft } from '@/hooks/use-upload-draft'
 import { useWizardNavigation } from '@/hooks/use-wizard-navigation'
 import { api } from '@/lib/convex-api'
 import { logger } from '@/lib/logger'
@@ -63,6 +64,7 @@ export function UploadContent() {
   const editHandle = searchParams.get('handle')
   const editSlug = searchParams.get('slug')
   const isEditMode = !!(editHandle && editSlug)
+  const isBuilderMode = searchParams.get('from') === 'builder'
 
   // Fork mode: pre-fill from another soul (fork param is "handle/slug")
   const forkParam = searchParams.get('fork')
@@ -114,6 +116,7 @@ export function UploadContent() {
   const [forkedFromSoulId, setForkedFromSoulId] = useState<Id<'souls'> | null>(null)
   const hasInitializedEditMode = useRef(false)
   const hasInitializedForkMode = useRef(false)
+  const hasInitializedBuilderMode = useRef(false)
 
   // ==========================================================================
   // Custom hooks
@@ -156,7 +159,7 @@ export function UploadContent() {
 
   const wizard = useWizardNavigation(
     wizardReadiness,
-    isEditMode ? 'metadata' : isForkMode ? 'review' : undefined
+    isEditMode ? 'metadata' : isForkMode || isBuilderMode ? 'review' : undefined
   )
 
   // ==========================================================================
@@ -168,6 +171,37 @@ export function UploadContent() {
       router.replace(ROUTES.login)
     }
   }, [authLoading, isAuthenticated, router])
+
+  // ==========================================================================
+  // Builder mode initialization (prefill from a generated draft exactly once)
+  // ==========================================================================
+
+  useEffect(() => {
+    if (
+      !isBuilderMode ||
+      isEditMode ||
+      isForkMode ||
+      hasInitializedBuilderMode.current ||
+      fileUpload.content.length > 0
+    ) {
+      return
+    }
+
+    const draft = consumeUploadDraft()
+    hasInitializedBuilderMode.current = true
+    if (!draft) return
+
+    setSourceType(draft.sourceType)
+    fileUpload.setContent(draft.content)
+    soulMetadata.populateFromInitialData({
+      displayName: draft.displayName,
+      slug: draft.slug,
+      tagline: draft.tagline,
+      description: draft.description,
+      categoryId: (draft.categoryId as Id<'categories'> | null) ?? null,
+      tags: draft.selectedTags,
+    })
+  }, [isBuilderMode, isEditMode, isForkMode, fileUpload, soulMetadata])
 
   // ==========================================================================
   // Fork mode initialization (pre-fill content from another soul)

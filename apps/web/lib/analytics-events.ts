@@ -16,9 +16,19 @@ export type AnalyticsEvents = {
   profile_view: { handle: string }
   collection_create: never
   github_import: { url: string }
-  homepage_skill_cta_click: { location: 'hero' }
-  homepage_skill_modal_open: { location: 'hero' }
-  homepage_skill_command_copy: { location: 'hero' }
+  homepage_skill_cta_click: { location: 'hero' | 'builder' }
+  homepage_skill_modal_open: { location: 'hero' | 'builder' }
+  homepage_skill_command_copy: { location: 'hero' | 'builder' }
+  soul_builder_generate: {
+    useCase: string
+    workingStyle: string
+    uncertaintyMode: string
+    disagreementStyle: string
+  }
+  soul_builder_redirected_to_upload: {
+    useCase: string
+    categorySlug: string
+  }
 
   // Navigation (outbound clicks are auto-tracked by OpenPanel; listed for documentation)
   outbound_click: { url: string }

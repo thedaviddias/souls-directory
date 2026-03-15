@@ -8,6 +8,10 @@ export function useAuthActions() {
   }
 }
 
+export function useAuthToken() {
+  return null
+}
+
 export function ConvexAuthProvider({ children }: { children: React.ReactNode }) {
   return children
 }

@@ -55,6 +55,11 @@ vi.mock('next/link', () => ({
   }) => React.createElement('a', { href, ...props }, children),
 }))
 
+vi.mock('@/components/home/skill-command-card', () => ({
+  SkillCommandCard: ({ triggerLabel }: { triggerLabel?: string }) =>
+    React.createElement('button', { type: 'button' }, triggerLabel || 'Install skill'),
+}))
+
 vi.mock('motion/react', () => ({
   motion: {
     div: ({ children, ...p }: { children: React.ReactNode }) =>
@@ -113,7 +118,11 @@ describe('HomeContent', () => {
       '/upload'
     )
     expect(screen.getByRole('link', { name: 'Browse Souls' })).toHaveAttribute('href', '/souls')
-    expect(screen.getByRole('button', { name: 'Create your own' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Create your own' })).toHaveAttribute('href', '/create')
+    expect(screen.getByText('Power user?')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Install the local skill instead' })
+    ).toBeInTheDocument()
   })
 
   it('renders stats row with counts', () => {

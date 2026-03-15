@@ -28,6 +28,7 @@ describe('Footer', () => {
   it('renders internal directory links', () => {
     render(<Footer />)
     expect(screen.getByRole('link', { name: 'Browse All' })).toHaveAttribute('href', '/souls')
+    expect(screen.getByRole('link', { name: 'Generator' })).toHaveAttribute('href', '/create')
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
     expect(screen.getByRole('link', { name: 'FAQ' })).toHaveAttribute('href', '/faq')
     expect(screen.getByRole('link', { name: 'Submit Soul' })).toHaveAttribute('href', '/upload')

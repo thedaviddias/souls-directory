@@ -10,8 +10,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 export interface UploadDraft {
   /** Which step the user was on */
   currentStep: string
-  /** File or GitHub */
-  sourceType: 'file' | 'github'
+  /** File, GitHub, or pasted content */
+  sourceType: 'file' | 'github' | 'paste'
   /** Raw markdown content (file upload or GitHub import) */
   content: string
   /** GitHub URL input */
@@ -31,8 +31,65 @@ export interface UploadDraft {
   savedAt: number
 }
 
-const STORAGE_KEY = 'souls-upload-draft'
+export const UPLOAD_DRAFT_STORAGE_KEY = 'souls-upload-draft'
 const MAX_AGE_MS = 24 * 60 * 60 * 1000 // 24 hours
+
+function getStorage(): Storage | null {
+  if (typeof window === 'undefined') return null
+  return window.localStorage
+}
+
+export function loadUploadDraft(): UploadDraft | null {
+  const storage = getStorage()
+  if (!storage) return null
+
+  try {
+    const raw = storage.getItem(UPLOAD_DRAFT_STORAGE_KEY)
+    if (!raw) return null
+
+    const draft: UploadDraft = JSON.parse(raw)
+
+    if (Date.now() - draft.savedAt > MAX_AGE_MS) {
+      storage.removeItem(UPLOAD_DRAFT_STORAGE_KEY)
+      return null
+    }
+
+    return draft
+  } catch {
+    storage.removeItem(UPLOAD_DRAFT_STORAGE_KEY)
+    return null
+  }
+}
+
+export function saveUploadDraftNow(draft: Omit<UploadDraft, 'savedAt'>): boolean {
+  const storage = getStorage()
+  if (!storage) return false
+
+  try {
+    storage.setItem(
+      UPLOAD_DRAFT_STORAGE_KEY,
+      JSON.stringify({
+        ...draft,
+        savedAt: Date.now(),
+      } satisfies UploadDraft)
+    )
+    return true
+  } catch {
+    return false
+  }
+}
+
+export function clearUploadDraftStorage() {
+  const storage = getStorage()
+  storage?.removeItem(UPLOAD_DRAFT_STORAGE_KEY)
+}
+
+export function consumeUploadDraft(): UploadDraft | null {
+  const draft = loadUploadDraft()
+  if (!draft) return null
+  clearUploadDraftStorage()
+  return draft
+}
 
 // =============================================================================
 // Hook
@@ -55,23 +112,7 @@ export function useUploadDraft() {
   // -------------------------------------------------------------------------
 
   const loadDraft = useCallback((): UploadDraft | null => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (!raw) return null
-
-      const draft: UploadDraft = JSON.parse(raw)
-
-      // Check staleness
-      if (Date.now() - draft.savedAt > MAX_AGE_MS) {
-        localStorage.removeItem(STORAGE_KEY)
-        return null
-      }
-
-      return draft
-    } catch {
-      localStorage.removeItem(STORAGE_KEY)
-      return null
-    }
+    return loadUploadDraft()
   }, [])
 
   // -------------------------------------------------------------------------
@@ -85,15 +126,9 @@ export function useUploadDraft() {
     }
 
     saveTimerRef.current = setTimeout(() => {
-      try {
-        const withTimestamp: UploadDraft = {
-          ...draft,
-          savedAt: Date.now(),
-        }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(withTimestamp))
+      const saved = saveUploadDraftNow(draft)
+      if (saved) {
         setHasDraft(true)
-      } catch {
-        // localStorage full or unavailable, silently skip
       }
     }, 500)
   }, [])
@@ -103,7 +138,7 @@ export function useUploadDraft() {
   // -------------------------------------------------------------------------
 
   const clearDraft = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY)
+    clearUploadDraftStorage()
     setHasDraft(false)
   }, [])
 

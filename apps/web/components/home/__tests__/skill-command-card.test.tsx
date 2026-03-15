@@ -18,7 +18,7 @@ describe('SkillCommandCard', () => {
 
     render(<SkillCommandCard />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Create your own' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Install skill' }))
 
     expect(track).toHaveBeenCalledWith('homepage_skill_cta_click', { location: 'hero' })
     expect(await screen.findByRole('dialog')).toBeInTheDocument()
@@ -29,10 +29,10 @@ describe('SkillCommandCard', () => {
     vi.mocked(useAnalytics).mockReturnValue({ track: vi.fn() })
     render(<SkillCommandCard />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Create your own' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Install skill' }))
 
     expect(await screen.findByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Create your own' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Install SOUL.md Creator' })).toBeInTheDocument()
     expect(screen.getByText(`$ ${SOUL_MD_CREATOR_COMMAND}`)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /view source/i })).toHaveAttribute(
       'href',
@@ -47,7 +47,7 @@ describe('SkillCommandCard', () => {
     Object.assign(navigator, { clipboard: { writeText } })
 
     render(<SkillCommandCard />)
-    fireEvent.click(screen.getByRole('button', { name: 'Create your own' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Install skill' }))
     fireEvent.click(screen.getByRole('button', { name: 'Copy SOUL.md Creator install command' }))
 
     await waitFor(() => {

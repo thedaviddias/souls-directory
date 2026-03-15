@@ -316,6 +316,14 @@ const dailyStats = defineTable({
   .index('by_soul_day', ['soulId', 'day'])
   .index('by_day', ['day'])
 
+// Daily usage counters for the AI soul builder
+const soulBuilderDailyUsage = defineTable({
+  userId: v.id('users'),
+  dateKey: v.string(),
+  count: v.number(),
+  lastGeneratedAt: v.number(),
+}).index('by_user_date', ['userId', 'dateKey'])
+
 // Audit logs for moderation
 const auditLogs = defineTable({
   actorUserId: v.id('users'),
@@ -362,6 +370,7 @@ export default defineSchema({
   collectionItems,
   downloads,
   dailyStats,
+  soulBuilderDailyUsage,
   auditLogs,
   reports,
 })

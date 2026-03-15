@@ -31,6 +31,14 @@ declare module '@/convex/_generated/api' {
     categories: {
       list: AnyFunction
     }
+    tags: {
+      list: AnyFunction
+      search: AnyFunction
+    }
+    soulBuilderUsage: {
+      getQuota: AnyFunction
+      consume: AnyFunction
+    }
     search: {
       fulltext: AnyFunction
     }
@@ -106,6 +114,8 @@ declare module '@convex-dev/auth/react' {
     signIn: (provider: string, args?: Record<string, unknown>) => Promise<void>
     signOut: () => Promise<void>
   }
+
+  export function useAuthToken(): string | null
 
   export function Authenticated(props: { children: ReactNode }): JSX.Element | null
   export function Unauthenticated(props: { children: ReactNode }): JSX.Element | null

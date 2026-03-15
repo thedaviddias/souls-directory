@@ -16,6 +16,7 @@ import { Redis } from '@upstash/redis'
 const WINDOW_DURATION = '60 s' // 1 minute window
 const MAX_REQUESTS = 10 // 10 requests per minute (soul fetch)
 const MAX_SEARCH_REQUESTS = 5 // 5 requests per minute (search API - heavier)
+const MAX_SOUL_BUILDER_REQUESTS = 3 // 3 requests per minute (OpenAI-backed builder)
 const MAX_LLMSTXT_REQUESTS = 30 // 30 requests per minute (llms.txt - generous for crawlers)
 
 export interface RateLimitResult {
@@ -35,6 +36,7 @@ const isRedisConfigured = !!(REDIS_URL && REDIS_TOKEN)
 let upstashRatelimit: Ratelimit | null = null
 
 let upstashSearchRatelimit: Ratelimit | null = null
+let upstashSoulBuilderRatelimit: Ratelimit | null = null
 let upstashLlmsTxtRatelimit: Ratelimit | null = null
 
 if (isRedisConfigured) {
@@ -54,6 +56,12 @@ if (isRedisConfigured) {
     analytics: true,
     prefix: 'souls-directory:ratelimit:search',
   })
+  upstashSoulBuilderRatelimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(MAX_SOUL_BUILDER_REQUESTS, WINDOW_DURATION),
+    analytics: true,
+    prefix: 'souls-directory:ratelimit:soul-builder',
+  })
   upstashLlmsTxtRatelimit = new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(MAX_LLMSTXT_REQUESTS, WINDOW_DURATION),
@@ -66,6 +74,7 @@ if (isRedisConfigured) {
 const WINDOW_MS = 60 * 1000
 const inMemoryRequests = new Map<string, { count: number; resetAt: number }>()
 const inMemorySearchRequests = new Map<string, { count: number; resetAt: number }>()
+const inMemorySoulBuilderRequests = new Map<string, { count: number; resetAt: number }>()
 const inMemoryLlmsTxtRequests = new Map<string, { count: number; resetAt: number }>()
 
 /**
@@ -136,6 +145,26 @@ export async function checkRateLimitSearch(ip: string): Promise<RateLimitResult>
 }
 
 /**
+ * Check rate limit for the AI soul builder (3 req/min per IP).
+ * Stricter than search because each request triggers a paid model call.
+ */
+export async function checkRateLimitSoulBuilder(ip: string): Promise<RateLimitResult> {
+  if (upstashSoulBuilderRatelimit) {
+    const result = await upstashSoulBuilderRatelimit.limit(ip)
+    return {
+      allowed: result.success,
+      remaining: result.remaining,
+      resetAt: result.reset,
+    }
+  }
+  return checkInMemoryRateLimitWithConfig(
+    ip,
+    inMemorySoulBuilderRequests,
+    MAX_SOUL_BUILDER_REQUESTS
+  )
+}
+
+/**
  * Check rate limit for the llms.txt route (30 req/min per IP).
  * Generous for legitimate bots/crawlers, limits hammering.
  */
@@ -186,6 +215,11 @@ if (typeof setInterval !== 'undefined' && !isRedisConfigured) {
     for (const [ip, record] of inMemorySearchRequests.entries()) {
       if (now > record.resetAt) {
         inMemorySearchRequests.delete(ip)
+      }
+    }
+    for (const [ip, record] of inMemorySoulBuilderRequests.entries()) {
+      if (now > record.resetAt) {
+        inMemorySoulBuilderRequests.delete(ip)
       }
     }
     for (const [ip, record] of inMemoryLlmsTxtRequests.entries()) {

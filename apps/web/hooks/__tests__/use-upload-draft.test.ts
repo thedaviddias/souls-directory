@@ -1,14 +1,19 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { UploadDraft } from '../use-upload-draft'
-import { useUploadDraft } from '../use-upload-draft'
+import {
+  UPLOAD_DRAFT_STORAGE_KEY,
+  consumeUploadDraft,
+  loadUploadDraft,
+  saveUploadDraftNow,
+  useUploadDraft,
+} from '../use-upload-draft'
 
-const STORAGE_KEY = 'souls-upload-draft'
 const MAX_AGE_MS = 24 * 60 * 60 * 1000
 
 const baseDraft: Omit<UploadDraft, 'savedAt'> = {
   currentStep: 'metadata',
-  sourceType: 'file',
+  sourceType: 'paste',
   content: '# SOUL.md',
   githubUrl: '',
   displayName: 'Test',
@@ -44,7 +49,10 @@ describe('useUploadDraft', () => {
   })
 
   it('detects existing draft with content on mount', async () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...baseDraft, savedAt: Date.now() }))
+    localStorage.setItem(
+      UPLOAD_DRAFT_STORAGE_KEY,
+      JSON.stringify({ ...baseDraft, savedAt: Date.now() })
+    )
     const { result } = renderHook(() => useUploadDraft())
     await waitFor(() => {
       expect(result.current.hasDraft).toBe(true)
@@ -53,7 +61,7 @@ describe('useUploadDraft', () => {
 
   it('ignores existing draft if content is empty (nothing to resume)', async () => {
     localStorage.setItem(
-      STORAGE_KEY,
+      UPLOAD_DRAFT_STORAGE_KEY,
       JSON.stringify({ ...baseDraft, content: '', savedAt: Date.now() })
     )
     const { result } = renderHook(() => useUploadDraft())
@@ -69,19 +77,19 @@ describe('useUploadDraft', () => {
 
   it('treats drafts older than 24h as expired and removes them', () => {
     localStorage.setItem(
-      STORAGE_KEY,
+      UPLOAD_DRAFT_STORAGE_KEY,
       JSON.stringify({ ...baseDraft, savedAt: Date.now() - MAX_AGE_MS - 1 })
     )
     const { result } = renderHook(() => useUploadDraft())
     expect(result.current.loadDraft()).toBeNull()
     // Should have cleaned up localStorage too
-    expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
+    expect(localStorage.getItem(UPLOAD_DRAFT_STORAGE_KEY)).toBeNull()
   })
 
   it('keeps drafts that are exactly at the age boundary', () => {
     // Edge case: exactly MAX_AGE_MS old should still be valid (not expired)
     const savedAt = Date.now() - MAX_AGE_MS + 100 // just under the limit
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...baseDraft, savedAt }))
+    localStorage.setItem(UPLOAD_DRAFT_STORAGE_KEY, JSON.stringify({ ...baseDraft, savedAt }))
     const { result } = renderHook(() => useUploadDraft())
     const loaded = result.current.loadDraft()
     expect(loaded).not.toBeNull()
@@ -93,11 +101,11 @@ describe('useUploadDraft', () => {
   // ---------------------------------------------------------------------------
 
   it('handles corrupt JSON in localStorage gracefully', () => {
-    localStorage.setItem(STORAGE_KEY, 'not valid json {{{')
+    localStorage.setItem(UPLOAD_DRAFT_STORAGE_KEY, 'not valid json {{{')
     const { result } = renderHook(() => useUploadDraft())
     expect(result.current.loadDraft()).toBeNull()
     // Should clean up the corrupt entry
-    expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
+    expect(localStorage.getItem(UPLOAD_DRAFT_STORAGE_KEY)).toBeNull()
   })
 
   // ---------------------------------------------------------------------------
@@ -113,7 +121,7 @@ describe('useUploadDraft', () => {
     })
 
     // Should NOT be in localStorage yet
-    expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
+    expect(localStorage.getItem(UPLOAD_DRAFT_STORAGE_KEY)).toBeNull()
 
     vi.useRealTimers()
   })
@@ -131,7 +139,7 @@ describe('useUploadDraft', () => {
       vi.advanceTimersByTime(500)
     })
 
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(UPLOAD_DRAFT_STORAGE_KEY)
     expect(raw).not.toBeNull()
     const parsed = JSON.parse(raw ?? '') as UploadDraft
     expect(parsed.content).toBe('# SOUL.md')
@@ -161,7 +169,7 @@ describe('useUploadDraft', () => {
       vi.advanceTimersByTime(500)
     })
 
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(UPLOAD_DRAFT_STORAGE_KEY)
     expect(raw).not.toBeNull()
     const parsed = JSON.parse(raw ?? '') as UploadDraft
     // Should have the SECOND value, not the first
@@ -173,7 +181,10 @@ describe('useUploadDraft', () => {
   // ---------------------------------------------------------------------------
 
   it('clearDraft removes the draft and updates hasDraft', async () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...baseDraft, savedAt: Date.now() }))
+    localStorage.setItem(
+      UPLOAD_DRAFT_STORAGE_KEY,
+      JSON.stringify({ ...baseDraft, savedAt: Date.now() })
+    )
     const { result } = renderHook(() => useUploadDraft())
 
     await waitFor(() => {
@@ -184,7 +195,7 @@ describe('useUploadDraft', () => {
       result.current.clearDraft()
     })
 
-    expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
+    expect(localStorage.getItem(UPLOAD_DRAFT_STORAGE_KEY)).toBeNull()
     expect(result.current.hasDraft).toBe(false)
   })
 
@@ -267,5 +278,25 @@ describe('useUploadDraft', () => {
     expect(loaded?.changelog).toBe('Initial release')
     expect(loaded?.versionBump).toBe('minor')
     expect(loaded?.isUpdate).toBe(true)
+  })
+
+  it('saveUploadDraftNow writes immediately for builder handoff', () => {
+    const saved = saveUploadDraftNow(baseDraft)
+
+    expect(saved).toBe(true)
+    const loaded = loadUploadDraft()
+    expect(loaded?.sourceType).toBe('paste')
+    expect(loaded?.content).toBe('# SOUL.md')
+  })
+
+  it('consumeUploadDraft returns the draft once and clears storage', () => {
+    saveUploadDraftNow(baseDraft)
+
+    const first = consumeUploadDraft()
+    const second = consumeUploadDraft()
+
+    expect(first?.content).toBe('# SOUL.md')
+    expect(second).toBeNull()
+    expect(localStorage.getItem(UPLOAD_DRAFT_STORAGE_KEY)).toBeNull()
   })
 })

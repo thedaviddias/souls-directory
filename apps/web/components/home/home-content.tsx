@@ -65,7 +65,23 @@ export function HomeContent({
             <Button asChild variant="secondary">
               <Link href={ROUTES.souls}>Browse Souls</Link>
             </Button>
-            <SkillCommandCard />
+            <Button asChild variant="secondary">
+              <Link href={ROUTES.create}>Create your own</Link>
+            </Button>
+          </div>
+
+          <div className="mb-6 flex justify-center">
+            <p className="flex flex-wrap items-center justify-center gap-1 text-sm text-text-secondary">
+              <span>Power user?</span>
+              <SkillCommandCard
+                triggerLabel="Install the local skill instead"
+                triggerVariant="link"
+                triggerSize="sm"
+                triggerClassName="h-auto px-0 text-sm text-text underline-offset-4 hover:underline"
+                analyticsLocation="hero"
+                showTriggerIcon={false}
+              />
+            </p>
           </div>
 
           {/* Stats row */}

@@ -56,14 +56,18 @@ export function Breadcrumb({ items, className = '' }: BreadcrumbProps) {
 
       {/* Visible breadcrumb navigation */}
       <nav aria-label="Breadcrumb" className={className}>
-        <ol className="flex items-center gap-2 text-xs font-mono">
+        <ol className="flex items-center gap-2 text-[13px] font-mono">
           {fullItems.map((item, index) => {
             const isLast = index === fullItems.length - 1
             const isActive = item.href === pathname
 
             return (
               <li key={item.href || item.name} className="flex items-center gap-2">
-                {index > 0 && <span className="text-text-muted select-none">/</span>}
+                {index > 0 && (
+                  <span className="select-none text-text-secondary" aria-hidden="true">
+                    /
+                  </span>
+                )}
                 {item.href && !isLast ? (
                   <Link
                     href={item.href as Route}
@@ -75,7 +79,10 @@ export function Breadcrumb({ items, className = '' }: BreadcrumbProps) {
                     {item.name}
                   </Link>
                 ) : (
-                  <span className="text-text-muted" aria-current={isLast ? 'page' : undefined}>
+                  <span
+                    className="font-medium text-text-secondary"
+                    aria-current={isLast ? 'page' : undefined}
+                  >
                     {item.name}
                   </span>
                 )}

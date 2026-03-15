@@ -32,6 +32,7 @@ const directoryLinks: FooterLink[] = [
 const learnLinks: FooterLink[] = [
   { href: ROUTES.gettingStarted, label: 'Getting Started' },
   { href: ROUTES.quiz, label: 'Find Your Soul' },
+  { href: ROUTES.create, label: 'Generator' },
   { href: ROUTES.guides, label: 'Guides' },
   { href: '/llms.txt' as Route, label: 'llms.txt' },
 ]

@@ -48,6 +48,7 @@ describe('Header', () => {
 
     // Use exact name "Souls" to avoid matching the logo link "souls.directory"
     expect(screen.getByRole('link', { name: 'Souls' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Generator' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Members' })).toBeInTheDocument()
   })
 
@@ -70,6 +71,7 @@ describe('Header', () => {
     render(<Header />)
 
     expect(screen.getByRole('link', { name: 'Souls' })).toHaveAttribute('href', '/souls')
+    expect(screen.getByRole('link', { name: 'Generator' })).toHaveAttribute('href', '/create')
     expect(screen.getByRole('link', { name: 'Members' })).toHaveAttribute('href', '/members')
   })
 
