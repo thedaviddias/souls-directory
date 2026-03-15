@@ -45,7 +45,7 @@ You can also **fork** an existing soul (from its page) or **edit** your own soul
 - [ ] Category selected (see list below)
 - [ ] 3–5 relevant tags selected
 - [ ] Core truths, boundaries, and vibe are in the markdown
-- [ ] You've tested the soul with at least one LLM
+- [ ] You've tested the soul before publishing
 - [ ] No typos or grammar issues
 - [ ] Slug is lowercase-with-hyphens and unique
 

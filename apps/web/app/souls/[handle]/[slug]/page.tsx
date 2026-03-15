@@ -43,7 +43,6 @@ interface RelatedSoulData {
     upvotes?: number
   }
   featured?: boolean
-  testedWithModels?: Array<{ model: string }>
   createdAt: number
   updatedAt: number
 }
@@ -129,7 +128,6 @@ export default async function SoulPage({ params }: PageProps) {
         comments: soul.stats?.comments || 0,
         views: soul.stats?.views || 0,
       },
-      testedWithModels: (soul.testedWithModels || []).map((t: { model: string }) => t.model),
       featured: soul.featured || false,
       createdAt: soul.createdAt,
       updatedAt: soul.updatedAt,
@@ -174,7 +172,6 @@ export default async function SoulPage({ params }: PageProps) {
         stars: s.stats?.stars || 0,
         upvotes: s.stats?.upvotes || 0,
         featured: s.featured || false,
-        tested_with: (s.testedWithModels || []).map((t) => t.model),
         category_id: category?._id || '',
         category: category
           ? {
@@ -202,7 +199,6 @@ export default async function SoulPage({ params }: PageProps) {
       stars: s.stats?.stars || 0,
       upvotes: s.stats?.upvotes || 0,
       featured: s.featured || false,
-      tested_with: [],
       category_id: category?._id || '',
       category: category
         ? {
@@ -238,7 +234,6 @@ export default async function SoulPage({ params }: PageProps) {
         stars={transformedData.soul.stats.stars}
         createdAt={soul.createdAt}
         updatedAt={soul.updatedAt}
-        testedWithModels={soul.testedWithModels}
       />
       <BreadcrumbSchema
         items={[

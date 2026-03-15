@@ -145,9 +145,9 @@ export async function getSoulsList(params: {
   categorySlug?: string
   tagSlug?: string
   featured?: boolean
-  model?: string
   sort?: 'recent' | 'published' | 'popular' | 'trending' | 'stars' | 'hot'
   limit?: number
+  cursor?: string
 }) {
   return safeQuery(
     () =>
@@ -155,9 +155,9 @@ export async function getSoulsList(params: {
         categorySlug: params.categorySlug,
         tagSlug: params.tagSlug,
         featured: params.featured,
-        model: params.model,
         sort: params.sort ?? 'recent',
         limit: params.limit ?? 24,
+        cursor: params.cursor,
       }),
     'getSoulsList'
   )

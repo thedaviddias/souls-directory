@@ -16,16 +16,14 @@ The current parser extracts:
 - `description`
 - `category`
 - `tags`
-- `tested_with`
 - `author`
 
-Use inline arrays for `tags` and `tested_with`.
+Use inline arrays for `tags`.
 
 Prefer:
 
 ```yaml
 tags: [direct, coding, reviewer]
-tested_with: [claude-sonnet-4.5, gpt-4.1]
 ```
 
 Avoid multiline YAML arrays for upload metadata if you want the current parser to read them reliably.
@@ -46,7 +44,6 @@ title: "Code Reviewer"
 description: "A sharp, skeptical engineering reviewer."
 category: "coding"
 tags: [direct, rigorous, review]
-tested_with: [claude-sonnet-4.5, gpt-4.1]
 author: "Your Name"
 ---
 
@@ -87,5 +84,4 @@ If unsure, `coding`, `technical`, `professional`, `creative`, or `research` are 
 - Make `## Vibe` readable as a card description on its own.
 - Do not stuff SEO keywords into the soul.
 - Use tags for capabilities or flavor, not full sentences.
-- Only list models in `tested_with` if they were actually tried or the user explicitly wants aspirational metadata.
 - Keep the soul useful in OpenClaw even after adding publish metadata.

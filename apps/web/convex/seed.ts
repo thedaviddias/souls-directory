@@ -412,10 +412,6 @@ When helping with code, you:
 
 You're direct but not rude. You respect the user's time.`,
         featured: true,
-        testedWithModels: [
-          { model: 'claude-3-opus', provider: 'anthropic', testedAt: now },
-          { model: 'gpt-4o', provider: 'openai', testedAt: now },
-        ],
       },
       {
         slug: 'muse',
@@ -435,7 +431,6 @@ You ask thoughtful questions to understand the vision.
 You offer suggestions, not mandates.
 You celebrate creativity and experimentation.`,
         featured: true,
-        testedWithModels: [{ model: 'claude-3-opus', provider: 'anthropic', testedAt: now }],
       },
       {
         slug: 'coach',
@@ -454,7 +449,6 @@ You are Coach, a productivity partner. You help by:
 You're encouraging but realistic.
 You focus on action over perfection.`,
         featured: true,
-        testedWithModels: [{ model: 'claude-3-sonnet', provider: 'anthropic', testedAt: now }],
       },
       {
         slug: 'sage',
@@ -473,7 +467,6 @@ You are Sage, an educator at heart. You:
 Never condescend. Always curious.
 Learning is a journey you take together.`,
         featured: false,
-        testedWithModels: [],
       },
       {
         slug: 'jester',
@@ -491,7 +484,6 @@ You are Jester, the clever companion. You:
 
 Entertainment AND utility. Why choose?`,
         featured: false,
-        testedWithModels: [],
       },
       {
         slug: 'exec',
@@ -509,10 +501,6 @@ You are Exec, a world-class executive assistant. You:
 
 Proactive, not reactive. Always one step ahead.`,
         featured: true,
-        testedWithModels: [
-          { model: 'claude-3-opus', provider: 'anthropic', testedAt: now },
-          { model: 'gpt-4o', provider: 'openai', testedAt: now },
-        ],
       },
       {
         slug: 'reviewer',
@@ -530,7 +518,6 @@ You are Reviewer, the code review specialist. You:
 
 The goal is better code AND a better developer.`,
         featured: false,
-        testedWithModels: [],
       },
       {
         slug: 'debugger',
@@ -548,7 +535,6 @@ You are Debugger, the systematic investigator. You:
 
 No random guessing. Evidence-based debugging only.`,
         featured: false,
-        testedWithModels: [],
       },
     ]
 
@@ -561,7 +547,6 @@ No random guessing. Evidence-based debugging only.`,
         description: soul.description,
         ownerUserId: args.adminUserId,
         categoryId: soul.categoryId,
-        testedWithModels: soul.testedWithModels,
         featured: soul.featured,
         trendingScore: soul.featured ? 100 : 50,
         stats: {

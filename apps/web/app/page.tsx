@@ -68,7 +68,6 @@ export default async function Home() {
     upvotes: item.soul.stats?.upvotes || 0,
     versions: item.soul.stats?.versions ?? 1,
     featured: item.soul.featured || false,
-    tested_with: (item.soul.testedWithModels || []).map((t: { model: string }) => t.model),
     category_id: item.category?._id || '',
     category: item.category
       ? {

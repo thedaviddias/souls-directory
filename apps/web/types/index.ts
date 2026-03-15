@@ -19,7 +19,6 @@ export interface Soul {
   upvotes?: number
   versions?: number
   featured: boolean
-  tested_with?: string[]
   created_at: string
   updated_at: string
   category?: Category

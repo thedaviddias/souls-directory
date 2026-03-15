@@ -39,8 +39,6 @@ interface SoulSchemaProps {
   stars: number
   createdAt: number
   updatedAt: number
-  /** Models this soul was tested with (for agent parseability) */
-  testedWithModels?: Array<{ model: string; provider?: string }>
 }
 
 interface PersonSchemaProps {
@@ -202,14 +200,6 @@ export function SoulSchema(props: SoulSchemaProps) {
         urlTemplate: downloadUrl,
       },
     },
-    ...(props.testedWithModels?.length
-      ? {
-          targetProduct: props.testedWithModels.map((t) => ({
-            '@type': 'SoftwareApplication',
-            name: t.model,
-          })),
-        }
-      : {}),
   }
 
   // Add author if available

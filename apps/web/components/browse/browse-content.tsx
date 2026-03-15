@@ -3,6 +3,7 @@
  *
  * Receives SSR data and handles interactive filtering.
  * URL state is managed via nuqs for client-side updates.
+ * Uses TanStack Virtual for DOM virtualization + cursor-based infinite loading.
  */
 
 'use client'
@@ -13,18 +14,23 @@ import { SearchInput } from '@/components/search/search-input'
 import { CategoryBadge } from '@/components/shared/category-badge'
 import { EmptyState } from '@/components/shared/empty-state'
 import { SoulCard } from '@/components/souls/soul-card'
-import { SoulCardGrid } from '@/components/souls/soul-card-grid'
 import { useAnalytics } from '@/hooks/use-analytics'
+import { api } from '@/lib/convex-api'
 import { ROUTES } from '@/lib/routes'
 import type { Category, Soul } from '@/types'
+import { useWindowVirtualizer } from '@tanstack/react-virtual'
+import { useConvex } from 'convex/react'
+import { Loader2 } from 'lucide-react'
 import { parseAsBoolean, parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs'
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-// Sort options - default to recent
+const PAGE_SIZE = 24
+const ROW_HEIGHT_ESTIMATE = 220
+const OVERSCAN = 3
+
 const sortOptions = ['recent', 'published', 'popular', 'trending', 'hot'] as const
 type SortOption = (typeof sortOptions)[number]
 
-// Display labels for sort options
 const sortLabels: Record<SortOption, string> = {
   recent: 'Recently updated',
   published: 'Recently published',
@@ -33,82 +39,176 @@ const sortLabels: Record<SortOption, string> = {
   hot: 'Hot',
 }
 
-// "Tested with" filter — 2025 current models only (Open Router rankings + OpenAI)
-const modelFilterOptions: { value: string; label: string }[] = [
-  { value: 'gemini-3-flash', label: 'Gemini 3 Flash' },
-  { value: 'claude-sonnet-4.5', label: 'Claude Sonnet 4.5' },
-  { value: 'kimi-k2.5', label: 'Kimi K2.5' },
-  { value: 'deepseek-v3.2', label: 'DeepSeek V3.2' },
-  { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
-  { value: 'claude-opus-4.5', label: 'Claude Opus 4.5' },
-  { value: 'minimax-m2.1', label: 'MiniMax M2.1' },
-  { value: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash Lite' },
-  { value: 'grok-4.1', label: 'Grok 4.1' },
-  { value: 'gpt-5.2', label: 'GPT-5.2' },
-  { value: 'gpt-5', label: 'GPT-5' },
-  { value: 'gpt-5-mini', label: 'GPT-5 mini' },
-]
+function useColumns() {
+  const [columns, setColumns] = useState(1)
+
+  useEffect(() => {
+    function update() {
+      const w = window.innerWidth
+      if (w >= 1280) setColumns(4)
+      else if (w >= 1024) setColumns(3)
+      else if (w >= 640) setColumns(2)
+      else setColumns(1)
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
+  return columns
+}
 
 interface BrowseContentProps {
   initialCategories: Category[]
   initialSouls: Soul[]
+  initialCursor: string | null
 }
 
-export function BrowseContent({ initialCategories, initialSouls }: BrowseContentProps) {
+export function BrowseContent({
+  initialCategories,
+  initialSouls,
+  initialCursor,
+}: BrowseContentProps) {
   const analytics = useAnalytics()
+  const convex = useConvex() as {
+    // biome-ignore lint/suspicious/noExplicitAny: Convex client type is widened
+    query: (ref: unknown, args: Record<string, unknown>) => Promise<any>
+  }
+  const columns = useColumns()
 
-  // Use nuqs for URL state (navigation triggers server re-fetch via Next.js)
   const [filters, setFilters] = useQueryStates(
     {
       q: parseAsString.withDefault(''),
       category: parseAsString,
-      model: parseAsString,
       sort: parseAsStringLiteral(sortOptions).withDefault('recent'),
       featured: parseAsBoolean.withDefault(false),
     },
     {
-      shallow: false, // Important: triggers server re-fetch
+      shallow: false,
     }
   )
 
   const query = filters.q
   const categorySlug = filters.category ?? undefined
-  const modelSlug = filters.model ?? undefined
   const sortBy = filters.sort as SortOption
 
-  // Client-side search filter for instant feedback
-  // (Server already filtered by category/sort, this adds text search)
+  const [souls, setSouls] = useState<Soul[]>(initialSouls)
+  const [cursor, setCursor] = useState<string | null>(initialCursor)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const hasMore = cursor !== null
+
+  // Reset accumulated state when SSR data changes (filter navigation)
+  useEffect(() => {
+    setSouls(initialSouls)
+    setCursor(initialCursor)
+  }, [initialSouls, initialCursor])
+
+  const loadMore = useCallback(async () => {
+    if (!hasMore || isLoadingMore) return
+    setIsLoadingMore(true)
+    try {
+      const result = await convex.query(api.souls.list, {
+        categorySlug,
+        sort: sortBy,
+        featured: filters.featured || undefined,
+        limit: PAGE_SIZE,
+        cursor,
+      })
+      if (result?.items) {
+        const newSouls: Soul[] = result.items.map(
+          // biome-ignore lint/suspicious/noExplicitAny: Convex untyped data
+          (item: { soul: Record<string, any>; category: Record<string, any> | null }) => ({
+            id: item.soul._id,
+            slug: item.soul.slug,
+            ownerHandle: item.soul.ownerHandle ?? '',
+            name: item.soul.name,
+            tagline: item.soul.tagline || '',
+            description: item.soul.description || '',
+            content: '',
+            downloads: item.soul.stats?.downloads || 0,
+            stars: item.soul.stats?.stars || 0,
+            upvotes: item.soul.stats?.upvotes || 0,
+            featured: item.soul.featured || false,
+            category_id: item.category?._id || '',
+            category: item.category
+              ? {
+                  id: item.category._id,
+                  slug: item.category.slug,
+                  name: item.category.name,
+                  description: item.category.description || '',
+                  icon: item.category.icon || '',
+                  color: item.category.color || '#878787',
+                }
+              : undefined,
+            tags: [],
+            created_at: new Date(item.soul.createdAt).toISOString(),
+            updated_at: new Date(item.soul.updatedAt).toISOString(),
+          })
+        )
+        setSouls((prev) => [...prev, ...newSouls])
+        setCursor(result.nextCursor ?? null)
+      }
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }, [hasMore, isLoadingMore, convex, categorySlug, sortBy, filters.featured, cursor])
+
+  // Client-side text search on accumulated souls
   const filteredSouls = useMemo(() => {
-    if (!query) return initialSouls
+    if (!query) return souls
 
     const lowerQuery = query.toLowerCase()
-    return initialSouls.filter(
+    return souls.filter(
       (s) =>
         s.name.toLowerCase().includes(lowerQuery) ||
         s.tagline.toLowerCase().includes(lowerQuery) ||
         s.description.toLowerCase().includes(lowerQuery)
     )
-  }, [initialSouls, query])
+  }, [souls, query])
+
+  // Row-based virtualization: chunk souls into rows
+  const rows = useMemo(() => {
+    const result: Soul[][] = []
+    for (let i = 0; i < filteredSouls.length; i += columns) {
+      result.push(filteredSouls.slice(i, i + columns))
+    }
+    return result
+  }, [filteredSouls, columns])
+
+  const listRef = useRef<HTMLDivElement>(null)
+
+  const virtualizer = useWindowVirtualizer({
+    count: rows.length,
+    estimateSize: () => ROW_HEIGHT_ESTIMATE,
+    overscan: OVERSCAN,
+    scrollMargin: listRef.current?.offsetTop ?? 0,
+  })
+
+  const virtualRows = virtualizer.getVirtualItems()
+
+  // Trigger loadMore when the last virtual row is near visible
+  useEffect(() => {
+    if (!hasMore || isLoadingMore || virtualRows.length === 0) return
+    const lastVirtualRow = virtualRows[virtualRows.length - 1]
+    if (lastVirtualRow && lastVirtualRow.index >= rows.length - 2) {
+      loadMore()
+    }
+  }, [virtualRows, rows.length, hasMore, isLoadingMore, loadMore])
 
   return (
     <main className="min-h-screen">
       <PageContainer>
-        {/* Breadcrumb */}
         <Breadcrumb items={[{ name: 'Souls' }]} className="mb-6" />
 
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-lg font-medium text-text">Browse Souls</h1>
         </div>
 
-        {/* Search */}
         <div className="mb-8">
           <SearchInput defaultValue={query} placeholder="Search souls..." />
         </div>
 
-        {/* Filters */}
         <div className="flex flex-wrap gap-6 mb-8 pb-8 border-b border-border">
-          {/* Categories */}
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -138,37 +238,6 @@ export function BrowseContent({ initialCategories, initialSouls }: BrowseContent
             ))}
           </div>
 
-          {/* Model filter - tested with */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-text-muted">Tested with:</span>
-            <button
-              type="button"
-              onClick={() => setFilters({ model: null })}
-              className={`px-3 py-1.5 rounded-md text-sm transition-colors border ${
-                !modelSlug
-                  ? 'bg-surface border-text-secondary text-text'
-                  : 'border-border text-text-secondary hover:text-text hover:border-text-muted'
-              }`}
-            >
-              Any
-            </button>
-            {modelFilterOptions.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => setFilters({ model: opt.value })}
-                className={`px-3 py-1.5 rounded-md text-sm font-mono transition-colors border ${
-                  modelSlug === opt.value
-                    ? 'bg-surface border-text-secondary text-text'
-                    : 'border-border text-text-secondary hover:text-text hover:border-text-muted'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Sort */}
           <div className="flex items-center gap-2 ml-auto">
             <span className="text-xs text-text-muted font-mono">Sort:</span>
             {sortOptions.map((sort) => (
@@ -191,24 +260,57 @@ export function BrowseContent({ initialCategories, initialSouls }: BrowseContent
           </div>
         </div>
 
-        {/* Results */}
-        {filteredSouls.length === 0 ? (
+        {filteredSouls.length === 0 && !isLoadingMore ? (
           <EmptyState
             title="No souls found"
             description="Try a different search or filter"
             action={{ label: 'Browse All', href: ROUTES.souls }}
           />
         ) : (
-          <SoulCardGrid>
-            {filteredSouls.map((soul) => (
-              <SoulCard key={soul.id} soul={soul} />
-            ))}
-          </SoulCardGrid>
+          <div ref={listRef}>
+            <div
+              style={{
+                height: `${virtualizer.getTotalSize()}px`,
+                width: '100%',
+                position: 'relative',
+              }}
+            >
+              {virtualRows.map((virtualRow) => {
+                const row = rows[virtualRow.index]
+                return (
+                  <div
+                    key={virtualRow.key}
+                    data-index={virtualRow.index}
+                    ref={virtualizer.measureElement}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      transform: `translateY(${virtualRow.start - virtualizer.options.scrollMargin}px)`,
+                    }}
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-4">
+                      {row?.map((soul) => (
+                        <SoulCard key={soul.id} soul={soul} />
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         )}
 
-        {/* Count */}
+        {isLoadingMore && (
+          <div className="flex justify-center py-8">
+            <Loader2 className="w-5 h-5 animate-spin text-text-muted" />
+          </div>
+        )}
+
         <div className="mt-8 text-center text-xs text-text-muted font-mono">
           {filteredSouls.length} soul{filteredSouls.length !== 1 ? 's' : ''} found
+          {hasMore && !query && ' (scroll for more)'}
         </div>
       </PageContainer>
     </main>

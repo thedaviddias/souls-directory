@@ -32,6 +32,7 @@ npm-debug.log*
 .vercel
 .env*.local
 
+./agents
 **/.claude
 .claude
 .cursor

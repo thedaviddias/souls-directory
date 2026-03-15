@@ -16,7 +16,6 @@ vi.mock('nuqs', () => ({
     {
       q: '',
       category: null,
-      model: null,
       sort: 'recent',
       featured: false,
     },
@@ -57,6 +56,15 @@ vi.mock('@/components/souls/soul-card', () => ({
 vi.mock('@/components/souls/soul-card-grid', () => ({
   SoulCardGrid: ({ children }: { children: React.ReactNode }) =>
     React.createElement('div', {}, children),
+}))
+
+vi.mock('@tanstack/react-virtual', () => ({
+  useWindowVirtualizer: () => ({
+    getVirtualItems: () => [{ key: '0', index: 0, start: 0, size: 220, end: 220 }],
+    getTotalSize: () => 220,
+    measureElement: () => {},
+    options: { scrollMargin: 0 },
+  }),
 }))
 
 vi.mock('next/link', () => ({
@@ -100,17 +108,27 @@ const mockSoul: Soul = {
 
 describe('BrowseContent', () => {
   it('renders Browse heading', () => {
-    render(<BrowseContent initialCategories={[mockCategory]} initialSouls={[]} />)
+    render(
+      <BrowseContent initialCategories={[mockCategory]} initialSouls={[]} initialCursor={null} />
+    )
     expect(screen.getByRole('heading', { name: 'Browse Souls', level: 1 })).toBeInTheDocument()
   })
 
   it('renders empty state when no souls match', () => {
-    render(<BrowseContent initialCategories={[mockCategory]} initialSouls={[]} />)
+    render(
+      <BrowseContent initialCategories={[mockCategory]} initialSouls={[]} initialCursor={null} />
+    )
     expect(screen.getByText('No souls found')).toBeInTheDocument()
   })
 
   it('renders soul cards when souls provided', () => {
-    render(<BrowseContent initialCategories={[mockCategory]} initialSouls={[mockSoul]} />)
+    render(
+      <BrowseContent
+        initialCategories={[mockCategory]}
+        initialSouls={[mockSoul]}
+        initialCursor={null}
+      />
+    )
     expect(screen.getByText('Test Soul')).toBeInTheDocument()
   })
 })

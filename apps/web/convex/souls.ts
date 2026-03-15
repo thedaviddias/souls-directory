@@ -18,7 +18,6 @@ function toPublicSoul(soul: Doc<'souls'>) {
     description: soul.description,
     categoryId: soul.categoryId,
     tagIds: soul.tagIds,
-    testedWithModels: soul.testedWithModels,
     forkedFromId: soul.forkedFromId,
     stats: soul.stats,
     featured: soul.featured,
@@ -111,7 +110,6 @@ export const list = query({
     categorySlug: v.optional(v.string()),
     tagSlug: v.optional(v.string()),
     featured: v.optional(v.boolean()),
-    model: v.optional(v.string()),
     sort: v.optional(
       v.union(
         v.literal('recent'),
@@ -263,11 +261,6 @@ export const list = query({
       if (soul.softDeletedAt) continue
       if (categoryId && soul.categoryId !== categoryId) continue
       if (tagId && !soul.tagIds?.includes(tagId)) continue
-      if (
-        args.model &&
-        !soul.testedWithModels?.some((t) => t.model.toLowerCase() === args.model?.toLowerCase())
-      )
-        continue
       if (items.length >= limit) break
 
       const category = soul.categoryId ? await ctx.db.get(soul.categoryId) : null

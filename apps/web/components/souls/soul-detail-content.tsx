@@ -11,7 +11,6 @@ import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { SectionHeader } from '@/components/marketing/section-header'
 import { CategoryBadge } from '@/components/shared/category-badge'
-import { ModelBadges } from '@/components/shared/model-badge'
 import { ShareMenuItems } from '@/components/shared/share-menu-items'
 import { SoulCard } from '@/components/souls/soul-card'
 import { SoulCardGrid } from '@/components/souls/soul-card-grid'
@@ -75,7 +74,6 @@ interface SoulData {
       comments: number
       views: number
     }
-    testedWithModels: string[]
     featured: boolean
     createdAt: number
     updatedAt: number
@@ -405,24 +403,8 @@ export function SoulDetailContent({ data }: SoulDetailContentProps) {
               </span>
               <span>{soul.stats.upvotes.toLocaleString()} upvotes</span>
             </div>
-            {(soul.testedWithModels?.length ||
-              category ||
-              tags.length > 0 ||
-              owner ||
-              soul.updatedAt) && (
+            {(category || tags.length > 0 || owner || soul.updatedAt) && (
               <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-text-muted">
-                {soul.testedWithModels?.length ? (
-                  <>
-                    <span className="text-text-muted">Tested with</span>
-                    <ModelBadges models={soul.testedWithModels} />
-                  </>
-                ) : null}
-                {soul.testedWithModels?.length &&
-                (category || tags.length > 0 || owner || soul.updatedAt) ? (
-                  <span className="text-border" aria-hidden>
-                    ·
-                  </span>
-                ) : null}
                 {category && (
                   <CategoryBadge
                     category={category}

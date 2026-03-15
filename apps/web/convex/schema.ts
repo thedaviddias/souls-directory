@@ -79,17 +79,6 @@ const souls = defineTable({
   tagIds: v.optional(v.array(v.id('tags'))),
   // Versioning
   latestVersionId: v.optional(v.id('soulVersions')),
-  // "Tested with" model badges
-  testedWithModels: v.optional(
-    v.array(
-      v.object({
-        model: v.string(), // e.g., "claude-sonnet-4.5", "gpt-4o"
-        provider: v.string(), // e.g., "anthropic", "openai"
-        testedAt: v.number(),
-        testedByUserId: v.optional(v.id('users')),
-      })
-    )
-  ),
   // Related souls (curated)
   relatedSoulIds: v.optional(v.array(v.id('souls'))),
   // Fork lineage (when this soul was remixed from another)

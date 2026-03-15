@@ -50,7 +50,6 @@ function toSoul(item: {
     tagline: string
     description?: string
     stats: { downloads: number; stars: number; upvotes?: number; versions: number }
-    testedWithModels?: Array<{ model: string }>
     featured?: boolean
     createdAt: number
     updatedAt: number
@@ -72,7 +71,6 @@ function toSoul(item: {
     upvotes: soul.stats.upvotes ?? 0,
     versions: soul.stats.versions,
     featured: soul.featured ?? false,
-    tested_with: (soul.testedWithModels ?? []).map((t) => t.model),
     created_at: new Date(soul.createdAt).toISOString(),
     updated_at: new Date(soul.updatedAt).toISOString(),
     category: category

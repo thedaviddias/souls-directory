@@ -104,7 +104,7 @@ For souls.directory, frontmatter is optional but useful. Keep the body strong fi
 
 When adding frontmatter:
 - Keep it minimal and accurate.
-- Prefer inline arrays for `tags` and `tested_with`.
+- Prefer inline arrays for `tags`.
 - Make sure the heading, italic tagline, and `## Vibe` section still stand on their own.
 
 See [souls-directory-publishing.md](./references/souls-directory-publishing.md) for the exact parser expectations.

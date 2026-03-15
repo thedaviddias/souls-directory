@@ -227,8 +227,6 @@ export interface ExtractedSoulMetadata {
   categorySlug?: string
   /** Tag names — from frontmatter `tags` array (can't reliably infer from content) */
   tags?: string[]
-  /** Model badges — from frontmatter `tested_with` */
-  testedWith?: string[]
   /** Author — from frontmatter `author` */
   author?: string
 }
@@ -330,9 +328,6 @@ export function extractSoulMetadata(content: string, filePath?: string): Extract
   }
   if (Array.isArray(fm.tags)) {
     meta.tags = fm.tags.map((t) => t.toLowerCase())
-  }
-  if (Array.isArray(fm.tested_with)) {
-    meta.testedWith = fm.tested_with
   }
   if (typeof fm.author === 'string' && fm.author) {
     meta.author = fm.author

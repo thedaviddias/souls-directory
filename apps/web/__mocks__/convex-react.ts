@@ -13,7 +13,9 @@ export function useMutation(_mutation: any) {
 }
 
 export function useConvex() {
-  return {}
+  return {
+    query: async () => ({ items: [], nextCursor: null }),
+  }
 }
 
 export function useConvexAuth() {

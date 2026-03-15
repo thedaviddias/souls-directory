@@ -40,34 +40,28 @@ interface PageProps {
   searchParams: Promise<{
     q?: string
     category?: string
-    model?: string
     sort?: 'recent' | 'published' | 'popular' | 'trending' | 'hot'
     featured?: string
   }>
 }
 
 export default async function SoulsPage({ searchParams }: PageProps) {
-  // Await searchParams (Next.js 15+ async searchParams)
   const params = await searchParams
 
   const categorySlug = params.category
-  const model = params.model
   const sort = params.sort ?? 'recent'
   const featured = params.featured === 'true'
 
-  // Fetch data on the server in parallel
   const [categoriesData, soulsData] = await Promise.all([
     getCategoriesList(),
     getSoulsList({
       categorySlug,
-      model,
       sort,
       featured: featured || undefined,
-      limit: 50,
+      limit: 24,
     }),
   ])
 
-  // Transform categories
   const categories: Category[] = (categoriesData || []).map((cat: CategoryData) => ({
     id: cat._id,
     slug: cat.slug,
@@ -77,7 +71,6 @@ export default async function SoulsPage({ searchParams }: PageProps) {
     color: cat.color || '#878787',
   }))
 
-  // Transform souls
   const souls: Soul[] = (soulsData?.items || []).map((item: SoulListItem) => ({
     id: item.soul._id,
     slug: item.soul.slug,
@@ -90,7 +83,6 @@ export default async function SoulsPage({ searchParams }: PageProps) {
     stars: item.soul.stats?.stars || 0,
     upvotes: item.soul.stats?.upvotes || 0,
     featured: item.soul.featured || false,
-    tested_with: (item.soul.testedWithModels || []).map((t: { model: string }) => t.model),
     category_id: item.category?._id || '',
     category: item.category
       ? {
@@ -107,6 +99,8 @@ export default async function SoulsPage({ searchParams }: PageProps) {
     updated_at: new Date(item.soul.updatedAt).toISOString(),
   }))
 
+  const initialCursor = soulsData?.nextCursor ?? null
+
   return (
     <>
       <CollectionPageSchema
@@ -116,7 +110,11 @@ export default async function SoulsPage({ searchParams }: PageProps) {
         itemCount={souls.length}
       />
       <BreadcrumbSchema items={[{ name: 'Souls', url: '/souls' }]} />
-      <BrowseContent initialCategories={categories} initialSouls={souls} />
+      <BrowseContent
+        initialCategories={categories}
+        initialSouls={souls}
+        initialCursor={initialCursor}
+      />
     </>
   )
 }

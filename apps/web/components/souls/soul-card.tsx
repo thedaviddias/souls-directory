@@ -11,7 +11,6 @@
 
 import { CategoryBadge } from '@/components/shared/category-badge'
 import { FeaturedBadge } from '@/components/shared/featured-badge'
-import { ModelBadges } from '@/components/shared/model-badge'
 import { soulPathFrom } from '@/lib/routes'
 import type { Soul } from '@/types'
 import { format } from 'date-fns'
@@ -60,13 +59,12 @@ export function SoulCard({ soul, featured = false, showUpdatedDate = false }: So
             </p>
           </div>
 
-          {/* Category and model badges */}
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            {soul.category && <CategoryBadge category={soul.category} size="sm" />}
-            {soul.tested_with?.length ? (
-              <ModelBadges models={soul.tested_with} className="shrink-0" />
-            ) : null}
-          </div>
+          {/* Category badge */}
+          {soul.category && (
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <CategoryBadge category={soul.category} size="sm" />
+            </div>
+          )}
 
           {/* Stats footer - monospace */}
           <div className="mt-4 pt-4 border-t border-border-subtle flex items-center gap-3 text-xs text-text-muted font-mono">
