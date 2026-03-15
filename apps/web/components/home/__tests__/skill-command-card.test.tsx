@@ -1,0 +1,38 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import {
+  SOUL_MD_CREATOR_COMMAND,
+  SOUL_MD_CREATOR_REPO_URL,
+  SkillCommandCard,
+} from '../skill-command-card'
+
+describe('SkillCommandCard', () => {
+  it('opens the modal with the install command and repo link', async () => {
+    render(<SkillCommandCard />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Create your own' }))
+
+    expect(await screen.findByRole('dialog')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Create your own' })).toBeInTheDocument()
+    expect(screen.getByText(`$ ${SOUL_MD_CREATOR_COMMAND}`)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /view source/i })).toHaveAttribute(
+      'href',
+      SOUL_MD_CREATOR_REPO_URL
+    )
+  })
+
+  it('copies the command and shows copied state', async () => {
+    const writeText = vi.fn(() => Promise.resolve())
+    Object.assign(navigator, { clipboard: { writeText } })
+
+    render(<SkillCommandCard />)
+    fireEvent.click(screen.getByRole('button', { name: 'Create your own' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Copy SOUL.md Creator install command' }))
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith(SOUL_MD_CREATOR_COMMAND)
+    })
+
+    expect(screen.getByText('Copied')).toBeInTheDocument()
+  })
+})

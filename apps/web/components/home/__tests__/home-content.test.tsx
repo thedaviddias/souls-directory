@@ -113,6 +113,7 @@ describe('HomeContent', () => {
       '/upload'
     )
     expect(screen.getByRole('link', { name: 'Browse Souls' })).toHaveAttribute('href', '/souls')
+    expect(screen.getByRole('button', { name: 'Create your own' })).toBeInTheDocument()
   })
 
   it('renders stats row with counts', () => {

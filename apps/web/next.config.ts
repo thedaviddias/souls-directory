@@ -3,7 +3,7 @@ import createWithVercelToolbar from '@vercel/toolbar/plugins/next'
 import type { NextConfig } from 'next'
 
 const withVercelToolbar = createWithVercelToolbar({
-  enableInProduction: true,
+  enableInProduction: false,
 })
 
 // Content Security Policy directives

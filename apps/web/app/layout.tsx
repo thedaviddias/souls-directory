@@ -18,6 +18,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const vercelEnvironment = process.env.VERCEL_ENV ?? process.env.NODE_ENV
   let collections = false
   try {
     collections = await collectionsEnabled()
@@ -44,7 +45,7 @@ export default async function RootLayout({
               <Footer />
             </div>
           </Providers>
-          <VercelToolbarWrapper />
+          <VercelToolbarWrapper environment={vercelEnvironment} />
         </FlagsProvider>
       </body>
     </html>

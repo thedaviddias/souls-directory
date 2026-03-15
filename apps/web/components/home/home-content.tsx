@@ -7,6 +7,7 @@
 
 'use client'
 
+import { SkillCommandCard } from '@/components/home/skill-command-card'
 import { PageContainer } from '@/components/layout/page-container'
 import { SectionHeader } from '@/components/marketing/section-header'
 import { SearchInput } from '@/components/search/search-input'
@@ -64,6 +65,7 @@ export function HomeContent({
             <Button asChild variant="secondary">
               <Link href={ROUTES.souls}>Browse Souls</Link>
             </Button>
+            <SkillCommandCard />
           </div>
 
           {/* Stats row */}
