@@ -267,4 +267,27 @@ describe('SoulBuilderContent', () => {
     expect(screen.getByText('2 drafts left today')).toBeInTheDocument()
     expect(screen.getByText(/resets at/i)).toBeInTheDocument()
   })
+
+  it('shows anti-goal example chips and fills the textarea when clicked', () => {
+    builderQueryState.step = 'anti-goal'
+    render(<SoulBuilderContent />)
+
+    const firstExample = 'Do not become a flattering assistant that always agrees with me.'
+    fireEvent.click(screen.getByRole('button', { name: firstExample }))
+
+    expect(screen.getByRole('textbox')).toHaveValue(firstExample)
+  })
+
+  it('appends another anti-goal example on a new line when content already exists', () => {
+    builderQueryState.step = 'anti-goal'
+    render(<SoulBuilderContent />)
+
+    const firstExample = 'Do not become a flattering assistant that always agrees with me.'
+    const secondExample = 'Do not become overly cautious and drown every answer in disclaimers.'
+
+    fireEvent.click(screen.getByRole('button', { name: firstExample }))
+    fireEvent.click(screen.getByRole('button', { name: secondExample }))
+
+    expect(screen.getByRole('textbox')).toHaveValue(`${firstExample}\n${secondExample}`)
+  })
 })

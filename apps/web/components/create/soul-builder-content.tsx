@@ -54,6 +54,12 @@ const GENERATION_PHASES = [
     detail: 'Packaging the draft so it drops cleanly into upload.',
   },
 ] as const
+const ANTI_GOAL_EXAMPLES = [
+  'Do not become a flattering assistant that always agrees with me.',
+  'Do not become a manipulative companion that tries to create dependence.',
+  'Do not become generic "helpful AI" sludge with no point of view.',
+  'Do not become overly cautious and drown every answer in disclaimers.',
+] as const
 
 const QUESTION_STEPS = [
   'use-case',
@@ -281,6 +287,11 @@ export function SoulBuilderContent() {
     }
   }
 
+  const handleAntiGoalExampleClick = (example: (typeof ANTI_GOAL_EXAMPLES)[number]) => {
+    const nextValue = antiGoal.trim().length === 0 ? example : `${antiGoal}\n${example}`
+    void setBuilderState({ antiGoal: nextValue }, { history: 'replace' })
+  }
+
   if (authLoading || !isAuthenticated) {
     return (
       <div className="flex flex-1 items-center justify-center flex-col gap-3">
@@ -295,7 +306,7 @@ export function SoulBuilderContent() {
       <PageContainer>
         <Breadcrumb items={[{ name: 'Create a soul' }]} className="mb-6" />
 
-        <div className="max-w-4xl space-y-10">
+        <div className="space-y-10">
           <div className="space-y-3">
             <div>
               <Badge
@@ -308,7 +319,7 @@ export function SoulBuilderContent() {
               </Badge>
             </div>
             <h1 className="text-2xl font-medium text-text">Create a soul</h1>
-            <p className="max-w-2xl text-sm leading-relaxed text-text-secondary">
+            <p className="max-w-3xl text-sm leading-relaxed text-text-secondary">
               Answer a few focused questions, generate a first draft, then send it into the upload
               flow for final review and publishing.
             </p>
@@ -411,6 +422,21 @@ export function SoulBuilderContent() {
                     placeholder="Example: Do not become a flattering productivity mascot that always agrees with me."
                     maxLength={240}
                   />
+                  <p className="text-xs text-text-secondary">
+                    Examples are anti-patterns to avoid, not traits to copy.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {ANTI_GOAL_EXAMPLES.map((example) => (
+                      <button
+                        key={example}
+                        type="button"
+                        onClick={() => handleAntiGoalExampleClick(example)}
+                        className="inline-flex items-center rounded-full border border-border bg-surface/80 px-3 py-1.5 text-left text-xs text-text-secondary transition-colors hover:border-text-muted hover:text-text"
+                      >
+                        {example}
+                      </button>
+                    ))}
+                  </div>
                   <p className="text-xs text-text-muted">{antiGoal.length}/240</p>
                 </div>
               )}
