@@ -55,6 +55,6 @@ describe('SkillCommandCard', () => {
     })
 
     expect(track).toHaveBeenCalledWith('homepage_skill_command_copy', { location: 'hero' })
-    expect(screen.getByText('Copied')).toBeInTheDocument()
+    expect(await screen.findByText('Copied')).toBeInTheDocument()
   })
 })

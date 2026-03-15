@@ -76,22 +76,26 @@ vi.mock('@/components/ui/button', () => ({
     type,
     onClick,
     disabled,
+    loading,
+    loadingText,
     ...props
   }: {
     children: React.ReactNode
     type?: string
     onClick?: () => void
     disabled?: boolean
+    loading?: boolean
+    loadingText?: string
   }) =>
     React.createElement(
       'button',
       {
         type: type === 'submit' || type === 'reset' ? type : 'button',
         onClick,
-        disabled,
+        disabled: disabled || loading,
         ...props,
       },
-      children
+      loading ? (loadingText ?? children) : children
     ),
 }))
 

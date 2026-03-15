@@ -1,5 +1,5 @@
 import { useAuthStatus } from '@/hooks/use-auth-status'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { DashboardContent } from '../dashboard-content'
@@ -132,8 +132,10 @@ describe('DashboardContent', () => {
     fireEvent.click(deleteButton)
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     const confirmButton = screen.getByRole('button', { name: /Delete|Confirm/i })
-    fireEvent.click(confirmButton)
-    await vi.waitFor(() => {
+    await act(async () => {
+      fireEvent.click(confirmButton)
+    })
+    await waitFor(() => {
       expect(mockDeleteSoul).toHaveBeenCalled()
     })
   })
