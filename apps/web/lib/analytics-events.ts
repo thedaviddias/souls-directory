@@ -16,6 +16,9 @@ export type AnalyticsEvents = {
   profile_view: { handle: string }
   collection_create: never
   github_import: { url: string }
+  homepage_skill_cta_click: { location: 'hero' }
+  homepage_skill_modal_open: { location: 'hero' }
+  homepage_skill_command_copy: { location: 'hero' }
 
   // Navigation (outbound clicks are auto-tracked by OpenPanel; listed for documentation)
   outbound_click: { url: string }

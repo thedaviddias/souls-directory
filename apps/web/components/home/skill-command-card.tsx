@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useAnalytics } from '@/hooks/use-analytics'
 import { Check, Copy, ExternalLink, Sparkles } from 'lucide-react'
 import { useCallback, useState } from 'react'
 
@@ -17,27 +18,36 @@ const SKILL_COMMAND = 'npx skills https://github.com/thedaviddias/souls-director
 const REPO_URL = 'https://github.com/thedaviddias/souls-directory'
 
 export function SkillCommandCard() {
+  const analytics = useAnalytics()
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(SKILL_COMMAND)
+    analytics.track('homepage_skill_command_copy', { location: 'hero' })
     setCopied(true)
 
     window.setTimeout(() => {
       setCopied(false)
     }, 2000)
-  }, [])
+  }, [analytics])
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" variant="secondary">
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => analytics.track('homepage_skill_cta_click', { location: 'hero' })}
+        >
           <Sparkles className="h-4 w-4" />
           Create your own
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="border-border bg-surface p-6 sm:max-w-2xl sm:rounded-xl">
+      <DialogContent
+        className="border-border bg-surface p-6 sm:max-w-2xl sm:rounded-xl"
+        onOpenAutoFocus={() => analytics.track('homepage_skill_modal_open', { location: 'hero' })}
+      >
         <DialogHeader>
           <DialogTitle className="text-left text-text text-base font-medium">
             Create your own
