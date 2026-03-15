@@ -23,7 +23,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuthStatus } from '@/hooks/use-auth-status'
-import { LayoutDashboard, Loader2, LogOut, Plus, Settings } from 'lucide-react'
+import { LayoutDashboard, Loader2, LogOut, Plus, Settings, Sparkles } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -57,12 +58,15 @@ function UserAvatar({
   size?: 'sm' | 'md'
 }) {
   const sizeClasses = size === 'sm' ? 'w-7 h-7 text-xs' : 'w-9 h-9 text-sm'
+  const imageSize = size === 'sm' ? 28 : 36
 
   if (user?.image) {
     return (
-      <img
+      <Image
         src={user.image}
         alt={user.displayName || user.handle || 'User avatar'}
+        width={imageSize}
+        height={imageSize}
         className={`${sizeClasses} rounded-full object-cover border border-border`}
       />
     )
@@ -101,15 +105,17 @@ export function Header() {
     const handleScroll = () => {
       const scrollY = window.scrollY
       const delta = scrollY - lastScrollY.current
+      let nextVisible = headerVisible
 
       if (scrollY < SCROLL_TOP_THRESHOLD) {
-        setHeaderVisible(true)
+        nextVisible = true
       } else if (delta > SCROLL_DELTA_THRESHOLD) {
-        setHeaderVisible(false)
+        nextVisible = false
       } else if (delta < -SCROLL_DELTA_THRESHOLD) {
-        setHeaderVisible(true)
+        nextVisible = true
       }
 
+      setHeaderVisible(nextVisible)
       lastScrollY.current = scrollY
     }
 
@@ -126,7 +132,7 @@ export function Header() {
       window.removeEventListener('scroll', onScroll)
       if (rafId.current !== null) cancelAnimationFrame(rafId.current)
     }
-  }, [])
+  }, [headerVisible])
 
   const handleSignOut = async () => {
     await signOut()
@@ -247,6 +253,24 @@ export function Header() {
                       </DropdownMenuLabel>
                     )}
                     <DropdownMenuSeparator className="bg-border" />
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={ROUTES.create}
+                        className="cursor-pointer text-text-secondary hover:text-text"
+                      >
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        Generate
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={ROUTES.upload}
+                        className="cursor-pointer text-text-secondary hover:text-text"
+                      >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Submit
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link
                         href={ROUTES.dashboard}

@@ -2,7 +2,7 @@
 
 import { MarkdownEditor } from '@/components/upload/markdown-editor'
 import { ExternalLink, FileText, GitFork, Pencil } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 // =============================================================================
 // Types
@@ -47,10 +47,21 @@ export function ReviewStep({
   githubSource,
   fileLabel,
 }: ReviewStepProps) {
-  const [isEditing, setIsEditing] = useState(isForkMode)
+  const [forkModeView, setForkModeView] = useState<'edit' | 'preview'>('edit')
+
+  const isEditing = isForkMode && forkModeView === 'edit'
+  const previewLines = useMemo(
+    () =>
+      content.split('\n').map((line, lineNumber) => ({
+        key: `${lineNumber + 1}-${line}`,
+        line,
+        lineNumber: lineNumber + 1,
+      })),
+    [content]
+  )
 
   const toggleEditing = useCallback(() => {
-    setIsEditing((prev) => !prev)
+    setForkModeView((prev) => (prev === 'edit' ? 'preview' : 'edit'))
   }, [])
 
   const displayLabel =
@@ -69,7 +80,7 @@ export function ReviewStep({
       {/* Fork attribution */}
       {isForkMode && forkSourceName && (
         <div className="flex items-center gap-2 bg-surface border border-border rounded-lg px-4 py-3">
-          <GitFork className="w-4 h-4 text-text-muted shrink-0" aria-hidden />
+          <GitFork className="w-4 h-4 text-text-secondary shrink-0" aria-hidden />
           <p className="text-sm text-text-secondary">
             Forking from <span className="text-text font-medium">{forkSourceName}</span> — edit the
             content below to make it your own.
@@ -80,10 +91,10 @@ export function ReviewStep({
       {/* File info bar */}
       <div className="flex items-center justify-between bg-surface border border-border rounded-lg px-4 py-3">
         <div className="flex items-center gap-3">
-          <FileText className="w-4 h-4 text-text-muted" />
+          <FileText className="w-4 h-4 text-text-secondary" />
           <div>
             <p className="text-sm text-text font-medium">{displayLabel}</p>
-            <p className="text-xs text-text-muted">{subtitle}</p>
+            <p className="text-xs text-text-secondary">{subtitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -129,13 +140,12 @@ export function ReviewStep({
           <div className="overflow-x-auto bg-surface">
             <pre className="p-4 text-sm font-mono" data-testid="review-preview">
               <code>
-                {content.split('\n').map((line, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: lines are static display content
-                  <div key={i} className="flex">
+                {previewLines.map((item) => (
+                  <div key={item.key} className="flex">
                     <span className="select-none w-10 pr-4 text-right text-text-muted/40 text-xs leading-relaxed">
-                      {i + 1}
+                      {item.lineNumber}
                     </span>
-                    <span className="text-text-secondary leading-relaxed">{line || ' '}</span>
+                    <span className="text-text-secondary leading-relaxed">{item.line || ' '}</span>
                   </div>
                 ))}
               </code>

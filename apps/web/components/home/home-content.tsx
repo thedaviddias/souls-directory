@@ -85,7 +85,7 @@ export function HomeContent({
           </div>
 
           {/* Stats row */}
-          <div className="flex flex-wrap justify-center items-center gap-4 text-xs text-text-muted font-mono mb-8">
+          <div className="mb-8 flex flex-wrap items-center justify-center gap-4 font-mono text-xs text-text-secondary">
             <span>{totalSouls.toLocaleString()} souls</span>
             <span className="w-px h-3 bg-border" aria-hidden="true" />
             <span>{categories.length} categories</span>
@@ -246,7 +246,7 @@ export function HomeContent({
                   className="group flex items-center justify-between gap-4 rounded-md border border-border bg-surface px-4 py-3 transition-all duration-200 hover:border-text-muted"
                 >
                   <CategoryBadge category={category} size="md" variant="minimal" />
-                  <span className="text-xs text-text-muted font-mono">
+                  <span className="text-xs text-text-secondary font-mono">
                     {category.soulCount?.toLocaleString()}
                   </span>
                 </Link>

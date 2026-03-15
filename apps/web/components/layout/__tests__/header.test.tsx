@@ -1,7 +1,23 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { Header } from '../header'
+
+const mockUseAuthStatus = vi.fn<
+  () => {
+    me: { handle?: string; displayName?: string; email?: string } | null
+    isLoading: boolean
+    isAuthenticated: boolean
+    signIn: ReturnType<typeof vi.fn>
+    signOut: ReturnType<typeof vi.fn>
+  }
+>(() => ({
+  me: null,
+  isLoading: false,
+  isAuthenticated: false,
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+}))
 
 // Mock next/link
 vi.mock('next/link', () => ({
@@ -17,13 +33,7 @@ vi.mock('next/navigation', () => ({
 
 // Mock useAuthStatus hook to simulate logged-out state
 vi.mock('@/hooks/use-auth-status', () => ({
-  useAuthStatus: () => ({
-    me: null,
-    isLoading: false,
-    isAuthenticated: false,
-    signIn: vi.fn(),
-    signOut: vi.fn(),
-  }),
+  useAuthStatus: () => mockUseAuthStatus(),
 }))
 
 // Mock GithubStars component
@@ -37,13 +47,48 @@ vi.mock('@/components/search/search-autocomplete', () => ({
 }))
 
 describe('Header', () => {
+  it('shows generate and submit inside the authenticated user menu', () => {
+    mockUseAuthStatus.mockReturnValue({
+      me: {
+        handle: 'david',
+        displayName: 'David',
+        email: 'david@example.com',
+      },
+      isLoading: false,
+      isAuthenticated: true,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    })
+
+    render(<Header />)
+
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'User menu' }))
+
+    expect(screen.getByRole('menuitem', { name: 'Generate' })).toHaveAttribute('href', '/create')
+    expect(screen.getByRole('menuitem', { name: 'Submit' })).toHaveAttribute('href', '/upload')
+  })
+
   it('should render the logo', () => {
+    mockUseAuthStatus.mockReturnValue({
+      me: null,
+      isLoading: false,
+      isAuthenticated: false,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    })
     render(<Header />)
 
     expect(screen.getByText('souls.directory')).toBeInTheDocument()
   })
 
   it('should render navigation links', () => {
+    mockUseAuthStatus.mockReturnValue({
+      me: null,
+      isLoading: false,
+      isAuthenticated: false,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    })
     render(<Header />)
 
     // Use exact name "Souls" to avoid matching the logo link "souls.directory"
@@ -53,6 +98,13 @@ describe('Header', () => {
   })
 
   it('should render Sign Up button when logged out', () => {
+    mockUseAuthStatus.mockReturnValue({
+      me: null,
+      isLoading: false,
+      isAuthenticated: false,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    })
     render(<Header />)
 
     // Sign Up button should be visible when user is not authenticated
@@ -61,6 +113,13 @@ describe('Header', () => {
   })
 
   it('should have correct href for logo', () => {
+    mockUseAuthStatus.mockReturnValue({
+      me: null,
+      isLoading: false,
+      isAuthenticated: false,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    })
     render(<Header />)
 
     const logo = screen.getByRole('link', { name: /souls\.directory/i })
@@ -68,6 +127,13 @@ describe('Header', () => {
   })
 
   it('should have correct hrefs for navigation links', () => {
+    mockUseAuthStatus.mockReturnValue({
+      me: null,
+      isLoading: false,
+      isAuthenticated: false,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    })
     render(<Header />)
 
     expect(screen.getByRole('link', { name: 'Souls' })).toHaveAttribute('href', '/souls')
@@ -76,6 +142,13 @@ describe('Header', () => {
   })
 
   it('should apply sticky positioning', () => {
+    mockUseAuthStatus.mockReturnValue({
+      me: null,
+      isLoading: false,
+      isAuthenticated: false,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    })
     render(<Header />)
 
     const header = screen.getByRole('banner')

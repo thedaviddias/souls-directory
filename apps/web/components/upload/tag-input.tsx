@@ -59,7 +59,7 @@ export function TagInput({
 
   return (
     <div>
-      <label htmlFor="tags" className="flex items-center gap-2 text-xs text-text-muted mb-1">
+      <label htmlFor="tags" className="mb-1 flex items-center gap-2 text-xs text-text-secondary">
         Tags (max {maxTags})
         {autoDetected && (
           <span className="text-[10px] px-1.5 py-0.5 rounded bg-text/5 text-text-secondary border border-border">
@@ -120,7 +120,7 @@ export function TagInput({
               disabled={!inputMatchesExistingTag}
               aria-label="Add tag"
               title={inputMatchesExistingTag ? 'Add tag' : 'Select a tag from the list'}
-              className="p-2 text-text-muted hover:text-text disabled:opacity-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text rounded"
+              className="rounded p-2 text-text-secondary transition-colors hover:text-text disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text"
             >
               <Plus className="w-4 h-4" aria-hidden="true" />
             </button>

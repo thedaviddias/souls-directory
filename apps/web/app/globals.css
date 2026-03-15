@@ -42,8 +42,8 @@
 
   /* Text */
   --color-text: #ededed;
-  --color-text-secondary: #878787;
-  --color-text-muted: #525252;
+  --color-text-secondary: #9a9a9a;
+  --color-text-muted: #6a6a6a;
 
   /* Minimal accent - white for active states */
   --color-accent: #ededed;

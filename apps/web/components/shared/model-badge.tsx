@@ -69,7 +69,7 @@ export function ModelBadges({ models, className = '' }: ModelBadgesProps) {
         <ModelBadge key={m} model={m} />
       ))}
       {models.length > 5 && (
-        <span className="text-xs text-text-muted font-mono">+{models.length - 5}</span>
+        <span className="text-xs text-text-secondary font-mono">+{models.length - 5}</span>
       )}
     </div>
   )

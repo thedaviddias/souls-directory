@@ -14,7 +14,7 @@ export function FeaturedBadge({ className }: FeaturedBadgeProps) {
   return (
     <span
       className={cn(
-        'px-1.5 py-0.5 text-[10px] uppercase tracking-wider rounded-md border border-border text-text-muted font-mono',
+        'px-1.5 py-0.5 text-[10px] uppercase tracking-wider rounded-md border border-border text-text-secondary font-mono',
         className
       )}
       aria-hidden

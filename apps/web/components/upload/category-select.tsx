@@ -3,7 +3,7 @@
 import type { Id } from '@/convex/_generated/dataModel'
 import { CategoryIcon } from '@/lib/category-icons'
 import { Check, ChevronDown, Search } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface Category {
   _id: Id<'categories'>
@@ -28,6 +28,7 @@ export function CategorySelect({
 }: CategorySelectProps) {
   const [showDropdown, setShowDropdown] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
   const filteredCategories = categories.filter((cat) =>
     cat.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -48,7 +49,7 @@ export function CategorySelect({
       >
         <span
           className={`flex items-center gap-2 ${
-            selectedCategoryId ? 'text-text' : 'text-text-muted'
+            selectedCategoryId ? 'text-text' : 'text-text-secondary'
           }`}
         >
           {selectedCategory ? (
@@ -61,7 +62,7 @@ export function CategorySelect({
           )}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-text-muted transition-transform ${
+          className={`w-4 h-4 text-text-secondary transition-transform ${
             showDropdown ? 'rotate-180' : ''
           }`}
         />
@@ -72,8 +73,12 @@ export function CategorySelect({
           {/* Search input */}
           <div className="p-2 border-b border-border">
             <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-secondary" />
               <input
+                ref={(node) => {
+                  searchInputRef.current = node
+                  if (node) node.focus()
+                }}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -82,8 +87,6 @@ export function CategorySelect({
                 }}
                 placeholder="Search categories…"
                 className="w-full pl-8 pr-3 py-1.5 text-sm bg-bg border border-border rounded text-text placeholder-text-muted focus:outline-none focus:border-text-secondary"
-                // biome-ignore lint/a11y/noAutofocus: search input in dropdown should autofocus
-                autoFocus
               />
             </div>
           </div>
@@ -97,13 +100,15 @@ export function CategorySelect({
                 onSelect(null)
                 setShowDropdown(false)
               }}
-              className="w-full px-3 py-2 text-left text-sm text-text-muted hover:bg-bg transition-colors focus-visible:outline-none focus-visible:bg-bg"
+              className="w-full px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg transition-colors focus-visible:outline-none focus-visible:bg-bg"
             >
               No category
             </button>
 
             {filteredCategories.length === 0 ? (
-              <p className="px-3 py-2 text-sm text-text-muted">No categories match your search</p>
+              <p className="px-3 py-2 text-sm text-text-secondary">
+                No categories match your search
+              </p>
             ) : (
               filteredCategories.map((cat) => (
                 <button

@@ -48,11 +48,7 @@ export function Breadcrumb({ items, className = '' }: BreadcrumbProps) {
   return (
     <>
       {/* JSON-LD structured data for SEO */}
-      <script
-        type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is safe
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
 
       {/* Visible breadcrumb navigation */}
       <nav aria-label="Breadcrumb" className={className}>

@@ -14,7 +14,7 @@ import { useAnalytics } from '@/hooks/use-analytics'
 import { soulsSearchPath } from '@/lib/routes'
 import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface SearchInputProps {
   defaultValue?: string
@@ -28,8 +28,9 @@ export function SearchInput({
   const router = useRouter()
   const analytics = useAnalytics()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [value, setValue] = useState(defaultValue)
+  const [value, setValue] = useState<string | null>(null)
   const [isFocused, setIsFocused] = useState(false)
+  const inputValue = value ?? defaultValue
 
   // Keyboard shortcut: "/" to focus search
   useEffect(() => {
@@ -49,7 +50,7 @@ export function SearchInput({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const query = value.trim()
+    const query = inputValue.trim()
     if (query) {
       analytics.track('search', { query })
       router.push(soulsSearchPath(query))
@@ -57,7 +58,16 @@ export function SearchInput({
   }
 
   // Show animated placeholder when input is empty and not focused
-  const showAnimatedPlaceholder = !value && !isFocused
+  const showAnimatedPlaceholder = !inputValue && !isFocused
+  const placeholderCharacters = useMemo(
+    () =>
+      Array.from(placeholder).map((char, index) => ({
+        char,
+        key: `${placeholder.length}-${char.charCodeAt(0)}-${index}`,
+        delay: 0.3 + index * 0.015,
+      })),
+    [placeholder]
+  )
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full max-w-2xl">
@@ -71,7 +81,7 @@ export function SearchInput({
           ref={inputRef}
           id="soul-search"
           type="search"
-          value={value}
+          value={inputValue}
           onChange={(e) => setValue(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -88,16 +98,16 @@ export function SearchInput({
             className="absolute top-1/2 left-4 -translate-y-1/2 pointer-events-none"
             aria-hidden="true"
           >
-            {placeholder.split('').map((char, index) => (
+            {placeholderCharacters.map((item) => (
               <span
-                key={`char-${index}-${char}`}
-                className="inline-block text-sm text-text-muted"
+                key={item.key}
+                className="inline-block text-sm text-text-secondary"
                 style={{
                   opacity: 0,
-                  animation: `typewriter-char 0.02s ease forwards ${0.3 + index * 0.015}s`,
+                  animation: `typewriter-char 0.02s ease forwards ${item.delay}s`,
                 }}
               >
-                {char === ' ' ? '\u00A0' : char}
+                {item.char === ' ' ? '\u00A0' : item.char}
               </span>
             ))}
           </div>
@@ -105,7 +115,7 @@ export function SearchInput({
 
         {/* Keyboard hint / Clear + Submit buttons */}
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-          {!value && (
+          {!inputValue && (
             <span
               className="hidden sm:inline-flex items-center justify-center w-6 h-6 rounded border border-border bg-elevated text-xs text-text-secondary font-mono"
               aria-hidden="true"
@@ -113,7 +123,7 @@ export function SearchInput({
               /
             </span>
           )}
-          {value && (
+          {inputValue && (
             <>
               <button
                 type="button"
@@ -121,7 +131,7 @@ export function SearchInput({
                   setValue('')
                   inputRef.current?.focus()
                 }}
-                className="inline-flex items-center justify-center w-6 h-6 rounded text-text-muted hover:text-text transition-colors"
+                className="inline-flex items-center justify-center w-6 h-6 rounded text-text-secondary hover:text-text transition-colors"
                 aria-label="Clear search"
               >
                 <X className="w-3.5 h-3.5" />
