@@ -116,8 +116,7 @@ export const list = query({
         v.literal('published'),
         v.literal('popular'),
         v.literal('trending'),
-        v.literal('stars'),
-        v.literal('hot')
+        v.literal('stars')
       )
     ),
     limit: v.optional(v.number()),
@@ -149,83 +148,6 @@ export const list = query({
       tagId = tag?._id
     }
 
-    // Special handling for "hot" sort - query-time calculation
-    if (sort === 'hot') {
-      const now = Date.now()
-      const oneHourAgo = now - 60 * 60 * 1000
-      const twoHoursAgo = now - 2 * 60 * 60 * 1000
-
-      // Get downloads from last hour
-      const recentDownloads = await ctx.db
-        .query('downloads')
-        .withIndex('by_date')
-        .filter((q) => q.gte(q.field('createdAt'), oneHourAgo))
-        .collect()
-
-      // Get downloads from previous hour (for velocity calculation)
-      const previousDownloads = await ctx.db
-        .query('downloads')
-        .withIndex('by_date')
-        .filter((q) =>
-          q.and(q.gte(q.field('createdAt'), twoHoursAgo), q.lt(q.field('createdAt'), oneHourAgo))
-        )
-        .collect()
-
-      // Count downloads per soul
-      const lastHourCounts = new Map<string, number>()
-      for (const dl of recentDownloads) {
-        const count = lastHourCounts.get(dl.soulId) ?? 0
-        lastHourCounts.set(dl.soulId, count + 1)
-      }
-
-      const prevHourCounts = new Map<string, number>()
-      for (const dl of previousDownloads) {
-        const count = prevHourCounts.get(dl.soulId) ?? 0
-        prevHourCounts.set(dl.soulId, count + 1)
-      }
-
-      // Calculate hot scores with velocity
-      const hotScores: Array<{ soulId: string; count: number; delta: number }> = []
-      for (const [soulId, count] of Array.from(lastHourCounts.entries())) {
-        const prevCount = prevHourCounts.get(soulId) ?? 0
-        const delta = count - prevCount
-        hotScores.push({ soulId, count, delta })
-      }
-
-      // Sort by count (primary) and delta (secondary)
-      hotScores.sort((a, b) => {
-        if (b.count !== a.count) return b.count - a.count
-        return b.delta - a.delta
-      })
-
-      // Fetch souls in hot order
-      const items: Array<{
-        soul: NonNullable<ReturnType<typeof toPublicSoul>>
-        category: Doc<'categories'> | null
-        hotStats?: { count: number; delta: number }
-      }> = []
-
-      for (const { soulId, count, delta } of hotScores.slice(0, limit * 2)) {
-        const soul = await ctx.db.get(soulId as Id<'souls'>)
-        if (!soul || soul.softDeletedAt) continue
-        if (categoryId && soul.categoryId !== categoryId) continue
-        if (tagId && !soul.tagIds?.includes(tagId)) continue
-        if (items.length >= limit) break
-
-        const category = soul.categoryId ? await ctx.db.get(soul.categoryId) : null
-        const publicSoul = toPublicSoul(soul)
-        if (!publicSoul) continue
-
-        items.push({ soul: publicSoul, category, hotStats: { count, delta } })
-      }
-
-      return {
-        items,
-        nextCursor: null, // Hot sort doesn't support pagination well
-        hasMore: false,
-      }
-    }
-
     // Build query based on sort - use a function to properly type the query
     const getQuery = () => {
       if (args.featured) {
@@ -246,10 +168,11 @@ export const list = query({
       return ctx.db.query('souls').withIndex('by_updated')
     }
 
-    // Paginate
+    // Over-fetch more when post-filtering by category/tag to reduce round trips
+    const fetchMultiplier = categoryId || tagId ? 4 : 2
     const { page, isDone, continueCursor } = await getQuery()
       .order('desc')
-      .paginate({ cursor: args.cursor ?? null, numItems: limit * 2 })
+      .paginate({ cursor: args.cursor ?? null, numItems: limit * fetchMultiplier })
 
     // Filter and transform
     const items: Array<{
@@ -272,7 +195,7 @@ export const list = query({
 
     return {
       items,
-      nextCursor: isDone || items.length < limit ? null : continueCursor,
+      nextCursor: isDone ? null : continueCursor,
     }
   },
 })

@@ -40,7 +40,7 @@ interface PageProps {
   searchParams: Promise<{
     q?: string
     category?: string
-    sort?: 'recent' | 'published' | 'popular' | 'trending' | 'hot'
+    sort?: 'recent' | 'published' | 'popular' | 'trending'
     featured?: string
   }>
 }

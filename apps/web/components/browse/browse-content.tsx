@@ -28,7 +28,7 @@ const PAGE_SIZE = 24
 const ROW_HEIGHT_ESTIMATE = 220
 const OVERSCAN = 3
 
-const sortOptions = ['recent', 'published', 'popular', 'trending', 'hot'] as const
+const sortOptions = ['recent', 'published', 'popular', 'trending'] as const
 type SortOption = (typeof sortOptions)[number]
 
 const sortLabels: Record<SortOption, string> = {
@@ -36,7 +36,6 @@ const sortLabels: Record<SortOption, string> = {
   published: 'Recently published',
   popular: 'Popular',
   trending: 'Trending',
-  hot: 'Hot',
 }
 
 function useColumns() {

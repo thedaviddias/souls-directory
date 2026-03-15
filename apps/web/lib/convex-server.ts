@@ -145,7 +145,7 @@ export async function getSoulsList(params: {
   categorySlug?: string
   tagSlug?: string
   featured?: boolean
-  sort?: 'recent' | 'published' | 'popular' | 'trending' | 'stars' | 'hot'
+  sort?: 'recent' | 'published' | 'popular' | 'trending' | 'stars'
   limit?: number
   cursor?: string
 }) {
