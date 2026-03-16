@@ -313,6 +313,13 @@ const soulBuilderDailyUsage = defineTable({
   lastGeneratedAt: v.number(),
 }).index('by_user_date', ['userId', 'dateKey'])
 
+// Desktop auth relay codes (ephemeral, for Tauri OAuth flow)
+const desktopAuthCodes = defineTable({
+  session: v.string(),
+  code: v.string(),
+  createdAt: v.number(),
+}).index('by_session', ['session'])
+
 // Audit logs for moderation
 const auditLogs = defineTable({
   actorUserId: v.id('users'),
@@ -360,6 +367,7 @@ export default defineSchema({
   downloads,
   dailyStats,
   soulBuilderDailyUsage,
+  desktopAuthCodes,
   auditLogs,
   reports,
 })

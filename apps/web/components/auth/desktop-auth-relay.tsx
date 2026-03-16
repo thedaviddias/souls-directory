@@ -93,9 +93,7 @@ export function DesktopAuthRelay() {
         <p className="text-lg font-medium text-text">Returning to Soul Studio...</p>
 
         {!showFallback ? (
-          <p className="text-sm text-text-secondary">
-            Opening the desktop app...
-          </p>
+          <p className="text-sm text-text-secondary">Opening the desktop app...</p>
         ) : (
           <div className="space-y-3">
             <p className="text-sm text-text-secondary">

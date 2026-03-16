@@ -1,17 +1,6 @@
+import { api } from '@/lib/convex-api'
+import { fetchMutation } from 'convex/nextjs'
 import { type NextRequest, NextResponse } from 'next/server'
-
-const CODE_TTL_MS = 5 * 60 * 1000 // 5 minutes
-
-const store = new Map<string, { code: string; createdAt: number }>()
-
-function cleanExpired() {
-  const now = Date.now()
-  for (const [key, entry] of store) {
-    if (now - entry.createdAt > CODE_TTL_MS) {
-      store.delete(key)
-    }
-  }
-}
 
 /**
  * POST /api/auth/desktop-relay
@@ -26,8 +15,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Missing session or code' }, { status: 400 })
   }
 
-  cleanExpired()
-  store.set(session, { code, createdAt: Date.now() })
+  await fetchMutation(api.desktopAuthCodes.store, { session, code })
 
   return NextResponse.json({ ok: true })
 }
@@ -44,13 +32,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing session' }, { status: 400 })
   }
 
-  cleanExpired()
-  const entry = store.get(session)
+  const result = await fetchMutation(api.desktopAuthCodes.consume, { session })
 
-  if (!entry) {
+  if (!result) {
     return NextResponse.json({ code: null }, { status: 404 })
   }
 
-  store.delete(session)
-  return NextResponse.json({ code: entry.code })
+  return NextResponse.json({ code: result.code })
 }

@@ -14,6 +14,7 @@ import type * as collections from "../collections.js";
 import type * as comments from "../comments.js";
 import type * as crons from "../crons.js";
 import type * as debug from "../debug.js";
+import type * as desktopAuthCodes from "../desktopAuthCodes.js";
 import type * as http from "../http.js";
 import type * as lib_access from "../lib/access.js";
 import type * as lib_sanitizeSoulContent from "../lib/sanitizeSoulContent.js";
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   comments: typeof comments;
   crons: typeof crons;
   debug: typeof debug;
+  desktopAuthCodes: typeof desktopAuthCodes;
   http: typeof http;
   "lib/access": typeof lib_access;
   "lib/sanitizeSoulContent": typeof lib_sanitizeSoulContent;
