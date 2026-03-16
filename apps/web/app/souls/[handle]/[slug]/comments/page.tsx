@@ -3,6 +3,9 @@
  * URL: /souls/{handle}/{slug}/comments
  */
 
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { SoulComments } from '@/components/souls/soul-comments'
@@ -10,9 +13,6 @@ import type { Id } from '@/convex/_generated/dataModel'
 import { getSoulByOwnerAndSlug } from '@/lib/convex-server'
 import { soulPath, soulPathFrom } from '@/lib/routes'
 import { createDynamicMetadata } from '@/lib/seo'
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 

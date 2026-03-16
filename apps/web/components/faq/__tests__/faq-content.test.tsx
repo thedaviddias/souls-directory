@@ -1,16 +1,10 @@
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: {
-    children: React.ReactNode
-    href: string
-  }) => React.createElement('a', { href, ...props }, children),
+  default: ({ children, href, ...props }: { children: React.ReactNode; href: string }) =>
+    React.createElement('a', { href, ...props }, children),
 }))
 
 vi.mock('next/navigation', () => ({

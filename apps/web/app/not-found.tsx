@@ -1,5 +1,5 @@
-import { ROUTES, soulsByCategoryPath } from '@/lib/routes'
 import Link from 'next/link'
+import { ROUTES, soulsByCategoryPath } from '@/lib/routes'
 
 export default function NotFound() {
   return (

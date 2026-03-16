@@ -8,7 +8,7 @@
 import { BrowseContent } from '@/components/browse/browse-content'
 import { BreadcrumbSchema, CollectionPageSchema } from '@/components/seo/json-ld'
 import { getCategoriesList, getSoulsList } from '@/lib/convex-server'
-import { SITE_CONFIG, createMetadata } from '@/lib/seo'
+import { createMetadata } from '@/lib/seo'
 import type { Category, Soul } from '@/types'
 
 // Helper types for Convex data transformation

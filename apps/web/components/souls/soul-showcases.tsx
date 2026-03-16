@@ -5,14 +5,6 @@
  * Preview mode shows 3 tweets + "View all"; full mode shows paginated grid.
  */
 
-import { SectionHeader } from '@/components/marketing/section-header'
-import { Button } from '@/components/ui/button'
-import type { Id } from '@/convex/_generated/dataModel'
-import { useAuthStatus } from '@/hooks/use-auth-status'
-import { api } from '@/lib/convex-api'
-import { logger } from '@/lib/logger'
-import { ROUTES, soulShowcasesPath } from '@/lib/routes'
-import { cn } from '@/lib/utils'
 import { useMutation, useQuery } from 'convex/react'
 import { ExternalLink, Trash2 } from 'lucide-react'
 import type { Route } from 'next'
@@ -22,6 +14,14 @@ import { Suspense, useEffect, useState } from 'react'
 import type { TwitterComponents } from 'react-tweet'
 import { Tweet, TweetSkeleton } from 'react-tweet'
 import { toast } from 'sonner'
+import { SectionHeader } from '@/components/marketing/section-header'
+import { Button } from '@/components/ui/button'
+import type { Id } from '@/convex/_generated/dataModel'
+import { useAuthStatus } from '@/hooks/use-auth-status'
+import { api } from '@/lib/convex-api'
+import { logger } from '@/lib/logger'
+import { ROUTES, soulShowcasesPath } from '@/lib/routes'
+import { cn } from '@/lib/utils'
 
 interface ShowcaseItem {
   showcase: {

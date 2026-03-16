@@ -4,14 +4,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { SectionHeader } from '../section-header'
 
 vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: {
-    children: React.ReactNode
-    href: string
-  }) => React.createElement('a', { href, ...props }, children),
+  default: ({ children, href, ...props }: { children: React.ReactNode; href: string }) =>
+    React.createElement('a', { href, ...props }, children),
 }))
 
 describe('SectionHeader', () => {

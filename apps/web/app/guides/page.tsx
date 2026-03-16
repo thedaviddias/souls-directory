@@ -2,14 +2,14 @@
  * Guides index - SEO and how-to content for OpenClaw and SOUL.md
  */
 
+import { format } from 'date-fns'
+import Link from 'next/link'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { BreadcrumbSchema } from '@/components/seo/json-ld'
 import { getAllGuides } from '@/lib/guides'
 import { ROUTES } from '@/lib/routes'
 import { createMetadata } from '@/lib/seo'
-import { format } from 'date-fns'
-import Link from 'next/link'
 
 export const metadata = createMetadata({
   title: 'Guides',

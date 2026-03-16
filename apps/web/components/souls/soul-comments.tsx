@@ -5,15 +5,15 @@
  * Uses Convex comments.list, comments.add, comments.remove.
  */
 
+import Image from 'next/image'
 import { SectionHeader } from '@/components/marketing/section-header'
 import { Button } from '@/components/ui/button'
 import type { Id } from '@/convex/_generated/dataModel'
 import { useAuthStatus } from '@/hooks/use-auth-status'
 import { api } from '@/lib/convex-api'
 import { logger } from '@/lib/logger'
-import { ROUTES, profilePath, soulCommentsPath } from '@/lib/routes'
+import { profilePath, ROUTES, soulCommentsPath } from '@/lib/routes'
 import { getUserDisplayName } from '@/lib/user-display'
-import Image from 'next/image'
 
 const COMMENT_CHAR_LIMIT = 2000
 
@@ -67,6 +67,7 @@ function CommentAvatar({
     </span>
   )
 }
+
 import { useMutation, useQuery } from 'convex/react'
 import { formatDistanceToNow } from 'date-fns'
 import { Flag, MessageCircle, Send, Trash2 } from 'lucide-react'
@@ -238,7 +239,7 @@ export function SoulComments({
       await removeComment({ commentId })
       setConfirmDeleteId(null)
       toast.success('Comment removed')
-    } catch (err) {
+    } catch (_err) {
       toast.error('Failed to remove comment')
     }
   }
@@ -459,7 +460,7 @@ function CommentBlock({
   onReport,
   confirmDeleteId,
   setConfirmDeleteId,
-  soulId,
+  soulId: _soulId,
 }: {
   item: CommentItem
   replies: CommentItem[]

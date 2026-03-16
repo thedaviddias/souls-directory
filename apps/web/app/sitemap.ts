@@ -7,11 +7,11 @@
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
  */
 
+import type { MetadataRoute } from 'next'
 import { getAllSoulsForSitemap, getAllUsersForSitemap } from '@/lib/convex-server'
 import { getAllGuides } from '@/lib/guides'
 import { profilePath } from '@/lib/routes'
 import { SITE_CONFIG } from '@/lib/seo'
-import type { MetadataRoute } from 'next'
 
 // Types for sitemap data
 type SitemapSoul = NonNullable<Awaited<ReturnType<typeof getAllSoulsForSitemap>>>[number]

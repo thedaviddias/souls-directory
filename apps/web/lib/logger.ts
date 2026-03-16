@@ -32,7 +32,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 /**
  * Format a log message with optional context
  */
-function formatMessage(message: string, context?: LogContext): string {
+function _formatMessage(message: string, context?: LogContext): string {
   if (!context || Object.keys(context).length === 0) {
     return message
   }

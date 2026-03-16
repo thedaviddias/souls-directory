@@ -9,12 +9,12 @@
 
 'use client'
 
-import { useCollectionsEnabled } from '@/components/flags-provider'
-import { PageContainer } from '@/components/layout/page-container'
-import { EXTERNAL_LINKS, ROUTES, soulsByCategoryPath } from '@/lib/routes'
 import { ExternalLink } from 'lucide-react'
 import type { Route } from 'next'
 import Link from 'next/link'
+import { useCollectionsEnabled } from '@/components/flags-provider'
+import { PageContainer } from '@/components/layout/page-container'
+import { EXTERNAL_LINKS, ROUTES, soulsByCategoryPath } from '@/lib/routes'
 
 type FooterLink =
   | { href: Route; label: string; external?: false }

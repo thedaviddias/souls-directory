@@ -1,5 +1,5 @@
+import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
-import { type VariantProps, cva } from 'class-variance-authority'
 
 const pageContainerVariants = cva('max-w-6xl mx-auto px-6', {
   variants: {

@@ -1,9 +1,9 @@
 'use client'
 
-import { api } from '@/lib/convex-api'
-import { logger, setUser } from '@/lib/logger'
 import { useConvexAuth, useMutation, useQuery } from 'convex/react'
 import { useEffect, useRef } from 'react'
+import { api } from '@/lib/convex-api'
+import { logger, setUser } from '@/lib/logger'
 
 /**
  * UserBootstrap component ensures user profile is created/updated after login.

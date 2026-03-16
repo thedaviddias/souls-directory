@@ -7,6 +7,22 @@
 
 'use client'
 
+import { useMutation, useQuery } from 'convex/react'
+import { formatDistanceToNow } from 'date-fns'
+import {
+  ArrowUp,
+  Check,
+  Clipboard,
+  Download,
+  GitFork,
+  MoreHorizontal,
+  Pencil,
+  Star,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { SectionHeader } from '@/components/marketing/section-header'
@@ -30,9 +46,9 @@ import { useAuthStatus } from '@/hooks/use-auth-status'
 import { api } from '@/lib/convex-api'
 import { logger } from '@/lib/logger'
 import {
-  ROUTES,
   getSoulHandle,
   profilePath,
+  ROUTES,
   soulPathFrom,
   soulsByCategoryPath,
   soulsByTagPath,
@@ -40,22 +56,6 @@ import {
 import { getUserDisplayName } from '@/lib/user-display'
 import { cn } from '@/lib/utils'
 import type { Soul } from '@/types'
-import { useMutation, useQuery } from 'convex/react'
-import { formatDistanceToNow } from 'date-fns'
-import {
-  ArrowUp,
-  Check,
-  Clipboard,
-  Download,
-  GitFork,
-  MoreHorizontal,
-  Pencil,
-  Star,
-} from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { toast } from 'sonner'
 
 interface SoulData {
   forkedFrom: { slug: string; ownerHandle?: string | null; name: string } | null

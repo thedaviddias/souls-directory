@@ -1,6 +1,6 @@
-import type { Id } from '@/convex/_generated/dataModel'
 import { act, renderHook } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import type { Id } from '@/convex/_generated/dataModel'
 import { useSoulMetadata } from '../use-soul-metadata'
 
 type CategoriesParam = Parameters<typeof useSoulMetadata>[2]

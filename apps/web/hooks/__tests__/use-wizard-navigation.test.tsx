@@ -1,6 +1,6 @@
 import { act, render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { type WizardStep, useWizardNavigation } from '../use-wizard-navigation'
+import { useWizardNavigation, type WizardStep } from '../use-wizard-navigation'
 
 const defaultReadiness = {
   source: true,

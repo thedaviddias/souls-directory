@@ -1,6 +1,6 @@
-import { api } from '@/lib/convex-api'
 import { fetchMutation } from 'convex/nextjs'
 import { type NextRequest, NextResponse } from 'next/server'
+import { api } from '@/lib/convex-api'
 
 /**
  * POST /api/auth/desktop-relay

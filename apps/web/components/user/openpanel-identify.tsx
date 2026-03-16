@@ -1,8 +1,8 @@
 'use client'
 
-import { api } from '@/lib/convex-api'
 import { useConvexAuth, useQuery } from 'convex/react'
 import { useEffect } from 'react'
+import { api } from '@/lib/convex-api'
 
 function splitName(name?: string | null) {
   const trimmed = name?.trim()

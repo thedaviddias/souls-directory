@@ -1,14 +1,19 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-  "organizeImports": { "enabled": true },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
       "complexity": { "noUselessFragments": "warn" },
       "style": { "noNonNullAssertion": "warn" },
-      "suspicious": { "noExplicitAny": "warn" }
+      "suspicious": { "noExplicitAny": "warn", "noArrayIndexKey": "warn" },
+      "a11y": {
+        "useAriaPropsSupportedByRole": "warn",
+        "useSemanticElements": "warn"
+      },
+      "performance": { "noImgElement": "warn" }
     }
   },
   "formatter": {
@@ -24,29 +29,45 @@
       "trailingCommas": "es5"
     }
   },
+  "css": {
+    "parser": { "cssModules": true }
+  },
   "overrides": [
     {
-      "include": ["**/convex-api.ts", "**/convex-server.ts"],
+      "includes": ["**/convex-api.ts", "**/convex-server.ts"],
       "linter": {
         "rules": {
           "suspicious": { "noExplicitAny": "off" }
         }
       }
+    },
+    {
+      "includes": ["**/__tests__/**", "**/__mocks__/**"],
+      "linter": {
+        "rules": {
+          "correctness": { "noUnusedFunctionParameters": "off" },
+          "suspicious": { "noArrayIndexKey": "off" },
+          "a11y": { "noStaticElementInteractions": "off" }
+        }
+      }
     }
   ],
   "files": {
-    "ignore": [
-      "node_modules",
-      ".next",
-      "dist",
-      ".turbo",
-      "coverage",
-      "**/next-env.d.ts",
-      "**/convex/_generated/**",
-      ".all-contributorsrc",
-      "**/src-tauri/**",
-      "**/src/generated/**",
-      "apps/souls-studio/**"
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/.next",
+      "!**/dist",
+      "!**/.turbo",
+      "!**/coverage",
+      "!**/next-env.d.ts",
+      "!**/convex/_generated",
+      "!**/.all-contributorsrc",
+      "!**/src-tauri",
+      "!**/src/generated",
+      "!**/apps/souls-studio",
+      "!**/env.d.ts",
+      "!**/globals.css"
     ]
   }
 }

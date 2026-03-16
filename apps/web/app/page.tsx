@@ -8,7 +8,7 @@
 import { HomeContent } from '@/components/home/home-content'
 import { WebSiteSchema } from '@/components/seo/json-ld'
 import { getCategories, getFeaturedSouls, getSoulsList } from '@/lib/convex-server'
-import { SITE_CONFIG, createMetadata } from '@/lib/seo'
+import { createMetadata } from '@/lib/seo'
 import type { Category, Soul } from '@/types'
 
 export const metadata = createMetadata({

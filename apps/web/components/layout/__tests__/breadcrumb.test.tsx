@@ -5,14 +5,8 @@ import { describe, expect, it, vi } from 'vitest'
 import { Breadcrumb, generateBreadcrumbItems } from '../breadcrumb'
 
 vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: {
-    children: ReactNode
-    href: string
-  }) => createElement('a', { href, ...props }, children),
+  default: ({ children, href, ...props }: { children: ReactNode; href: string }) =>
+    createElement('a', { href, ...props }, children),
 }))
 
 vi.mock('next/navigation', () => ({

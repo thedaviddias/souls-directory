@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
-  DEFAULT_KEYWORDS,
-  SITE_CONFIG,
   canonicalUrl,
   createAuthPageMetadata,
   createDynamicMetadata,
   createMetadata,
+  DEFAULT_KEYWORDS,
   formatTitle,
+  SITE_CONFIG,
 } from '../seo'
 
 describe('formatTitle', () => {

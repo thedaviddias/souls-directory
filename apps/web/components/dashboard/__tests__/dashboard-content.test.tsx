@@ -1,7 +1,7 @@
-import { useAuthStatus } from '@/hooks/use-auth-status'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useAuthStatus } from '@/hooks/use-auth-status'
 import { DashboardContent } from '../dashboard-content'
 
 const { mockReplace, mockPush, mockDeleteSoul, mockUseQuery } = vi.hoisted(() => ({
@@ -19,14 +19,8 @@ const mockUser = {
 }
 
 vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: {
-    children: React.ReactNode
-    href: string
-  }) => React.createElement('a', { href, ...props }, children),
+  default: ({ children, href, ...props }: { children: React.ReactNode; href: string }) =>
+    React.createElement('a', { href, ...props }, children),
 }))
 
 vi.mock('next/navigation', () => ({

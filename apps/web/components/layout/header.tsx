@@ -10,6 +10,12 @@
 
 'use client'
 
+import { LayoutDashboard, Loader2, LogOut, Plus, Settings, Sparkles } from 'lucide-react'
+import type { Route } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
 import { useCollectionsEnabled } from '@/components/flags-provider'
 import { SearchAutocomplete } from '@/components/search/search-autocomplete'
 import { GithubStars } from '@/components/shared/github-stars'
@@ -23,15 +29,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuthStatus } from '@/hooks/use-auth-status'
-import { LayoutDashboard, Loader2, LogOut, Plus, Settings, Sparkles } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
-
-import { ROUTES, profilePath } from '@/lib/routes'
+import { profilePath, ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
-import type { Route } from 'next'
 
 interface NavItem {
   href: Route

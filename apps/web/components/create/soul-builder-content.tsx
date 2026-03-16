@@ -1,5 +1,11 @@
 'use client'
 
+import { useAuthToken } from '@convex-dev/auth/react'
+import { useQuery } from 'convex/react'
+import { ArrowLeft, ArrowRight, Loader2, Sparkles } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs'
+import { type ReactNode, useEffect, useMemo, useState, useTransition } from 'react'
 import { SkillCommandCard } from '@/components/home/skill-command-card'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
@@ -23,12 +29,6 @@ import {
   type SoulBuilderUseCaseId,
   type SoulBuilderWorkingStyleId,
 } from '@/lib/soul-builder'
-import { useAuthToken } from '@convex-dev/auth/react'
-import { useQuery } from 'convex/react'
-import { ArrowLeft, ArrowRight, Loader2, Sparkles } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs'
-import { type ReactNode, useEffect, useMemo, useState, useTransition } from 'react'
 
 const inputClasses =
   'w-full px-3 py-2 rounded-md bg-bg border border-border text-text text-sm placeholder-text-muted focus:outline-none focus:border-text-secondary transition-colors'
@@ -557,13 +557,7 @@ function QuestionSection({
   )
 }
 
-function StatusPill({
-  children,
-  title,
-}: {
-  children: ReactNode
-  title?: string
-}) {
+function StatusPill({ children, title }: { children: ReactNode; title?: string }) {
   return (
     <Badge
       variant="outline"

@@ -65,7 +65,7 @@ export function useKeyboardShortcuts() {
         // Number keys 1-9 for quick copy
         if (/^[1-9]$/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
           const cards = document.querySelectorAll('[data-soul-card]')
-          const index = Number.parseInt(e.key) - 1
+          const index = Number.parseInt(e.key, 10) - 1
           if (cards[index]) {
             const copyBtn = cards[index].querySelector<HTMLButtonElement>('[data-copy-button]')
             if (copyBtn) {

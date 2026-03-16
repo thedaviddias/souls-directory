@@ -1,7 +1,7 @@
-import type { Category, Soul } from '@/types'
 import { render, screen } from '@testing-library/react'
 import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
+import type { Category, Soul } from '@/types'
 import { HomeContent } from '../home-content'
 
 vi.mock('@/components/layout/page-container', () => ({
@@ -31,28 +31,15 @@ vi.mock('@/components/souls/soul-card-grid', () => ({
 }))
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({
-    children,
-    asChild,
-    ...props
-  }: {
-    children: React.ReactNode
-    asChild?: boolean
-  }) =>
+  Button: ({ children, asChild, ...props }: { children: React.ReactNode; asChild?: boolean }) =>
     asChild
       ? React.createElement(React.Fragment, {}, children)
       : React.createElement('button', { type: 'button', ...props }, children),
 }))
 
 vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: {
-    children: React.ReactNode
-    href: string
-  }) => React.createElement('a', { href, ...props }, children),
+  default: ({ children, href, ...props }: { children: React.ReactNode; href: string }) =>
+    React.createElement('a', { href, ...props }, children),
 }))
 
 vi.mock('@/components/home/skill-command-card', () => ({

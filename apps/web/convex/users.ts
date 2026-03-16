@@ -492,7 +492,7 @@ export const deleteAccount = mutation({
     // The UI will show "Deleted User" based on the deletedAt timestamp
 
     // 4. Collections: Soft delete user's collections
-    const userCollections = await ctx.db
+    const _userCollections = await ctx.db
       .query('collections')
       .withIndex('by_owner', (q) => q.eq('ownerUserId', user._id))
       .collect()

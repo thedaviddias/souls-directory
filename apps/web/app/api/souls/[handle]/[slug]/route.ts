@@ -10,14 +10,14 @@
  * - Returns 404 for unknown souls
  */
 
-import { api } from '@/lib/convex-api'
-import { checkRateLimit } from '@/lib/rate-limit'
 import { fetchQuery } from 'convex/nextjs'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { api } from '@/lib/convex-api'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ handle: string; slug: string }> }
 ) {
   const { handle: rawHandle, slug: rawSlug } = await params

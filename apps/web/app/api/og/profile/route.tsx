@@ -3,8 +3,8 @@
  * Used when sharing /members/[handle] on social platforms.
  */
 
-import { getSoulsByUser, getUserByHandle } from '@/lib/convex-server'
 import { ImageResponse } from 'next/og'
+import { getSoulsByUser, getUserByHandle } from '@/lib/convex-server'
 
 export const alt = 'Profile on souls.directory'
 export const size = { width: 1200, height: 630 }

@@ -5,12 +5,12 @@
  * SoulCard, soul detail, browse filters. Optional link or button (onClick).
  */
 
+import { cva, type VariantProps } from 'class-variance-authority'
+import type { Route } from 'next'
+import Link from 'next/link'
 import { CategoryIcon } from '@/lib/category-icons'
 import { cn } from '@/lib/utils'
 import type { Category } from '@/types'
-import { type VariantProps, cva } from 'class-variance-authority'
-import type { Route } from 'next'
-import Link from 'next/link'
 
 const categoryBadgeVariants = cva(
   'inline-flex items-center font-medium transition-colors text-text-secondary hover:text-text',

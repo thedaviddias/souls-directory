@@ -1,23 +1,23 @@
+import { fetchMutation, fetchQuery } from 'convex/nextjs'
+import { NextResponse } from 'next/server'
 import { errors } from '@/lib/api-response'
 import { api } from '@/lib/convex-api'
 import { logger } from '@/lib/logger'
 import { trackServerEvent } from '@/lib/openpanel-server'
 import { checkRateLimitSoulBuilder } from '@/lib/rate-limit'
 import {
+  getSoulBuilderUseCase,
   SOUL_BUILDER_DAILY_LIMIT,
   type SoulBuilderExample,
   SoulBuilderRequestSchema,
   type SoulBuilderResponse,
-  getSoulBuilderUseCase,
 } from '@/lib/soul-builder'
 import {
-  SOUL_BUILDER_OUTPUT_SCHEMA,
   buildSoulBuilderPrompt,
   extractOpenAIText,
   normalizeSoulBuilderResult,
+  SOUL_BUILDER_OUTPUT_SCHEMA,
 } from '@/lib/soul-builder-server'
-import { fetchMutation, fetchQuery } from 'convex/nextjs'
-import { NextResponse } from 'next/server'
 
 const DEFAULT_MODEL = 'gpt-5-mini'
 
@@ -78,7 +78,7 @@ function toContrastExamples(payload: unknown): SoulBuilderExample[] {
 async function getAuthenticatedUser(token: string) {
   try {
     return await fetchQuery(api.users.me, {}, { token })
-  } catch (error) {
+  } catch (_error) {
     return null
   }
 }

@@ -1,5 +1,22 @@
 'use client'
 
+import { useMutation, useQuery } from 'convex/react'
+import { formatDistanceToNow } from 'date-fns'
+import {
+  ArrowUp,
+  Download,
+  Eye,
+  FolderPlus,
+  Loader2,
+  Pencil,
+  Plus,
+  Star,
+  Trash2,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { useCollectionsEnabled } from '@/components/flags-provider'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
@@ -19,23 +36,6 @@ import { useAuthStatus } from '@/hooks/use-auth-status'
 import { api } from '@/lib/convex-api'
 import { logger } from '@/lib/logger'
 import { ROUTES, soulPath } from '@/lib/routes'
-import { useMutation, useQuery } from 'convex/react'
-import { formatDistanceToNow } from 'date-fns'
-import {
-  ArrowUp,
-  Download,
-  Eye,
-  FolderPlus,
-  Loader2,
-  Pencil,
-  Plus,
-  Star,
-  Trash2,
-} from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
 
 interface SoulItem {
   soul: {
@@ -424,15 +424,7 @@ export function DashboardContent() {
   )
 }
 
-function StatCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string
-  value: string
-  icon: React.ReactNode
-}) {
+function StatCard({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
   return (
     <div className="bg-surface border border-border rounded-lg p-4">
       <div className="flex items-center gap-2 text-text-muted mb-2">

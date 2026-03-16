@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { SlugParamSchema, SoulListQuerySchema, parseSoulListQuery } from './validation'
+import { parseSoulListQuery, SlugParamSchema, SoulListQuerySchema } from './validation'
 
 describe('SlugParamSchema', () => {
   it('accepts valid slug', () => {

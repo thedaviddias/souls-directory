@@ -2,6 +2,7 @@
  * Collections list page - public collections and starter packs
  */
 
+import Link from 'next/link'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { BreadcrumbSchema } from '@/components/seo/json-ld'
@@ -9,7 +10,6 @@ import { SoulCardGrid } from '@/components/souls/soul-card-grid'
 import { getPublicCollections } from '@/lib/convex-server'
 import { ROUTES, soulsByCategoryPath } from '@/lib/routes'
 import { createMetadata } from '@/lib/seo'
-import Link from 'next/link'
 
 export const metadata = createMetadata({
   title: 'Collections',

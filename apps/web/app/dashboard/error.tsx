@@ -5,11 +5,11 @@
  * Reports to Sentry with route tag and offers try again / back to home.
  */
 
-import { Button } from '@/components/ui/button'
-import { ROUTES } from '@/lib/routes'
 import * as Sentry from '@sentry/nextjs'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { ROUTES } from '@/lib/routes'
 
 export default function DashboardError({
   error,

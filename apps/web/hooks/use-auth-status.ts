@@ -1,8 +1,8 @@
 'use client'
 
-import { api } from '@/lib/convex-api'
 import { useAuthActions } from '@convex-dev/auth/react'
 import { useQuery } from 'convex/react'
+import { api } from '@/lib/convex-api'
 
 /**
  * Hook to get the current authentication status and user data.

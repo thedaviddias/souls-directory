@@ -1,7 +1,7 @@
-import { SoulBuilderContent } from '@/components/create/soul-builder-content'
-import { createAuthPageMetadata } from '@/lib/seo'
 import { Loader2 } from 'lucide-react'
 import { Suspense } from 'react'
+import { SoulBuilderContent } from '@/components/create/soul-builder-content'
+import { createAuthPageMetadata } from '@/lib/seo'
 
 export const metadata = createAuthPageMetadata(
   'Create Soul',

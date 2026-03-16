@@ -1,13 +1,13 @@
 import {
-  type SoulBuilderExample,
-  type SoulBuilderRequest,
-  SoulBuilderResponseSchema,
   getSoulBuilderDisagreementStyle,
   getSoulBuilderUncertaintyMode,
   getSoulBuilderUseCase,
   getSoulBuilderWorkingStyle,
+  type SoulBuilderExample,
+  type SoulBuilderRequest,
+  SoulBuilderResponseSchema,
 } from '@/lib/soul-builder'
-import { SLUG_PATTERN, generateSlug } from '@/lib/upload-utils'
+import { generateSlug, SLUG_PATTERN } from '@/lib/upload-utils'
 
 const SOUL_BUILDER_HEURISTICS = `
 Write a soul that is behaviorally specific, not generic assistant sludge.

@@ -1,5 +1,24 @@
 'use client'
 
+import { useMutation, useQuery } from 'convex/react'
+import {
+  AlertCircle,
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  CheckCircle,
+  ChevronDown,
+  Clipboard,
+  ExternalLink,
+  FileText,
+  Github,
+  Loader2,
+  Upload,
+  X,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { Button } from '@/components/ui/button'
@@ -20,25 +39,6 @@ import { logger } from '@/lib/logger'
 import { ROUTES, soulPath } from '@/lib/routes'
 import { formatBytes, formatPublishError, isMarkdownFile } from '@/lib/upload-utils'
 import { bumpVersion } from '@/lib/version-utils'
-import { useMutation, useQuery } from 'convex/react'
-import {
-  AlertCircle,
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  CheckCircle,
-  ChevronDown,
-  Clipboard,
-  ExternalLink,
-  FileText,
-  Github,
-  Loader2,
-  Upload,
-  X,
-} from 'lucide-react'
-import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useRef, useState } from 'react'
 
 // =============================================================================
 // Constants

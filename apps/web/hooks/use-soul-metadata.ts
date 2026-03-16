@@ -1,15 +1,15 @@
 'use client'
 
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Id } from '@/convex/_generated/dataModel'
 import { logger } from '@/lib/logger'
 import {
-  SLUG_PATTERN,
   extractSoulMetadata,
   generateSlug,
   isMarkdownFile,
   isSoulFile,
+  SLUG_PATTERN,
 } from '@/lib/upload-utils'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 /** Which fields were auto-detected from the file content */
 export type AutoDetectedFields = Partial<
@@ -152,7 +152,7 @@ export function useSoulMetadata(
       }
 
       setAutoDetected((prev) => ({ ...prev, ...detected }))
-    } catch (err) {
+    } catch (_err) {
       logger.warn('Soul metadata extraction failed', { path: mdFile?.path })
     }
     // normalizedFiles is read via ref — not included in deps to avoid infinite re-render

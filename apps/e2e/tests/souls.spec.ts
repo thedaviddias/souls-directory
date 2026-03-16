@@ -67,7 +67,7 @@ test.describe('Soul Cards', () => {
     await page.goto('/')
 
     // Should show featured souls section
-    const featuredSection = page
+    const _featuredSection = page
       .locator('text=Featured')
       .or(page.locator('[data-testid="featured-souls"]'))
 

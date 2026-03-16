@@ -13,15 +13,14 @@
  * revalidation times. This reduces database load and improves TTFB.
  */
 
+import { fetchQuery } from 'convex/nextjs'
+import { unstable_cache } from 'next/cache'
 import type { Id } from '@/convex/_generated/dataModel'
 import { api } from '@/lib/convex-api'
 import { logger } from '@/lib/logger'
-import { fetchQuery } from 'convex/nextjs'
-import { unstable_cache } from 'next/cache'
 
 // Re-export for convenience
-export { fetchQuery }
-export { api }
+export { api, fetchQuery }
 
 // Cache configuration constants (in seconds)
 const CACHE_TIMES = {

@@ -1,11 +1,11 @@
 'use client'
 
+import { ChevronDown, ExternalLink } from 'lucide-react'
+import { useState } from 'react'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { faqCategories, faqItems } from '@/lib/faq-data'
 import { cn } from '@/lib/utils'
-import { ChevronDown, ExternalLink } from 'lucide-react'
-import { useState } from 'react'
 
 export function FAQContent() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)

@@ -2,6 +2,12 @@
  * Guide article page - MDX content with sidebar TOC and Article SEO.
  */
 
+import { format, isToday, isYesterday } from 'date-fns'
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { MDXRemote } from 'next-mdx-remote/rsc'
 import { GuideLayout } from '@/components/guides/guide-layout'
 import { GuideShareButton } from '@/components/guides/guide-share-button'
 import { mdxGuideComponents } from '@/components/guides/mdx-components'
@@ -10,15 +16,9 @@ import { PageContainer } from '@/components/layout/page-container'
 import { ArticleSchema, BreadcrumbSchema } from '@/components/seo/json-ld'
 import { getUserByHandle } from '@/lib/convex-server'
 import { getGuide, getGuidesSlugs } from '@/lib/guides'
-import { ROUTES, profilePath } from '@/lib/routes'
-import { SITE_CONFIG, createMetadata } from '@/lib/seo'
+import { profilePath, ROUTES } from '@/lib/routes'
+import { createMetadata, SITE_CONFIG } from '@/lib/seo'
 import { getUserDisplayName, getUserHandle, getUserImage } from '@/lib/user-display'
-import { format, isToday, isYesterday } from 'date-fns'
-import type { Metadata } from 'next'
-import { MDXRemote } from 'next-mdx-remote/rsc'
-import Image from 'next/image'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 const DEFAULT_AUTHOR_NAME = 'David Dias'
 

@@ -1,8 +1,8 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import type { GuideHeading } from '@/lib/guides'
 import { cn } from '@/lib/utils'
-import { useEffect, useState } from 'react'
 
 interface TableOfContentsProps {
   headings: GuideHeading[]

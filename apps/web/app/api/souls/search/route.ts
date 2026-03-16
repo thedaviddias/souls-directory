@@ -7,12 +7,12 @@
  * Rate limited to 5 req/min per IP (stricter than soul fetch).
  */
 
-import { api } from '@/lib/convex-api'
-import { checkRateLimitSearch } from '@/lib/rate-limit'
-import { SITE_CONFIG } from '@/lib/seo'
 import { fetchQuery } from 'convex/nextjs'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { api } from '@/lib/convex-api'
+import { checkRateLimitSearch } from '@/lib/rate-limit'
+import { SITE_CONFIG } from '@/lib/seo'
 
 const MAX_LIMIT = 25
 
@@ -107,7 +107,7 @@ export async function GET(request: Request) {
         },
       }
     )
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'Search failed.' },
       {

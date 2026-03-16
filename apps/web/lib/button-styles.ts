@@ -3,7 +3,7 @@
  * Primary matches the header "Sign up" button; secondary is the outline style.
  */
 
-import { type VariantProps, cva } from 'class-variance-authority'
+import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
 

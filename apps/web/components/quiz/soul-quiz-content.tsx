@@ -4,15 +4,15 @@
  * Interactive quiz: use case → tone → model → recommended souls with install commands.
  */
 
+import { useQuery } from 'convex/react'
+import { ArrowRight, Check, Sparkles } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
 import { SoulCard } from '@/components/souls/soul-card'
 import { Button } from '@/components/ui/button'
 import { api } from '@/lib/convex-api'
 import { ROUTES } from '@/lib/routes'
 import type { Soul } from '@/types'
-import { useQuery } from 'convex/react'
-import { ArrowRight, Check, Sparkles } from 'lucide-react'
-import Link from 'next/link'
-import { useState } from 'react'
 
 const USE_CASES = [
   { id: 'coding', label: 'Coding & development', categorySlug: 'technical' },

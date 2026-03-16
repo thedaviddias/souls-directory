@@ -1,5 +1,5 @@
-import { logger } from '@/lib/logger'
 import { opServer } from '@thedaviddias/analytics/server'
+import { logger } from '@/lib/logger'
 
 export function trackServerEvent(event: string, properties: Record<string, unknown> = {}) {
   if (process.env.NODE_ENV !== 'production') return

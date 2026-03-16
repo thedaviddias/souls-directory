@@ -1,7 +1,6 @@
-import type { Id } from '@/convex/_generated/dataModel'
 import { fireEvent, render, screen } from '@testing-library/react'
-import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
+import type { Id } from '@/convex/_generated/dataModel'
 import { TagInput } from '../tag-input'
 
 const mockId = (id: string) => id as unknown as Id<'tags'>

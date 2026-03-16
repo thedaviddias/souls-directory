@@ -2,16 +2,16 @@
  * Single collection view - souls in the collection
  */
 
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { SoulCard } from '@/components/souls/soul-card'
 import { SoulCardGrid } from '@/components/souls/soul-card-grid'
 import { getCollectionBySlug } from '@/lib/convex-server'
-import { ROUTES, profilePath } from '@/lib/routes'
+import { profilePath, ROUTES } from '@/lib/routes'
 import { createMetadata } from '@/lib/seo'
 import type { Soul } from '@/types'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 type Props = { params: Promise<{ slug: string }> }
 

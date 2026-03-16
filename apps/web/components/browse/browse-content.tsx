@@ -8,6 +8,11 @@
 
 'use client'
 
+import { useWindowVirtualizer } from '@tanstack/react-virtual'
+import { useConvex } from 'convex/react'
+import { Loader2 } from 'lucide-react'
+import { parseAsBoolean, parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { SearchInput } from '@/components/search/search-input'
@@ -18,11 +23,6 @@ import { useAnalytics } from '@/hooks/use-analytics'
 import { api } from '@/lib/convex-api'
 import { ROUTES } from '@/lib/routes'
 import type { Category, Soul } from '@/types'
-import { useWindowVirtualizer } from '@tanstack/react-virtual'
-import { useConvex } from 'convex/react'
-import { Loader2 } from 'lucide-react'
-import { parseAsBoolean, parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const PAGE_SIZE = 24
 const ROW_HEIGHT_ESTIMATE = 220

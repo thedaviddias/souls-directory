@@ -1,7 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import { Check, Copy, ExternalLink, Sparkles } from 'lucide-react'
+import { useCallback, useState } from 'react'
 import type { ButtonProps } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -12,8 +14,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useAnalytics } from '@/hooks/use-analytics'
-import { Check, Copy, ExternalLink, Sparkles } from 'lucide-react'
-import { useCallback, useState } from 'react'
 
 const SKILL_COMMAND = 'npx skills add https://github.com/thedaviddias/souls-directory'
 const REPO_URL = 'https://github.com/thedaviddias/souls-directory'

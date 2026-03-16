@@ -1,9 +1,9 @@
-import { loadUploadDraft } from '@/hooks/use-upload-draft'
 import { useAuthToken } from '@convex-dev/auth/react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { useQuery } from 'convex/react'
 import * as React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { loadUploadDraft } from '@/hooks/use-upload-draft'
 import { SoulBuilderContent } from '../soul-builder-content'
 
 const push = vi.fn()

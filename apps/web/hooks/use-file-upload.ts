@@ -1,17 +1,17 @@
 'use client'
 
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { logger } from '@/lib/logger'
 import {
-  MAX_TOTAL_BYTES,
   expandDroppedItems,
   formatBytes,
   isMarkdownFile,
   isSoulFile,
   isTextFile,
+  MAX_TOTAL_BYTES,
   normalizePath,
   unwrapSingleTopLevelFolder,
 } from '@/lib/upload-utils'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // =============================================================================
 // Types

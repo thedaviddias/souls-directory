@@ -1,6 +1,6 @@
-import type { Soul } from '@/types'
 import { render, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Soul } from '@/types'
 import { SoulCard } from '../soul-card'
 
 const mockSoul: Soul = {

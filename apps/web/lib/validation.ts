@@ -16,7 +16,7 @@ export const SoulListQuerySchema = z.object({
     .min(1)
     .max(64)
     // keep query safe for PostgREST filter string building
-    .regex(/^[a-zA-Z0-9 _\-\.]+$/, 'Invalid search query')
+    .regex(/^[a-zA-Z0-9 _\-.]+$/, 'Invalid search query')
     .optional(),
   sort: z.enum(['popular', 'recent', 'alphabetical']).default('popular'),
   featured: z

@@ -4,8 +4,8 @@
  * Redirects to /feed for canonical URL handling
  */
 
-import { ROUTES } from '@/lib/routes'
 import { redirect } from 'next/navigation'
+import { ROUTES } from '@/lib/routes'
 
 export function GET() {
   redirect(ROUTES.feed)

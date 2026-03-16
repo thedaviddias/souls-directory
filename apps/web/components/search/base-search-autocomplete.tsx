@@ -1,13 +1,13 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { api } from '@/lib/convex-api'
-import { soulPathFrom } from '@/lib/routes'
 import { useQuery } from 'convex/react'
 import { Search, X } from 'lucide-react'
 import type { Route } from 'next'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { Button } from '@/components/ui/button'
+import { api } from '@/lib/convex-api'
+import { soulPathFrom } from '@/lib/routes'
 
 const RECENT_SEARCHES_KEY = 'souls-recent-searches'
 const MAX_RECENT_SEARCHES = 5

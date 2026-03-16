@@ -9,13 +9,13 @@
 
 'use client'
 
+import { format } from 'date-fns'
+import { ArrowUp } from 'lucide-react'
+import Link from 'next/link'
 import { CategoryBadge } from '@/components/shared/category-badge'
 import { FeaturedBadge } from '@/components/shared/featured-badge'
 import { soulPathFrom } from '@/lib/routes'
 import type { Soul } from '@/types'
-import { format } from 'date-fns'
-import { ArrowUp } from 'lucide-react'
-import Link from 'next/link'
 
 interface SoulCardProps {
   soul: Soul

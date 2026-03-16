@@ -14,7 +14,7 @@
  * for section titles under that h1.
  */
 
-import { type VariantProps, cva } from 'class-variance-authority'
+import { cva, type VariantProps } from 'class-variance-authority'
 import type { Route } from 'next'
 import Link from 'next/link'
 import type { ReactNode } from 'react'

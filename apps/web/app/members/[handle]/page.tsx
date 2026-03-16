@@ -5,13 +5,13 @@
  * Canonical URL: /members/[handle]
  */
 
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { ProfileContent } from '@/components/profile/profile-content'
 import { BreadcrumbSchema, PersonSchema } from '@/components/seo/json-ld'
 import { getSoulsByUser, getUserByHandle } from '@/lib/convex-server'
-import { ROUTES, profilePath } from '@/lib/routes'
-import { SITE_CONFIG, createDynamicMetadata } from '@/lib/seo'
-import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { profilePath, ROUTES } from '@/lib/routes'
+import { createDynamicMetadata, SITE_CONFIG } from '@/lib/seo'
 
 // Force dynamic rendering for fresh data
 export const dynamic = 'force-dynamic'

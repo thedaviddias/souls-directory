@@ -3,8 +3,8 @@
  * Canonical profile URL is /members/[handle].
  */
 
-import { profilePath } from '@/lib/routes'
 import { permanentRedirect } from 'next/navigation'
+import { profilePath } from '@/lib/routes'
 
 interface PageProps {
   params: Promise<{ handle: string }>

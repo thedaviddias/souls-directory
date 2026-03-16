@@ -8,8 +8,8 @@
 
 import { version } from 'flags'
 import { createFlagsDiscoveryEndpoint, getProviderData } from 'flags/next'
-import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import * as flags from '../../../flags'
 
 export async function GET(request: NextRequest) {

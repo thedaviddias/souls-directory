@@ -1,6 +1,6 @@
-import type { Category } from '@/types'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import type { Category } from '@/types'
 import { CategoryCard } from '../category-card'
 
 const mockCategory: Category = {

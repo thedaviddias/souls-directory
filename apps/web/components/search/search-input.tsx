@@ -9,12 +9,12 @@
 
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { useAnalytics } from '@/hooks/use-analytics'
-import { soulsSearchPath } from '@/lib/routes'
 import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { useAnalytics } from '@/hooks/use-analytics'
+import { soulsSearchPath } from '@/lib/routes'
 
 interface SearchInputProps {
   defaultValue?: string

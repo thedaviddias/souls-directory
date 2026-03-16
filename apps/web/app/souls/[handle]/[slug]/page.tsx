@@ -5,6 +5,8 @@
  * URL: /souls/{handle}/{slug}
  */
 
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { BreadcrumbSchema, SoulSchema } from '@/components/seo/json-ld'
 import { SoulDetailContent } from '@/components/souls/soul-detail-content'
 import {
@@ -15,9 +17,7 @@ import {
   getVersionHistory,
 } from '@/lib/convex-server'
 import { ROUTES, soulPath } from '@/lib/routes'
-import { SITE_CONFIG, canonicalUrl, createDynamicMetadata } from '@/lib/seo'
-import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { canonicalUrl, createDynamicMetadata, SITE_CONFIG } from '@/lib/seo'
 
 // Force dynamic rendering for fresh data
 export const dynamic = 'force-dynamic'

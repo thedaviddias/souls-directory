@@ -1,10 +1,10 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { Route } from 'next'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useTransition } from 'react'
+import { Button } from '@/components/ui/button'
 import { MemberCard, type MemberData } from './member-card'
 
 interface MembersListProps {

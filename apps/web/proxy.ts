@@ -1,5 +1,5 @@
-import { profilePath } from '@/lib/routes'
 import { type NextRequest, NextResponse } from 'next/server'
+import { profilePath } from '@/lib/routes'
 
 /**
  * Proxy for souls.directory

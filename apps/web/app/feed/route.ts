@@ -7,11 +7,11 @@
  * Also supports Atom format via query param: /feed?format=atom
  */
 
+import { NextResponse } from 'next/server'
 import { getSoulsForFeed } from '@/lib/convex-server'
 import { logger } from '@/lib/logger'
 import { profilePath } from '@/lib/routes'
 import { SITE_CONFIG } from '@/lib/seo'
-import { NextResponse } from 'next/server'
 
 // Revalidate every 5 minutes
 export const revalidate = 300
@@ -45,7 +45,7 @@ function generateRSS(souls: FeedSouls): string {
     .map((soul: FeedSoul) => {
       const itemUrl = `${url}/souls/${soul.ownerHandle}/${soul.slug}`
       const pubDate = formatRFC822Date(soul.createdAt)
-      const updateDate = formatRFC822Date(soul.updatedAt)
+      const _updateDate = formatRFC822Date(soul.updatedAt)
 
       // Build description with tagline and excerpt
       let itemDescription = soul.tagline

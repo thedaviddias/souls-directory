@@ -7,6 +7,7 @@
 
 'use client'
 
+import Link from 'next/link'
 import { SkillCommandCard } from '@/components/home/skill-command-card'
 import { PageContainer } from '@/components/layout/page-container'
 import { SectionHeader } from '@/components/marketing/section-header'
@@ -18,7 +19,6 @@ import { Button } from '@/components/ui/button'
 import { faqItems } from '@/lib/faq-data'
 import { ROUTES, soulsByCategoryPath, soulsFeaturedPath, soulsSortPath } from '@/lib/routes'
 import type { Category, Soul } from '@/types'
-import Link from 'next/link'
 
 interface HomeContentProps {
   categories: Category[]
@@ -174,7 +174,7 @@ export function HomeContent({
               sticky={false}
             />
             <SoulCardGrid className="mt-6">
-              {featured.map((soul, index) => (
+              {featured.map((soul, _index) => (
                 <SoulCard key={soul.id} soul={soul} featured />
               ))}
             </SoulCardGrid>

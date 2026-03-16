@@ -1,8 +1,8 @@
+import type { Route } from 'next'
+import Link from 'next/link'
 import { CategoryIcon } from '@/lib/category-icons'
 import { soulsByCategoryPath } from '@/lib/routes'
 import type { Category } from '@/types'
-import type { Route } from 'next'
-import Link from 'next/link'
 
 interface CategoryCardProps {
   category: Category

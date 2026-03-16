@@ -1,7 +1,7 @@
-import type { Category, Soul } from '@/types'
 import { render, screen } from '@testing-library/react'
 import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
+import type { Category, Soul } from '@/types'
 import { BrowseContent } from '../browse-content'
 
 const mockSetFilters = vi.fn()
@@ -68,14 +68,8 @@ vi.mock('@tanstack/react-virtual', () => ({
 }))
 
 vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: {
-    children: React.ReactNode
-    href: string
-  }) => React.createElement('a', { href, ...props }, children),
+  default: ({ children, href, ...props }: { children: React.ReactNode; href: string }) =>
+    React.createElement('a', { href, ...props }, children),
 }))
 
 const mockCategory: Category = {

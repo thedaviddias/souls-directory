@@ -1,9 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import type { Route } from 'next'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useState, useTransition } from 'react'
+import { Button } from '@/components/ui/button'
 
 /**
  * Simple debounce hook

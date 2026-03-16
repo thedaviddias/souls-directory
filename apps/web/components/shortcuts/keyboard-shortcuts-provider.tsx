@@ -1,7 +1,7 @@
 'use client'
 
-import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 import type { ReactNode } from 'react'
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 import { ShortcutsModal } from './shortcuts-modal'
 
 interface KeyboardShortcutsProviderProps {

@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import {
-  MAX_FILE_COUNT,
-  MAX_SINGLE_FILE_BYTES,
-  MAX_TOTAL_BYTES,
-  SLUG_PATTERN,
   extractSoulMetadata,
   formatBytes,
   formatPublishError,
@@ -13,6 +9,9 @@ import {
   isTextFile,
   isTextFilePath,
   isValidSlug,
+  MAX_FILE_COUNT,
+  MAX_SINGLE_FILE_BYTES,
+  MAX_TOTAL_BYTES,
   normalizePath,
   parseFrontmatter,
   unwrapSingleTopLevelFolder,

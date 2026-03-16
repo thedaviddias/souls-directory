@@ -8,10 +8,10 @@
  * See CLAUDE.md for warnings about modifying upload functionality.
  */
 
-import { UploadContent } from '@/components/upload/upload-content'
-import { createAuthPageMetadata } from '@/lib/seo'
 import { Loader2 } from 'lucide-react'
 import { Suspense } from 'react'
+import { UploadContent } from '@/components/upload/upload-content'
+import { createAuthPageMetadata } from '@/lib/seo'
 
 export const metadata = createAuthPageMetadata(
   'Upload Soul',

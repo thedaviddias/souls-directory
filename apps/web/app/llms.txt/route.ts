@@ -11,11 +11,11 @@
  * triggers a serverless run to regenerate; all other traffic is static.
  */
 
+import { NextResponse } from 'next/server'
 import { CATEGORIES } from '@/lib/categories'
 import { getAllSoulsForSitemap } from '@/lib/convex-server'
 import { ROUTES, soulPath, soulsByCategoryPath } from '@/lib/routes'
 import { SITE_CONFIG } from '@/lib/seo'
-import { NextResponse } from 'next/server'
 
 export const dynamic = 'force-static'
 export const revalidate = 3600

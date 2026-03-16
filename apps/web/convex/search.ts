@@ -206,7 +206,7 @@ export const semanticSearch = action({
     query: v.string(),
     limit: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
+  handler: async (_ctx, _args) => {
     // TODO: Generate embedding for query using OpenAI
     // TODO: Search soulEmbeddings using vectorSearch
     // For now, fall back to text search

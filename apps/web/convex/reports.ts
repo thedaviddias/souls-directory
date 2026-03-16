@@ -4,7 +4,7 @@ import type { Id } from './_generated/dataModel'
 import { internalAction, internalQuery, mutation } from './_generated/server'
 import { getAuthenticatedUser } from './lib/access'
 
-const REPORT_REASONS = ['spam', 'harassment', 'misinformation', 'other'] as const
+const _REPORT_REASONS = ['spam', 'harassment', 'misinformation', 'other'] as const
 const reportReasonValidator = v.union(
   v.literal('spam'),
   v.literal('harassment'),

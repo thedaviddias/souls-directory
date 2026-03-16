@@ -7,6 +7,11 @@
 
 'use client'
 
+import { formatDistanceToNow } from 'date-fns'
+import { ArrowUp, Calendar, Download, FileText, Globe, Star } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect } from 'react'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { SectionHeader } from '@/components/marketing/section-header'
@@ -16,11 +21,6 @@ import { useAnalytics } from '@/hooks/use-analytics'
 import { useAuthStatus } from '@/hooks/use-auth-status'
 import { ROUTES, soulPathFrom } from '@/lib/routes'
 import { getUserDisplayName, getUserImage, isUserVisible } from '@/lib/user-display'
-import { formatDistanceToNow } from 'date-fns'
-import { ArrowUp, Calendar, Download, FileText, Globe, Star } from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useEffect } from 'react'
 
 interface UserData {
   id: string
@@ -252,13 +252,7 @@ export function ProfileContent({ user, souls }: ProfileContentProps) {
   )
 }
 
-function SoulCard({
-  soul,
-  category,
-}: {
-  soul: SoulData['soul']
-  category: SoulData['category']
-}) {
+function SoulCard({ soul, category }: { soul: SoulData['soul']; category: SoulData['category'] }) {
   return (
     <Link
       href={soulPathFrom(soul)}

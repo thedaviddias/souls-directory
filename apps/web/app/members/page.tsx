@@ -4,6 +4,8 @@
  * Full SSR with caching. Matches the browse page layout.
  */
 
+import { Users } from 'lucide-react'
+import type { Metadata } from 'next'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import type { MemberData } from '@/components/members/member-card'
@@ -13,8 +15,6 @@ import { BreadcrumbSchema, CollectionPageSchema } from '@/components/seo/json-ld
 import { EmptyState } from '@/components/shared/empty-state'
 import { getMemberCount, getMembers } from '@/lib/convex-server'
 import { createMetadata } from '@/lib/seo'
-import { Users } from 'lucide-react'
-import type { Metadata } from 'next'
 
 // Force dynamic rendering since we use searchParams
 export const dynamic = 'force-dynamic'

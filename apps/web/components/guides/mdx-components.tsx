@@ -5,10 +5,10 @@
  * Internal hrefs are mapped to route helpers from lib/routes (no string cast).
  */
 
-import { ROUTES, collectionPath, guidePath, profilePath, soulPath } from '@/lib/routes'
-import { slugify } from '@/lib/slugify'
 import Link from 'next/link'
 import type { ComponentType, ReactNode } from 'react'
+import { collectionPath, guidePath, profilePath, ROUTES, soulPath } from '@/lib/routes'
+import { slugify } from '@/lib/slugify'
 
 /** Map internal pathname to Route using route helpers. Returns null if not a known route. */
 function internalHrefToRoute(href: string): ReturnType<typeof guidePath> | null {

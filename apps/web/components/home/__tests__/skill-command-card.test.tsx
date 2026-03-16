@@ -1,10 +1,10 @@
-import { useAnalytics } from '@/hooks/use-analytics'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { useAnalytics } from '@/hooks/use-analytics'
 import {
+  SkillCommandCard,
   SOUL_MD_CREATOR_COMMAND,
   SOUL_MD_CREATOR_REPO_URL,
-  SkillCommandCard,
 } from '../skill-command-card'
 
 vi.mock('@/hooks/use-analytics', () => ({

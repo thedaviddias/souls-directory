@@ -1,15 +1,15 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import { useAuthStatus } from '@/hooks/use-auth-status'
-import { logger } from '@/lib/logger'
-import { ROUTES } from '@/lib/routes'
 import { useAuthActions } from '@convex-dev/auth/react'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import type { Route } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { useAuthStatus } from '@/hooks/use-auth-status'
+import { logger } from '@/lib/logger'
+import { ROUTES } from '@/lib/routes'
 
 export function LoginContent() {
   const router = useRouter()

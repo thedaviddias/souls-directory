@@ -1,21 +1,15 @@
-import { useAuthStatus } from '@/hooks/use-auth-status'
 import { fireEvent, render, screen } from '@testing-library/react'
 import * as React from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useAuthStatus } from '@/hooks/use-auth-status'
 import { LoginContent } from '../login-content'
 
 const mockReplace = vi.fn()
 const mockSignIn = vi.fn()
 
 vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: {
-    children: React.ReactNode
-    href: string
-  }) => React.createElement('a', { href, ...props }, children),
+  default: ({ children, href, ...props }: { children: React.ReactNode; href: string }) =>
+    React.createElement('a', { href, ...props }, children),
 }))
 
 vi.mock('next/navigation', () => ({

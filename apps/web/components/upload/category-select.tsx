@@ -1,9 +1,9 @@
 'use client'
 
-import type { Id } from '@/convex/_generated/dataModel'
-import { CategoryIcon } from '@/lib/category-icons'
 import { Check, ChevronDown, Search } from 'lucide-react'
 import { useRef, useState } from 'react'
+import type { Id } from '@/convex/_generated/dataModel'
+import { CategoryIcon } from '@/lib/category-icons'
 
 interface Category {
   _id: Id<'categories'>

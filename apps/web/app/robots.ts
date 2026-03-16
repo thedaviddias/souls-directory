@@ -5,8 +5,8 @@
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
  */
 
-import { SITE_CONFIG } from '@/lib/seo'
 import type { MetadataRoute } from 'next'
+import { SITE_CONFIG } from '@/lib/seo'
 
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = SITE_CONFIG.url

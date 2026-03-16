@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import {
-  EXTERNAL_LINKS,
-  ROUTES,
   browseCategoryPath,
   browseSearchPath,
   collectionPath,
+  EXTERNAL_LINKS,
   getSoulHandle,
   guidePath,
   profilePath,
+  ROUTES,
   soulPath,
   soulPathFrom,
   soulsByCategoryPath,

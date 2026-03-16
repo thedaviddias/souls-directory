@@ -1,12 +1,12 @@
 'use client'
 
+import { Share2 } from 'lucide-react'
 import { ShareMenuItems } from '@/components/shared/share-menu-items'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Share2 } from 'lucide-react'
 
 interface GuideShareButtonProps {
   title: string

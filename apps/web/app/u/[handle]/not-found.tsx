@@ -1,5 +1,5 @@
-import { ROUTES } from '@/lib/routes'
 import Link from 'next/link'
+import { ROUTES } from '@/lib/routes'
 
 export default function ProfileNotFound() {
   return (

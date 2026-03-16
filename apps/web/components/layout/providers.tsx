@@ -1,15 +1,15 @@
 'use client'
 
-import { DesktopAuthRelay } from '@/components/auth/desktop-auth-relay'
-import { KeyboardShortcutsProvider } from '@/components/shortcuts/keyboard-shortcuts-provider'
-import { OpenPanelIdentify } from '@/components/user/openpanel-identify'
-import { UserBootstrap } from '@/components/user/user-bootstrap'
 import { ConvexAuthProvider } from '@convex-dev/auth/react'
 import { ConvexReactClient } from 'convex/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { type ReactNode, useCallback } from 'react'
 import { Toaster } from 'sonner'
+import { DesktopAuthRelay } from '@/components/auth/desktop-auth-relay'
+import { KeyboardShortcutsProvider } from '@/components/shortcuts/keyboard-shortcuts-provider'
+import { OpenPanelIdentify } from '@/components/user/openpanel-identify'
+import { UserBootstrap } from '@/components/user/user-bootstrap'
 
 // Convex client: use real URL when set; otherwise placeholder so ConvexProvider is always present
 // (avoids "useQuery must be used under ConvexProvider" during static prerender when env is missing, e.g. CI)

@@ -5,9 +5,9 @@
  * Auth-required page - marked as noindex.
  */
 
+import { Suspense } from 'react'
 import { LoginContent } from '@/components/auth/login-content'
 import { createAuthPageMetadata } from '@/lib/seo'
-import { Suspense } from 'react'
 
 export const metadata = createAuthPageMetadata(
   'Sign In',

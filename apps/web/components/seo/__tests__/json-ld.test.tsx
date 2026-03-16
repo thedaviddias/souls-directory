@@ -1,7 +1,7 @@
-import { profilePath } from '@/lib/routes'
-import { SITE_CONFIG } from '@/lib/seo'
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { profilePath } from '@/lib/routes'
+import { SITE_CONFIG } from '@/lib/seo'
 import {
   BreadcrumbSchema,
   CollectionPageSchema,

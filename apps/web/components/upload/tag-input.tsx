@@ -1,8 +1,8 @@
 'use client'
 
-import type { Id } from '@/convex/_generated/dataModel'
 import { Plus, X } from 'lucide-react'
 import { useState } from 'react'
+import type { Id } from '@/convex/_generated/dataModel'
 
 interface TagSuggestion {
   _id: Id<'tags'>

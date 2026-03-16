@@ -5,10 +5,10 @@
  * Auth-required page - marked as noindex.
  */
 
-import { DashboardContent } from '@/components/dashboard/dashboard-content'
-import { createAuthPageMetadata } from '@/lib/seo'
 import { Loader2 } from 'lucide-react'
 import { Suspense } from 'react'
+import { DashboardContent } from '@/components/dashboard/dashboard-content'
+import { createAuthPageMetadata } from '@/lib/seo'
 
 export const metadata = createAuthPageMetadata(
   'Dashboard',

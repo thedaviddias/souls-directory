@@ -5,14 +5,13 @@
  * "openclaw setup". Step-by-step onboarding for new OpenClaw users.
  */
 
+import Link from 'next/link'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { PageContainer } from '@/components/layout/page-container'
 import { BreadcrumbSchema } from '@/components/seo/json-ld'
 import { Button } from '@/components/ui/button'
 import { ROUTES } from '@/lib/routes'
-import { SITE_CONFIG } from '@/lib/seo'
-import { createMetadata } from '@/lib/seo'
-import Link from 'next/link'
+import { createMetadata, SITE_CONFIG } from '@/lib/seo'
 
 export const metadata = createMetadata({
   title: 'Getting Started - Install a SOUL.md for OpenClaw',
