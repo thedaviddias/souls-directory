@@ -38,3 +38,7 @@ npm-debug.log*
 .cursor
 
 docs
+
+# Tauri
+**/src-tauri/target/
+**/src-tauri/gen/schemas

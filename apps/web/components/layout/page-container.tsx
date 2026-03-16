@@ -14,7 +14,8 @@ const pageContainerVariants = cva('max-w-6xl mx-auto px-6', {
   },
 })
 
-type PageContainerProps = React.ComponentProps<'div'> & VariantProps<typeof pageContainerVariants>
+type PageContainerProps = React.ComponentPropsWithoutRef<'div'> &
+  VariantProps<typeof pageContainerVariants>
 
 export function PageContainer({ className, paddingY, children, ...props }: PageContainerProps) {
   return (

@@ -43,7 +43,10 @@
       "coverage",
       "**/next-env.d.ts",
       "**/convex/_generated/**",
-      ".all-contributorsrc"
+      ".all-contributorsrc",
+      "**/src-tauri/**",
+      "**/src/generated/**",
+      "apps/souls-studio/**"
     ]
   }
 }

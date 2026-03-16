@@ -1,0 +1,32 @@
+name: Release Please - Tauri
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/souls-studio/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs['apps/souls-studio--release_created'] }}
+      tag_name: ${{ steps.release.outputs['apps/souls-studio--tag_name'] }}
+    steps:
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # When release-please creates a release, trigger the build
+  build-and-publish:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    uses: ./.github/workflows/release-tauri.yml
+    secrets: inherit

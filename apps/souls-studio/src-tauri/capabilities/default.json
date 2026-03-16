@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schemas.tauri.app/desktop/capability",
+  "identifier": "default",
+  "description": "Capability for the main window with scoped permissions",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "dialog:default",
+    "http:default",
+    "notification:default",
+    "clipboard-manager:default",
+    "store:default",
+    "sql:default",
+    "window-state:default",
+    "log:default",
+    "deep-link:default",
+    "updater:default",
+    "process:default",
+    "shell:allow-open",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "ssh",
+          "cmd": "ssh",
+          "args": [
+            "-N",
+            "-L",
+            { "validator": "^\\d+:127\\.0\\.0\\.1:\\d+$" },
+            { "validator": "^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+$" },
+            "-p",
+            { "validator": "^\\d{1,5}$" },
+            "-o",
+            "StrictHostKeyChecking=accept-new",
+            "-o",
+            "ConnectTimeout=10",
+            "-i",
+            { "validator": "^[^;|&`$]+$" }
+          ]
+        },
+        {
+          "name": "kill",
+          "cmd": "kill",
+          "args": [{ "validator": "^\\d+$" }]
+        }
+      ]
+    },
+    "fs:default"
+  ]
+}

@@ -24,7 +24,11 @@
         "SENTRY_OTLP_TRACES_URL",
         "SENTRY_PUBLIC_KEY",
         "FLAGS_SECRET",
-        "OPENPANEL_SECRET_ID"
+        "OPENPANEL_SECRET_ID",
+        "VITE_CONVEX_URL",
+        "VITE_SENTRY_DSN",
+        "VITE_SENTRY_TRACES_SAMPLE_RATE",
+        "VITE_OPENPANEL_CLIENT_ID"
       ]
     },
     "dev": {
@@ -40,6 +44,18 @@
     "test": {
       "dependsOn": ["^build"],
       "outputs": []
+    },
+    "tauri:dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "tauri:build": {
+      "dependsOn": ["build"],
+      "outputs": ["src-tauri/target/release/bundle/**"],
+      "cache": false
+    },
+    "cargo:check": {
+      "cache": false
     }
   }
 }
