@@ -1,5 +1,6 @@
 'use client'
 
+import { DesktopAuthRelay } from '@/components/auth/desktop-auth-relay'
 import { KeyboardShortcutsProvider } from '@/components/shortcuts/keyboard-shortcuts-provider'
 import { OpenPanelIdentify } from '@/components/user/openpanel-identify'
 import { UserBootstrap } from '@/components/user/user-bootstrap'
@@ -7,7 +8,7 @@ import { ConvexAuthProvider } from '@convex-dev/auth/react'
 import { ConvexReactClient } from 'convex/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import type { ReactNode } from 'react'
+import { type ReactNode, useCallback } from 'react'
 import { Toaster } from 'sonner'
 
 // Convex client: use real URL when set; otherwise placeholder so ConvexProvider is always present
@@ -29,6 +30,14 @@ interface ProvidersProps {
  * - Keyboard shortcuts (power users)
  */
 export function Providers({ children }: ProvidersProps) {
+  // Skip automatic code handling when the OAuth callback is for the desktop app.
+  // The DesktopAuthRelay component will relay the code via deep-link instead.
+  const shouldHandleCode = useCallback(() => {
+    if (typeof window === 'undefined') return true
+    const params = new URLSearchParams(window.location.search)
+    return params.get('source') !== 'desktop'
+  }, [])
+
   const content = (
     <NuqsAdapter>
       <NextThemesProvider
@@ -55,7 +64,8 @@ export function Providers({ children }: ProvidersProps) {
   )
 
   return (
-    <ConvexAuthProvider client={convex}>
+    <ConvexAuthProvider client={convex} shouldHandleCode={shouldHandleCode}>
+      <DesktopAuthRelay />
       <UserBootstrap />
       <OpenPanelIdentify />
       {content}
