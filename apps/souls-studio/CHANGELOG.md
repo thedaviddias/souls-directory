@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   src/generated/changelog.json for use in the What's New modal.
 -->
 
+## [0.1.1](https://github.com/thedaviddias/souls-directory/compare/souls-studio-v0.1.0...souls-studio-v0.1.1) (2026-03-16)
+
+
+### Features
+
+* add Souls Studio desktop app and fix web build errors ([a9ee9cb](https://github.com/thedaviddias/souls-directory/commit/a9ee9cb27cde40abd7b6e35140db5c4101ea7d6b))
+
 ## [0.1.0] - 2026-03-15
 
 <!-- meta: { "image": "/images/whats-new-0.1.0.png" } -->
