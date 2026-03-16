@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   src/generated/changelog.json for use in the What's New modal.
 -->
 
+## [0.1.2](https://github.com/thedaviddias/souls-directory/compare/souls-studio-v0.1.1...souls-studio-v0.1.2) (2026-03-16)
+
+
+### Bug Fixes
+
+* migrate Souls Studio from Tailwind v3 to v4 ([31d3244](https://github.com/thedaviddias/souls-directory/commit/31d32445e9d7bc6de65a39537054c3ee2c81d203))
+
 ## [0.1.1](https://github.com/thedaviddias/souls-directory/compare/souls-studio-v0.1.0...souls-studio-v0.1.1) (2026-03-16)
 
 
