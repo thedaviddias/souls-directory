@@ -16,7 +16,7 @@
     "deploy": "convex deploy --typecheck=disable --yes"
   },
   "dependencies": {
-    "@auth/core": "^0.37.4",
+    "@auth/core": "^0.41.1",
     "@convex-dev/auth": "^0.0.91",
     "@openpanel/nextjs": "^1.3.0",
     "@radix-ui/react-dialog": "^1.1.15",
