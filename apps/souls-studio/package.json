@@ -55,22 +55,22 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
-    "@sentry/vite-plugin": "^5.1.1",
+    "@playwright/test": "^1.59.1",
+    "@sentry/vite-plugin": "^5.2.1",
     "@tailwindcss/postcss": "^4",
-    "@tauri-apps/cli": "^2.10.1",
+    "@tauri-apps/cli": "^2.11.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "jsdom": "^29.0.0",
-    "postcss": "^8.5.8",
-    "tailwindcss": "^4.2.1",
+    "jsdom": "^29.1.1",
+    "postcss": "^8.5.13",
+    "tailwindcss": "^4.2.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "vite": "^8.0.0",
-    "vitest": "^4.1.0",
-    "yaml": "^2.8.2"
+    "vite": "^8.0.10",
+    "vitest": "^4.1.5",
+    "yaml": "^2.8.4"
   }
 }
