@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
   src/generated/changelog.json for use in the What's New modal.
 -->
 
+## [0.1.3](https://github.com/thedaviddias/souls-directory/compare/souls-studio-v0.1.2...souls-studio-v0.1.3) (2026-08-11)
+
+
+### Features
+
+* point OpenPanel at self-hosted stats API ([380ae85](https://github.com/thedaviddias/souls-directory/commit/380ae859f2101e9bd42bcae19a063f189bb428ed))
+
 ## [0.1.2](https://github.com/thedaviddias/souls-directory/compare/souls-studio-v0.1.1...souls-studio-v0.1.2) (2026-03-16)
 
 
