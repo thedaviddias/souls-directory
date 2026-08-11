@@ -69,7 +69,7 @@ export default function PrivacyPage() {
               <h2 className="text-lg font-medium text-text mb-3">Where data is stored</h2>
               <p>
                 Data is stored in Convex (database) and Vercel (hosting). Both are US-based
-                services. Analytics are processed by OpenPanel.
+                services. Analytics are processed on our self-hosted OpenPanel instance.
               </p>
             </section>
 
@@ -95,7 +95,7 @@ export default function PrivacyPage() {
                 </li>
                 <li>
                   <strong className="text-text">OpenPanel</strong> &mdash; privacy-friendly
-                  analytics
+                  analytics (self-hosted)
                 </li>
                 <li>
                   <strong className="text-text">Sentry</strong> &mdash; error monitoring

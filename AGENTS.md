@@ -14,6 +14,6 @@
 - Convex dev deployment slug: `careful-kangaroo-28` (site URL: `https://careful-kangaroo-28.convex.site`)
 - Dev server uses `portless` tool; local URL is `http://souls.localhost:<port>/` (not `localhost:3000`)
 - Convex env var `SITE_URL` must match the local portless URL for auth redirects to work
-- OpenPanel analytics is proxied through `/api/op`; only active in production (gated by `AnalyticsProvider`)
+- OpenPanel analytics is self-hosted at `https://stats.daviddias.digital/api`, proxied through `/api/op`; only active in production (gated by `AnalyticsProvider`). Set `NEXT_PUBLIC_OPENPANEL_API_URL` (and `VITE_OPENPANEL_API_URL` for souls-studio).
 - `@tanstack/react-virtual` is used for the `/souls` browse page grid virtualization with cursor-based infinite scroll
 - GitHub OAuth env vars (`AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`) live in Convex dashboard, not `.env.local`

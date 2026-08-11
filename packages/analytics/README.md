@@ -12,12 +12,13 @@ OpenPanel analytics package for Next.js apps. Drop the provider into your layout
 
 ## Environment variables
 
-| Variable                          | Required                      | Scope           | Description                                                     |
-| --------------------------------- | ----------------------------- | --------------- | --------------------------------------------------------------- |
-| `NEXT_PUBLIC_OPENPANEL_CLIENT_ID` | Yes (for OpenPanel)           | Client + Server | OpenPanel client ID from [openpanel.dev](https://openpanel.dev) |
-| `OPENPANEL_CLIENT_SECRET`         | Only for server-side tracking | Server only     | OpenPanel client secret (never expose to the browser)           |
+| Variable                          | Required                      | Scope           | Description                                                                 |
+| --------------------------------- | ----------------------------- | --------------- | --------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_OPENPANEL_CLIENT_ID` | Yes (for OpenPanel)           | Client + Server | OpenPanel client ID from your OpenPanel dashboard                           |
+| `NEXT_PUBLIC_OPENPANEL_API_URL`   | Yes (self-hosted)             | Client + Server | Self-hosted API base URL, e.g. `https://stats.daviddias.digital/api`        |
+| `OPENPANEL_CLIENT_SECRET`         | Only for server-side tracking | Server only     | OpenPanel client secret (never expose to the browser)                       |
 
-Both variables must be added to `turbo.json` → `tasks.build.env` so Turborepo invalidates the build cache when they change.
+These variables must be added to `turbo.json` → `tasks.build.env` so Turborepo invalidates the build cache when they change.
 
 ## Setup
 
@@ -51,12 +52,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ### 3. Create the OpenPanel proxy route
 
-Create `app/api/op/[...path]/route.ts` to proxy analytics requests through your own domain (avoids ad blockers):
+Create `app/api/op/[...path]/route.ts` to proxy analytics requests through your own domain (avoids ad blockers). Pass your self-hosted `apiUrl` so the proxy forwards to your instance instead of OpenPanel Cloud:
 
 ```ts
 import { createRouteHandler } from '@openpanel/nextjs/server'
 
-export const { GET, POST } = createRouteHandler()
+export const { GET, POST } = createRouteHandler({
+  apiUrl: process.env.NEXT_PUBLIC_OPENPANEL_API_URL,
+})
 ```
 
 ### 4. Add environment variables to turbo.json
@@ -64,6 +67,7 @@ export const { GET, POST } = createRouteHandler()
 ```jsonc
 // turbo.json → tasks.build.env
 "NEXT_PUBLIC_OPENPANEL_CLIENT_ID",
+"NEXT_PUBLIC_OPENPANEL_API_URL",
 "OPENPANEL_CLIENT_SECRET",
 ```
 
@@ -82,6 +86,8 @@ export function trackServerEvent(event: string, properties?: Record<string, unkn
 }
 ```
 
+`opServer` reads `NEXT_PUBLIC_OPENPANEL_API_URL` so server-side events hit the same self-hosted instance.
+
 This requires `@vercel/functions` installed in your app and `OPENPANEL_CLIENT_SECRET` set.
 
 ## How it works
@@ -93,8 +99,10 @@ AnalyticsHead
             └─ globalProperties: { environment }
 
 opServer.track() (server)
-  └─ OpenPanel SDK → direct API call with clientSecret
+  └─ OpenPanel SDK → direct API call to NEXT_PUBLIC_OPENPANEL_API_URL with clientSecret
 ```
+
+Self-hosted deployments must set `NEXT_PUBLIC_OPENPANEL_API_URL` (path must end with `/api`). Without it, the proxy and server SDK fall back to OpenPanel Cloud.
 
 ## Production guards
 
